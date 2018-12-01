@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-11-26 23:25:05
+Date: 2018-11-28 00:17:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -108,14 +108,33 @@ CREATE TABLE `t_pool_operation` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for t_team
+-- ----------------------------
+DROP TABLE IF EXISTS `t_team`;
+CREATE TABLE `t_team` (
+  `team_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `member_layer` int(255) DEFAULT NULL COMMENT '队员层数，比如小明属于金字塔的第三层，最上面为第一层',
+  `team_sum` int(11) DEFAULT NULL COMMENT '队伍总人数',
+  `member_teamVIP` int(255) DEFAULT NULL COMMENT '用户属于几星用户',
+  `join_time` datetime DEFAULT NULL COMMENT '用户入团的时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_team
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for t_trade_log
 -- ----------------------------
 DROP TABLE IF EXISTS `t_trade_log`;
 CREATE TABLE `t_trade_log` (
   `record_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL COMMENT '赠送能量人id',
+  `team_id` int(11) NOT NULL COMMENT '用户的团队id 团队id为0代表没有团队',
   `to_user_id` int(11) DEFAULT NULL COMMENT '被赠送能量人id',
   `trade_number` double DEFAULT NULL COMMENT '赠送数量',
+  `service_charge` double(255,0) DEFAULT NULL,
   `trade_time` datetime DEFAULT NULL COMMENT '赠送时间',
   PRIMARY KEY (`record_id`),
   KEY `user_id` (`user_id`),
@@ -142,37 +161,23 @@ CREATE TABLE `t_user` (
   `user_pay_password` varchar(255) DEFAULT NULL COMMENT '交易密码',
   `user_equipment_id1` varchar(255) DEFAULT NULL COMMENT '用户手机的ime码',
   `user_equipment_id2` varchar(255) DEFAULT NULL COMMENT '用户手机的ime码',
+  `team_id` int(11) DEFAULT NULL COMMENT '用户的团队id 团队id为0代表没有团队，如果他爹属于一个团队，那么它就属于这个团队，并且要在team表中加入他的记录',
   `activation_code` varchar(255) DEFAULT NULL COMMENT '激活码',
-  `invitation_code` varchar(255) DEFAULT NULL COMMENT '用户自己的邀请码',
-  `invitationed_code1` varchar(255) DEFAULT NULL COMMENT '用户的被邀请码1   父亲',
-  `invitationed_code2` varchar(255) DEFAULT NULL COMMENT '用户的被邀请码 爷爷',
+  `invite_code` varchar(255) DEFAULT NULL COMMENT '用户自己的邀请码',
+  `invited_ancestors` int(255) DEFAULT NULL COMMENT '用户的被邀请的祖宗id',
+  `invited_father` int(255) DEFAULT NULL COMMENT '用户的被邀请的爸爸id',
   `user_address` varchar(255) DEFAULT NULL COMMENT '用户的收货地址',
   `user_head_picture` varchar(255) DEFAULT NULL COMMENT '用户头像',
-  `user_vip` int(255) DEFAULT NULL COMMENT '用户等级',
+  `invited_sum1` int(255) DEFAULT NULL COMMENT '用户直接推荐的总人数',
+  `invited_sum2` int(255) DEFAULT NULL COMMENT '用户间接推荐的总人数，直接在team表查团队，团队总人数减去自己为间接推荐人数',
+  `user_balance` double(255,0) DEFAULT NULL COMMENT '用户的余额',
+  `pool_usedCapacity` int(255) DEFAULT NULL COMMENT '能量池已经用的能量',
+  `pool_rank` int(255) DEFAULT NULL COMMENT '能量池等级',
+  `user_vip` int(255) DEFAULT NULL COMMENT '用户星级',
   `create_time` datetime DEFAULT NULL COMMENT '申请时间',
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='每次有新用户在注册的时候，会递归查询数据库，找爹和爹的爹的爹的爹，他们的间接邀请人数统一+1，新用户的父亲的直接推荐人数+1（按照星际等级更新用户vip等级）。\r\n如果，此时有满足星级用户条件，且一直到祖宗位置都没有团队，那么这个人独立成团队，下属所有用户跟团，此人祖宗id置0，下属祖宗id置为他。\r\n如果在他之上原先就有团队，那么不独立成团队。\r\n最初的注册50人的id为最初团队id，不记录奖励\r\n';
 
 -- ----------------------------
 -- Records of t_user
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_user_wealth
--- ----------------------------
-DROP TABLE IF EXISTS `t_user_wealth`;
-CREATE TABLE `t_user_wealth` (
-  `user_id` int(11) NOT NULL,
-  `user_balance` int(255) DEFAULT NULL,
-  `pool_usedCapacity` int(255) DEFAULT NULL COMMENT '能量池已经用的能量',
-  `directRecommend_sum` int(255) DEFAULT NULL COMMENT '直接推荐人数',
-  `indirectRecommend_sum` int(255) DEFAULT NULL COMMENT '间接推荐人数',
-  `pool_rank` int(255) DEFAULT NULL COMMENT '能量吃等级',
-  `user_vip` int(255) DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  CONSTRAINT `t_user_wealth_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_user_wealth
 -- ----------------------------
