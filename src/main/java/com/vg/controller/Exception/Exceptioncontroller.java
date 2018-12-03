@@ -1,4 +1,5 @@
-package com.vg.controller;
+package com.vg.controller.Exception;
+
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

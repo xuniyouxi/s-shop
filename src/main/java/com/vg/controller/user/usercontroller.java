@@ -1,4 +1,4 @@
-package com.vg.controller;
+package com.vg.controller.user;
 
 
 import org.springframework.stereotype.Controller;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class usercontroller {
 
 /**
- * http://localhost:8080/vg/test.do
+ * http://localhost:8080/vg/user.do
  * test
  * @return
  */
-	@RequestMapping(value = "test.do")
+	@RequestMapping(value = "user.do")
 	@ResponseBody
 	public int ddd() {
 		int a=1;
