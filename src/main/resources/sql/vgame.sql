@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : lzy
 Source Server Version : 50721
 Source Host           : localhost:3306
-Source Database       : vgame0.1
+Source Database       : vgame
 
 Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-12-01 19:46:36
+Date: 2018-12-03 19:00:12
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,9 +22,9 @@ DROP TABLE IF EXISTS `t_admin`;
 CREATE TABLE `t_admin` (
   `admin_id` int(11) NOT NULL,
   `admin_name` varchar(255) DEFAULT NULL,
-  `admin_rank` varchar(255) DEFAULT NULL,
-  `admin_static` varchar(255) DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
+  `admin_rank` varchar(255) DEFAULT NULL COMMENT '管理员等级',
+  `admin_static` varchar(255) DEFAULT NULL COMMENT '管理员状态0 代表不能使用 1代表可以使用',
+  `create_time` datetime DEFAULT NULL COMMENT '管理员创建时间',
   PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -81,7 +81,7 @@ CREATE TABLE `t_identify_code` (
   `identify_code` int(11) DEFAULT NULL,
   `used_static` varchar(255) DEFAULT NULL,
   `used_method` varchar(255) DEFAULT NULL,
-  `used_time` datetime DEFAULT NULL,
+  `used_time` datetime DEFAULT NULL COMMENT 'code发送时间',
   KEY `user_id` (`user_id`),
   CONSTRAINT `t_identify_code_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -98,7 +98,7 @@ CREATE TABLE `t_pool_operation` (
   `operation_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `into_balance` int(11) DEFAULT NULL COMMENT '使用多少可用余额转入能量池',
-  `operation_time` datetime DEFAULT NULL,
+  `operation_time` datetime DEFAULT NULL COMMENT '操作记录时间',
   PRIMARY KEY (`operation_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `t_pool_operation_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`user_id`)
@@ -121,6 +121,7 @@ CREATE TABLE `t_team` (
 -- ----------------------------
 -- Records of t_team
 -- ----------------------------
+INSERT INTO `t_team` VALUES ('1', '1', '2018-12-03 18:49:27');
 
 -- ----------------------------
 -- Table structure for t_trade_log
@@ -182,7 +183,7 @@ CREATE TABLE `t_user_team` (
   `user_id` int(11) NOT NULL,
   `team_id` int(11) DEFAULT NULL COMMENT '用户的团队id 团队id为0代表没有团队',
   `invited_father` int(255) DEFAULT NULL COMMENT '用户的被邀请的爸爸id',
-  `invited_sum2` int(255) DEFAULT NULL COMMENT '用户间接推荐的总人数',
+  `invited_sum` int(255) DEFAULT NULL COMMENT '用户间接推荐的总人数',
   `member_layer` int(255) DEFAULT NULL COMMENT '队员层数，比如小明属于金字塔的第三层，最上面为第一层',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户团队相关';

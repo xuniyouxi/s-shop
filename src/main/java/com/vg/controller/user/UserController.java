@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-public class usercontroller {
+public class UserController {
 
 /**
  * http://localhost:8080/vg/user.do
