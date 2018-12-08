@@ -3,63 +3,63 @@ package com.vg.entity;
 import java.util.Date;
 
 public class Exchange {
-    private Integer exchangeId;
+	private Integer exchange_id;
 
-    private Integer userId;
+	private String user_id;
 
-    private Integer goodsId;
+	private Integer goods_id;
 
-    private Double goodsEnergynum;
+	private Double goods_energyNum;
 
-    private Date exchangeTime;
+	private Date exchange_time;
 
-	public Integer getExchangeId() {
-		return exchangeId;
+	public Integer getExchange_id() {
+		return exchange_id;
 	}
 
-	public void setExchangeId(Integer exchangeId) {
-		this.exchangeId = exchangeId;
+	public void setExchange_id(Integer exchange_id) {
+		this.exchange_id = exchange_id;
 	}
 
-	public Integer getUserId() {
-		return userId;
+	public String getUser_id() {
+		return user_id;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
 
-	public Integer getGoodsId() {
-		return goodsId;
+	public Integer getGoods_id() {
+		return goods_id;
 	}
 
-	public void setGoodsId(Integer goodsId) {
-		this.goodsId = goodsId;
+	public void setGoods_id(Integer goods_id) {
+		this.goods_id = goods_id;
 	}
 
-	public Double getGoodsEnergynum() {
-		return goodsEnergynum;
+	public Double getGoods_energyNum() {
+		return goods_energyNum;
 	}
 
-	public void setGoodsEnergynum(Double goodsEnergynum) {
-		this.goodsEnergynum = goodsEnergynum;
+	public void setGoods_energyNum(Double goods_energyNum) {
+		this.goods_energyNum = goods_energyNum;
 	}
 
-	public Date getExchangeTime() {
-		return exchangeTime;
+	public Date getExchange_time() {
+		return exchange_time;
 	}
 
-	public void setExchangeTime(Date exchangeTime) {
-		this.exchangeTime = exchangeTime;
+	public void setExchange_time(Date exchange_time) {
+		this.exchange_time = exchange_time;
 	}
 
-	public Exchange(Integer exchangeId, Integer userId, Integer goodsId, Double goodsEnergynum, Date exchangeTime) {
+	public Exchange(Integer exchange_id, String user_id, Integer goods_id, Double goods_energyNum, Date exchange_time) {
 		super();
-		this.exchangeId = exchangeId;
-		this.userId = userId;
-		this.goodsId = goodsId;
-		this.goodsEnergynum = goodsEnergynum;
-		this.exchangeTime = exchangeTime;
+		this.exchange_id = exchange_id;
+		this.user_id = user_id;
+		this.goods_id = goods_id;
+		this.goods_energyNum = goods_energyNum;
+		this.exchange_time = exchange_time;
 	}
 
 	public Exchange() {
@@ -67,11 +67,6 @@ public class Exchange {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "Exchange [exchangeId=" + exchangeId + ", userId=" + userId + ", goodsId=" + goodsId
-				+ ", goodsEnergynum=" + goodsEnergynum + ", exchangeTime=" + exchangeTime + "]";
-	}
+	
 
- 
 }

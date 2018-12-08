@@ -3,86 +3,86 @@ package com.vg.entity;
 import java.util.Date;
 
 public class TradeLog {
-    private Integer recordId;
+	private Integer record_id;
 
-    private Integer userId;
+	private String user_id;
 
-    private Integer teamId;
+	private Integer team_id;
 
-    private Integer toUserId;
+	private String to_user_id;
 
-    private Double tradeNumber;
+	private Double trade_number;
 
-    private Double serviceCharge;
+	private Double service_charge;
 
-    private Date tradeTime;
+	private Date trade_time;
 
-	public Integer getRecordId() {
-		return recordId;
+	public Integer getRecord_id() {
+		return record_id;
 	}
 
-	public void setRecordId(Integer recordId) {
-		this.recordId = recordId;
+	public void setRecord_id(Integer record_id) {
+		this.record_id = record_id;
 	}
 
-	public Integer getUserId() {
-		return userId;
+	public String getUser_id() {
+		return user_id;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
 
-	public Integer getTeamId() {
-		return teamId;
+	public Integer getTeam_id() {
+		return team_id;
 	}
 
-	public void setTeamId(Integer teamId) {
-		this.teamId = teamId;
+	public void setTeam_id(Integer team_id) {
+		this.team_id = team_id;
 	}
 
-	public Integer getToUserId() {
-		return toUserId;
+	public String getTo_user_id() {
+		return to_user_id;
 	}
 
-	public void setToUserId(Integer toUserId) {
-		this.toUserId = toUserId;
+	public void setTo_user_id(String to_user_id) {
+		this.to_user_id = to_user_id;
 	}
 
-	public Double getTradeNumber() {
-		return tradeNumber;
+	public Double getTrade_number() {
+		return trade_number;
 	}
 
-	public void setTradeNumber(Double tradeNumber) {
-		this.tradeNumber = tradeNumber;
+	public void setTrade_number(Double trade_number) {
+		this.trade_number = trade_number;
 	}
 
-	public Double getServiceCharge() {
-		return serviceCharge;
+	public Double getService_charge() {
+		return service_charge;
 	}
 
-	public void setServiceCharge(Double serviceCharge) {
-		this.serviceCharge = serviceCharge;
+	public void setService_charge(Double service_charge) {
+		this.service_charge = service_charge;
 	}
 
-	public Date getTradeTime() {
-		return tradeTime;
+	public Date getTrade_time() {
+		return trade_time;
 	}
 
-	public void setTradeTime(Date tradeTime) {
-		this.tradeTime = tradeTime;
+	public void setTrade_time(Date trade_time) {
+		this.trade_time = trade_time;
 	}
 
-	public TradeLog(Integer recordId, Integer userId, Integer teamId, Integer toUserId, Double tradeNumber,
-			Double serviceCharge, Date tradeTime) {
+	public TradeLog(Integer record_id, String user_id, Integer team_id, String to_user_id, Double trade_number,
+			Double service_charge, Date trade_time) {
 		super();
-		this.recordId = recordId;
-		this.userId = userId;
-		this.teamId = teamId;
-		this.toUserId = toUserId;
-		this.tradeNumber = tradeNumber;
-		this.serviceCharge = serviceCharge;
-		this.tradeTime = tradeTime;
+		this.record_id = record_id;
+		this.user_id = user_id;
+		this.team_id = team_id;
+		this.to_user_id = to_user_id;
+		this.trade_number = trade_number;
+		this.service_charge = service_charge;
+		this.trade_time = trade_time;
 	}
 
 	public TradeLog() {
@@ -90,12 +90,5 @@ public class TradeLog {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "TradeLog [recordId=" + recordId + ", userId=" + userId + ", teamId=" + teamId + ", toUserId=" + toUserId
-				+ ", tradeNumber=" + tradeNumber + ", serviceCharge=" + serviceCharge + ", tradeTime=" + tradeTime
-				+ "]";
-	}
-
-    
+	
 }

@@ -3,52 +3,46 @@ package com.vg.entity;
 import java.util.Date;
 
 public class Team {
-    private Integer teamId;
+	private Integer team_id;
 
-    private Integer teamSum;
+	private Integer team_sum;
 
-    private Date createTime;
+	private Date create_time;
 
-	public Integer getTeamId() {
-		return teamId;
+	public Integer getTeam_id() {
+		return team_id;
 	}
 
-	public void setTeamId(Integer teamId) {
-		this.teamId = teamId;
+	public void setTeam_id(Integer team_id) {
+		this.team_id = team_id;
 	}
 
-	public Integer getTeamSum() {
-		return teamSum;
+	public Integer getTeam_sum() {
+		return team_sum;
 	}
 
-	public void setTeamSum(Integer teamSum) {
-		this.teamSum = teamSum;
+	public void setTeam_sum(Integer team_sum) {
+		this.team_sum = team_sum;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
+	public Date getCreate_time() {
+		return create_time;
 	}
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setCreate_time(Date create_time) {
+		this.create_time = create_time;
 	}
 
-	public Team(Integer teamId, Integer teamSum, Date createTime) {
+	public Team(Integer team_id, Integer team_sum, Date create_time) {
 		super();
-		this.teamId = teamId;
-		this.teamSum = teamSum;
-		this.createTime = createTime;
+		this.team_id = team_id;
+		this.team_sum = team_sum;
+		this.create_time = create_time;
 	}
 
 	public Team() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public String toString() {
-		return "Team [teamId=" + teamId + ", teamSum=" + teamSum + ", createTime=" + createTime + "]";
-	}
-
 
 }

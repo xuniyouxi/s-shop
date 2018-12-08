@@ -1,63 +1,63 @@
 package com.vg.entity;
 
 public class UserTeam {
-	private Integer userId;
+	private String user_id;
 
-	private Integer teamId;
+	private Integer team_id;
 
-	private Integer invitedFather;
+	private String invited_father;
 
-	private Integer invitedSum;
+	private Integer invited_sum;
 
-	private Integer memberLayer;
+	private Integer member_layer;
 
-	public Integer getUserId() {
-		return userId;
+	public String getUser_id() {
+		return user_id;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
 
-	public Integer getTeamId() {
-		return teamId;
+	public Integer getTeam_id() {
+		return team_id;
 	}
 
-	public void setTeamId(Integer teamId) {
-		this.teamId = teamId;
+	public void setTeam_id(Integer team_id) {
+		this.team_id = team_id;
 	}
 
-	public Integer getInvitedFather() {
-		return invitedFather;
+	public String getInvited_father() {
+		return invited_father;
 	}
 
-	public void setInvitedFather(Integer invitedFather) {
-		this.invitedFather = invitedFather;
+	public void setInvited_father(String invited_father) {
+		this.invited_father = invited_father;
 	}
 
-	public Integer getInvitedSum() {
-		return invitedSum;
+	public Integer getInvited_sum() {
+		return invited_sum;
 	}
 
-	public void setInvitedSum(Integer invitedSum) {
-		this.invitedSum = invitedSum;
+	public void setInvited_sum(Integer invited_sum) {
+		this.invited_sum = invited_sum;
 	}
 
-	public Integer getMemberLayer() {
-		return memberLayer;
+	public Integer getMember_layer() {
+		return member_layer;
 	}
 
-	public void setMemberLayer(Integer memberLayer) {
-		this.memberLayer = memberLayer;
+	public void setMember_layer(Integer member_layer) {
+		this.member_layer = member_layer;
 	}
 
-	public UserTeam(Integer userId, Integer teamId, Integer invitedFather, Integer invitedSum, Integer memberLayer) {
+	public UserTeam(String user_id, Integer team_id, String invited_father, Integer invited_sum, Integer member_layer) {
 		super();
-		this.userId = userId;
-		this.teamId = teamId;
-		this.invitedFather = invitedFather;
-		this.invitedSum = invitedSum;
-		this.memberLayer = memberLayer;
+		this.user_id = user_id;
+		this.team_id = team_id;
+		this.invited_father = invited_father;
+		this.invited_sum = invited_sum;
+		this.member_layer = member_layer;
 	}
 
 	public UserTeam() {
@@ -65,10 +65,5 @@ public class UserTeam {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "UserTeam [userId=" + userId + ", teamId=" + teamId + ", invitedFather=" + invitedFather
-				+ ", invitedSum=" + invitedSum + ", memberLayer=" + memberLayer + "]";
-	}
-
+	
 }

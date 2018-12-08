@@ -3,63 +3,63 @@ package com.vg.entity;
 import java.util.Date;
 
 public class IdentifyCode {
-    private Integer userId;
+	private String user_id;
 
-    private Integer identifyCode;
+	private Integer identify_code;
 
-    private String usedStatic;
+	private String used_static;
 
-    private String usedMethod;
+	private String used_method;
 
-    private Date usedTime;
+	private Date used_time;
 
-	public Integer getUserId() {
-		return userId;
+	public String getUser_id() {
+		return user_id;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
 
-	public Integer getIdentifyCode() {
-		return identifyCode;
+	public Integer getIdentify_code() {
+		return identify_code;
 	}
 
-	public void setIdentifyCode(Integer identifyCode) {
-		this.identifyCode = identifyCode;
+	public void setIdentify_code(Integer identify_code) {
+		this.identify_code = identify_code;
 	}
 
-	public String getUsedStatic() {
-		return usedStatic;
+	public String getUsed_static() {
+		return used_static;
 	}
 
-	public void setUsedStatic(String usedStatic) {
-		this.usedStatic = usedStatic;
+	public void setUsed_static(String used_static) {
+		this.used_static = used_static;
 	}
 
-	public String getUsedMethod() {
-		return usedMethod;
+	public String getUsed_method() {
+		return used_method;
 	}
 
-	public void setUsedMethod(String usedMethod) {
-		this.usedMethod = usedMethod;
+	public void setUsed_method(String used_method) {
+		this.used_method = used_method;
 	}
 
-	public Date getUsedTime() {
-		return usedTime;
+	public Date getUsed_time() {
+		return used_time;
 	}
 
-	public void setUsedTime(Date usedTime) {
-		this.usedTime = usedTime;
+	public void setUsed_time(Date used_time) {
+		this.used_time = used_time;
 	}
 
-	public IdentifyCode(Integer userId, Integer identifyCode, String usedStatic, String usedMethod, Date usedTime) {
+	public IdentifyCode(String user_id, Integer identify_code, String used_static, String used_method, Date used_time) {
 		super();
-		this.userId = userId;
-		this.identifyCode = identifyCode;
-		this.usedStatic = usedStatic;
-		this.usedMethod = usedMethod;
-		this.usedTime = usedTime;
+		this.user_id = user_id;
+		this.identify_code = identify_code;
+		this.used_static = used_static;
+		this.used_method = used_method;
+		this.used_time = used_time;
 	}
 
 	public IdentifyCode() {
@@ -67,5 +67,6 @@ public class IdentifyCode {
 		// TODO Auto-generated constructor stub
 	}
 
-   
+	
+
 }

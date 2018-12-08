@@ -3,52 +3,52 @@ package com.vg.entity;
 import java.util.Date;
 
 public class PoolOperation {
-    private Integer operationId;
+	private Integer operation_id;
 
-    private Integer userId;
+	private String user_id;
 
-    private Integer intoBalance;
+	private Integer into_balance;
 
-    private Date operationTime;
+	private Date operation_time;
 
-	public Integer getOperationId() {
-		return operationId;
+	public Integer getOperation_id() {
+		return operation_id;
 	}
 
-	public void setOperationId(Integer operationId) {
-		this.operationId = operationId;
+	public void setOperation_id(Integer operation_id) {
+		this.operation_id = operation_id;
 	}
 
-	public Integer getUserId() {
-		return userId;
+	public String getUser_id() {
+		return user_id;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
 
-	public Integer getIntoBalance() {
-		return intoBalance;
+	public Integer getInto_balance() {
+		return into_balance;
 	}
 
-	public void setIntoBalance(Integer intoBalance) {
-		this.intoBalance = intoBalance;
+	public void setInto_balance(Integer into_balance) {
+		this.into_balance = into_balance;
 	}
 
-	public Date getOperationTime() {
-		return operationTime;
+	public Date getOperation_time() {
+		return operation_time;
 	}
 
-	public void setOperationTime(Date operationTime) {
-		this.operationTime = operationTime;
+	public void setOperation_time(Date operation_time) {
+		this.operation_time = operation_time;
 	}
 
-	public PoolOperation(Integer operationId, Integer userId, Integer intoBalance, Date operationTime) {
+	public PoolOperation(Integer operation_id, String user_id, Integer into_balance, Date operation_time) {
 		super();
-		this.operationId = operationId;
-		this.userId = userId;
-		this.intoBalance = intoBalance;
-		this.operationTime = operationTime;
+		this.operation_id = operation_id;
+		this.user_id = user_id;
+		this.into_balance = into_balance;
+		this.operation_time = operation_time;
 	}
 
 	public PoolOperation() {
@@ -56,11 +56,5 @@ public class PoolOperation {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "PoolOperation [operationId=" + operationId + ", userId=" + userId + ", intoBalance=" + intoBalance
-				+ ", operationTime=" + operationTime + "]";
-	}
-
-
+	
 }
