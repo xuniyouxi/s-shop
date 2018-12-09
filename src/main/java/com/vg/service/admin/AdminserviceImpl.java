@@ -48,6 +48,7 @@ public class AdminserviceImpl implements Adminservice {
 
 	//更新一个小biscuits功能
 	@Override
+	@CacheEvict(value="t_biscuits",key="#bis_id")
 	public BackJSON deleteStatement(int bis_id) {
 		BackJSON backJSON = new BackJSON();
 		if (adminMapper.deleteStatement(bis_id) > 0) {
