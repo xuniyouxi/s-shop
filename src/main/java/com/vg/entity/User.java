@@ -3,6 +3,8 @@ package com.vg.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class User implements Serializable {
 	/**
 	 * 
@@ -15,6 +17,7 @@ public class User implements Serializable {
 
 	private String user_password;
 
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date create_time;
 
 	public String getUser_id() {

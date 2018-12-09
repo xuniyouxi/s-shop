@@ -1,7 +1,9 @@
 package com.vg.service.user;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -90,5 +92,23 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 		return backJSON;
 	}
+	//设置用户密码
+	@Override
+	public BackJSON SetPassword(User user) throws Exception {
+		user.setUser_id(UUID.randomUUID().toString().replaceAll("-",""));
+		user.setUser_role(1);
+		user.setUser_password(MD5.md5(user.getUser_password()));
+		user.setCreate_time(new Date());
+		BackJSON backJSON = new BackJSON();
+		int res = userbehavhourmapper.SetPassword(user);
+		if (res > 0) {
+			backJSON.setCode(200);
+			backJSON.setData("注册成功");
+		} else {
+			backJSON.setCode(404);
+			backJSON.setData("注册失败");
+		}
 
+		return backJSON;
+	}
 }

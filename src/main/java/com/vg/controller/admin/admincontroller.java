@@ -20,33 +20,22 @@ public class admincontroller {
 	@Autowired
 	Adminservice adminservice;
 
-	/**
-	 * `增加某个小功能 http://localhost:8080/vg/admin/Statement
-	 * 
-	 * @return
-	 */
+	// 增加某个小功能 http://localhost:8080/vg/admin/Statement
 	@PostMapping({ "/Statement" })
 	@Authorization(authorization = "admin")
 	public BackJSON Statement(@RequestBody Biscuits biscuits) {
 		return adminservice.setBiscuits(biscuits);
 	}
-	
-	/**
-	 * `更新某个小功能 http://localhost:8080/vg/admin/Statement
-	 * 
-	 * @return
-	 */
+
+	// 更新某个小功能 http://localhost:8080/vg/admin/Statement
 	@PutMapping({ "/Statement" })
 	@Authorization(authorization = "admin")
 	public BackJSON updateStatement(@RequestBody Biscuits biscuits) {
 		System.out.println(biscuits);
 		return adminservice.updatesetBiscuits(biscuits);
 	}
-	/**
-	 * `删除某个小功能 http://localhost:8080/vg/admin/Statement/2
-	 * 
-	 * @return
-	 */
+
+	// 删除某个小功能 http://localhost:8080/vg/admin/Statement/2
 	@DeleteMapping({ "/Statement/{bis_id}" })
 	@Authorization(authorization = "admin")
 	public BackJSON deleteStatement(@PathVariable int bis_id) {

@@ -22,4 +22,7 @@ public interface UserBehaviorservice {
 	
 	//获取用户权限
 	int getUserRoleById(String user_id);
+	
+	//用户设置密码
+	BackJSON SetPassword(User user) throws Exception;
 }

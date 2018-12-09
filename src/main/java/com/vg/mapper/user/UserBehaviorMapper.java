@@ -3,8 +3,10 @@ package com.vg.mapper.user;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import com.vg.entity.User;
@@ -28,4 +30,8 @@ public interface UserBehaviorMapper {
 	//获取某个用户的权限
 	@Select({"select user_role from t_user  WHERE user_id=#{user_id}"})
 	int getUserRoleById(String user_id);
+	
+	//用户设置密码
+	@Insert("INSERT INTO t_user VALUES (#{user_id},#{user_phone},#{user_password},1,#{create_time})")
+	int SetPassword(User user);
 }
