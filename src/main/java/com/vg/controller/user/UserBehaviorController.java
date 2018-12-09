@@ -60,5 +60,7 @@ public class UserBehaviorController {
 	public BackJSON getStatement(@PathVariable int bis_id) {
 		return userbehaviorservice.getStatementByFun(bis_id);
 	}
+	
+
 
 }

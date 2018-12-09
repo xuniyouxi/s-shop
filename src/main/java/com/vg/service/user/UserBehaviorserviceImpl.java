@@ -4,17 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.Encrypt.MD5;
 import com.vg.config.Util.BackJSON;
 import com.vg.entity.User;
-import com.vg.entity.EVO.UserTokenEvo;
 import com.vg.mapper.user.UserBehaviorMapper;
 
 @Service
 
+@CacheConfig()
 public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 	@Autowired
@@ -37,14 +39,29 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		return backJSON;
 	}
 
+	// 获取用户的权限,拦截器用
+	@Override
+	@Cacheable(value = "userRole", key = "#user_id")
+	public int getUserRoleById(String user_id) {
+		// TODO Auto-generated method stub
+		try {
+			return userbehavhourmapper.getUserRoleById(user_id);
+		} catch (Exception e) {
+			return 0;
+		}
+
+	}
+
 	// 用户登录
 	@Override
 	public BackJSON login(User user) throws Exception {
 		BackJSON backJSON = new BackJSON();
-		user.setUser_passward(MD5.md5(user.getUser_passward()));
+		String ssss = user.getUser_password();
+		System.out.println(ssss);
+		user.setUser_password(MD5.md5(user.getUser_password()));
 		User res = userbehavhourmapper.getUserByPhoneAndPass(user);
 		if (res != null) {
-			String token = JWTUtil.createJWT(res.getUser_id(),res.getUser_role());
+			String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
 			System.out.println(token);
 			System.out.println(JWTUtil.parseJWT(token));
 			backJSON.setCode(200);
@@ -57,7 +74,9 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		return backJSON;
 	}
 
+	// 获取小功能
 	@Override
+	@Cacheable(value = "t_biscuits", key = "#bis_id")
 	public BackJSON getStatementByFun(int bis_id) {
 		BackJSON backJSON = new BackJSON();
 		Map<String, Object> res = userbehavhourmapper.getStatementByFun(bis_id);

@@ -1,6 +1,8 @@
 package com.vg.entity;
 
-public class UserTeam {
+import java.io.Serializable;
+
+public class UserTeam implements Serializable{
 	private String user_id;
 
 	private Integer team_id;

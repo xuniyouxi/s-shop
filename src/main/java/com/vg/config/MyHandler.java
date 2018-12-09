@@ -5,15 +5,20 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.MyAnn.Authorization;
+import com.vg.service.user.UserBehaviorservice;
 
 @Configuration
 public class MyHandler implements HandlerInterceptor {
+	@Autowired
+	UserBehaviorservice ubservice;
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -30,8 +35,11 @@ public class MyHandler implements HandlerInterceptor {
 			if (token != null && method.isAnnotationPresent(Authorization.class)) {
 				Authorization useraut = method.getAnnotation(Authorization.class);
 				try {
-					int user_role = Integer
-							.parseInt(JWTUtil.parseJWT(request.getHeader("token")).toString().substring(10, 11));
+					int user_role = ubservice.getUserRoleById((String) JWTUtil.parseJWT(request.getHeader("token")).get("userId"));
+					if(user_role==0) {
+						System.out.println("虚假token滚蛋");
+						return false;
+					}
 					if (user_role == 1 && useraut.authorization().equals("user")) {
 						System.out.println("访问了user接口，且权限对的上");
 						return true;
@@ -54,12 +62,11 @@ public class MyHandler implements HandlerInterceptor {
 				if (useraut.authorization().equals("open")) {
 					System.out.println("请求了公开接口");
 					return true;
-				}
-				else
+				} else
 					System.out.println("没token还想请求私有接口");
-					return false;
+				return false;
 			}
-			
+
 			return false;
 
 		}

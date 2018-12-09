@@ -10,5 +10,8 @@ public interface Adminservice {
 	
 	//更新一个小biscuits功能
 	BackJSON updatesetBiscuits(Biscuits biscuits);
+	
+	//更新一个小biscuits功能
+	BackJSON deleteStatement(int bis_id);
 
 }

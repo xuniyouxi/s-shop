@@ -17,7 +17,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		
+
 	</properties>
 	<dependencies>
 		<!-- <dependency> 高级组件会自动调用这个组件，所以不需要再引用 <groupId>org.springframework.boot</groupId> 
@@ -85,7 +85,6 @@
 			<artifactId>java-jwt</artifactId>
 			<version>3.4.0</version>
 		</dependency>
-		<!-- 静态资源 -->
 
 
 	</dependencies>

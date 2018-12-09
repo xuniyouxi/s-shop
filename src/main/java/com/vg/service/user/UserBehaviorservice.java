@@ -19,4 +19,7 @@ public interface UserBehaviorservice {
 	
 	//获取免责声明
 	BackJSON getStatementByFun(int bis_id);
+	
+	//获取用户权限
+	int getUserRoleById(String user_id);
 }

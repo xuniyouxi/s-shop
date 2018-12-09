@@ -1,8 +1,9 @@
 package com.vg.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class UserData {
+public class UserData implements Serializable{
 	private Integer user_id;
 	private String user_realname;
 	private String user_name;

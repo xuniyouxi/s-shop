@@ -1,15 +1,19 @@
 package com.vg.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements Serializable {
+	/**
+	 * 
+	 */
 	private String user_id;
 
 	private Integer user_role;
 
 	private String user_phone;
 
-	private String user_passward;
+	private String user_password;
 
 	private Date create_time;
 
@@ -37,12 +41,12 @@ public class User {
 		this.user_phone = user_phone;
 	}
 
-	public String getUser_passward() {
-		return user_passward;
+	public String getUser_password() {
+		return user_password;
 	}
 
-	public void setUser_passward(String user_passward) {
-		this.user_passward = user_passward;
+	public void setUser_password(String user_password) {
+		this.user_password = user_password;
 	}
 
 	public Date getCreate_time() {
@@ -53,12 +57,12 @@ public class User {
 		this.create_time = create_time;
 	}
 
-	public User(String user_id, Integer user_role, String user_phone, String user_passward, Date create_time) {
+	public User(String user_id, Integer user_role, String user_phone, String user_password, Date create_time) {
 		super();
 		this.user_id = user_id;
 		this.user_role = user_role;
 		this.user_phone = user_phone;
-		this.user_passward = user_passward;
+		this.user_password = user_password;
 		this.create_time = create_time;
 	}
 
@@ -66,7 +70,5 @@ public class User {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-		
-
 
 }

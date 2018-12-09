@@ -41,7 +41,6 @@ public class JWTUtil {
 		// 创建payload的私有声明（根据特定的业务需要添加，如果要拿这个做验证，一般是需要和jwt的接收方提前沟通好验证方式的）
 		Map<String, Object> claims = new HashMap<String, Object>();
 		claims.put("userId", user_id);
-		claims.put("userRole", role);
 
 		// 生成签名的时候使用的秘钥secret,这个方法本地封装了的，一般可以从本地配置文件中读取，切记这个秘钥不能外露哦。它就是你服务端的私钥，在任何场景都不应该流露出去。一旦客户端得知这个secret,
 		// 那就意味着客户端是可以自我签发jwt了。
@@ -85,7 +84,7 @@ public class JWTUtil {
 //	nbf: 定义在什么时间之前，该jwt都是不可用的.
 //	iat: jwt的签发时间
 //	jti: jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
-	public static Object parseJWT(String token) {
+	public static Map<String, Object> parseJWT(String token) {
 
 		try {
 			// 签名秘钥,和生成的签名的秘钥一模一样
@@ -99,7 +98,7 @@ public class JWTUtil {
 			return claims;
 		} catch (Exception e) {
 			System.out.println("错了");
-			return -1;
+			return null;
 		}
 
 	}
