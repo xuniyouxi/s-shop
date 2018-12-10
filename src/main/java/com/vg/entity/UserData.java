@@ -19,7 +19,6 @@ public class UserData implements Serializable {
 	private Integer pool_usedCapacity;
 	private Integer pool_rank;
 	private Integer user_vip;
-	private Date create_time;
 
 	public Integer getUser_id() {
 		return user_id;
@@ -141,18 +140,10 @@ public class UserData implements Serializable {
 		this.user_vip = user_vip;
 	}
 
-	public Date getCreate_time() {
-		return create_time;
-	}
-
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
-	}
-
 	public UserData(Integer user_id, String user_realname, String user_name, String user_wxcode,
 			String user_pay_password, Integer authorization_code, String user_equipment_id1, String user_equipment_id2,
 			String invite_code, String user_address, String user_head_picture, String user_balance,
-			Integer pool_usedCapacity, Integer pool_rank, Integer user_vip, Date create_time) {
+			Integer pool_usedCapacity, Integer pool_rank, Integer user_vip) {
 		super();
 		this.user_id = user_id;
 		this.user_realname = user_realname;
@@ -169,7 +160,6 @@ public class UserData implements Serializable {
 		this.pool_usedCapacity = pool_usedCapacity;
 		this.pool_rank = pool_rank;
 		this.user_vip = user_vip;
-		this.create_time = create_time;
 	}
 
 	public UserData() {
