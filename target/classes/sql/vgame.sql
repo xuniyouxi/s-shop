@@ -10,10 +10,26 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-12-09 16:03:55
+Date: 2018-12-10 16:17:54
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for authorization_code
+-- ----------------------------
+DROP TABLE IF EXISTS `authorization_code`;
+CREATE TABLE `authorization_code` (
+  `code_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `code_content` varchar(255) NOT NULL COMMENT '授权码内容',
+  `apply_admin` varchar(255) NOT NULL COMMENT '签发人',
+  `apply_time` datetime NOT NULL COMMENT '签发时间',
+  PRIMARY KEY (`code_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of authorization_code
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_biscuits
@@ -147,14 +163,16 @@ CREATE TABLE `t_user` (
   `user_password` varchar(255) DEFAULT NULL COMMENT '用户密码',
   `user_role` int(255) DEFAULT NULL COMMENT '1普通用户 2管理员',
   `create_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_phone` (`user_phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('3b5c2f23df0f42eda54c213f0da1291b', '15524835211', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-06 19:05:09');
-INSERT INTO `t_user` VALUES ('ae3390f356c14cf988936e15d2391eb8', '451', '5161', '1', '2018-12-07 08:57:08');
+INSERT INTO `t_user` VALUES ('3b5c2f23df0f42eda54c213f0da1291b', '15524835211', '386f72fbd88bdd3047b862a26a981808', '2', '2018-12-06 19:05:09');
+INSERT INTO `t_user` VALUES ('7e9116e48973453790d8ddb30fc06707', '110', '3f824e181c827b1e5706ad71560c9b7a', '1', '2018-12-09 15:15:11');
+INSERT INTO `t_user` VALUES ('ae3390f356c14cf988936e15d2391eb8', '451', '11111', '1', '2018-12-07 08:57:08');
 
 -- ----------------------------
 -- Table structure for t_user_data
@@ -166,6 +184,7 @@ CREATE TABLE `t_user_data` (
   `user_name` varchar(255) DEFAULT NULL COMMENT '用户自设昵称可以修改',
   `user_wxcode` varchar(255) DEFAULT NULL COMMENT '微信号',
   `user_pay_password` varchar(255) DEFAULT NULL COMMENT '交易密码',
+  `authorization_code` int(10) DEFAULT NULL COMMENT '激活码，对应authorization_code',
   `user_equipment_id1` varchar(255) DEFAULT NULL COMMENT '用户手机的ime码',
   `user_equipment_id2` varchar(255) DEFAULT NULL COMMENT '用户手机的ime码',
   `invite_code` varchar(255) DEFAULT NULL COMMENT '用户自己的邀请码',
@@ -182,7 +201,7 @@ CREATE TABLE `t_user_data` (
 -- ----------------------------
 -- Records of t_user_data
 -- ----------------------------
-INSERT INTO `t_user_data` VALUES ('51511', '毛泽东', '小毛子', '84484848', '848488', '82888', '78181', '515151', '湖南省长沙市', 'img/sss/ads', '3515', '48848', '11', '1', '2018-12-06 23:43:36');
+INSERT INTO `t_user_data` VALUES ('51511', '毛泽东', '小毛子', '84484848', '848488', null, '82888', '78181', '515151', '湖南省长沙市', 'img/sss/ads', '3515', '48848', '11', '1', '2018-12-06 23:43:36');
 
 -- ----------------------------
 -- Table structure for t_user_team

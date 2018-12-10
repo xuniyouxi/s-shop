@@ -4,14 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import com.vg.entity.User;
-import com.vg.entity.EVO.UserTokenEvo;
-
 @Repository
 public interface UserBehaviorMapper {
 

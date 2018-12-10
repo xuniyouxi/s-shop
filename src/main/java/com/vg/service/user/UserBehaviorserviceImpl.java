@@ -92,18 +92,20 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 		return backJSON;
 	}
-	//设置用户密码
+	//用户注册
 	@Override
 	public BackJSON SetPassword(User user) throws Exception {
 		user.setUser_id(UUID.randomUUID().toString().replaceAll("-",""));
 		user.setUser_role(1);
 		user.setUser_password(MD5.md5(user.getUser_password()));
 		user.setCreate_time(new Date());
+		
 		BackJSON backJSON = new BackJSON();
 		int res = userbehavhourmapper.SetPassword(user);
 		if (res > 0) {
+			String token = JWTUtil.createJWT(user.getUser_id(), user.getUser_role());
 			backJSON.setCode(200);
-			backJSON.setData("注册成功");
+			backJSON.setData(user);
 		} else {
 			backJSON.setCode(404);
 			backJSON.setData("注册失败");

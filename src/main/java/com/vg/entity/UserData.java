@@ -3,12 +3,13 @@ package com.vg.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserData implements Serializable{
+public class UserData implements Serializable {
 	private Integer user_id;
 	private String user_realname;
 	private String user_name;
 	private String user_wxcode;
 	private String user_pay_password;
+	private Integer authorization_code;
 	private String user_equipment_id1;
 	private String user_equipment_id2;
 	private String invite_code;
@@ -58,6 +59,14 @@ public class UserData implements Serializable{
 
 	public void setUser_pay_password(String user_pay_password) {
 		this.user_pay_password = user_pay_password;
+	}
+
+	public Integer getAuthorization_code() {
+		return authorization_code;
+	}
+
+	public void setAuthorization_code(Integer authorization_code) {
+		this.authorization_code = authorization_code;
 	}
 
 	public String getUser_equipment_id1() {
@@ -141,15 +150,16 @@ public class UserData implements Serializable{
 	}
 
 	public UserData(Integer user_id, String user_realname, String user_name, String user_wxcode,
-			String user_pay_password, String user_equipment_id1, String user_equipment_id2, String invite_code,
-			String user_address, String user_head_picture, String user_balance, Integer pool_usedCapacity,
-			Integer pool_rank, Integer user_vip, Date create_time) {
+			String user_pay_password, Integer authorization_code, String user_equipment_id1, String user_equipment_id2,
+			String invite_code, String user_address, String user_head_picture, String user_balance,
+			Integer pool_usedCapacity, Integer pool_rank, Integer user_vip, Date create_time) {
 		super();
 		this.user_id = user_id;
 		this.user_realname = user_realname;
 		this.user_name = user_name;
 		this.user_wxcode = user_wxcode;
 		this.user_pay_password = user_pay_password;
+		this.authorization_code = authorization_code;
 		this.user_equipment_id1 = user_equipment_id1;
 		this.user_equipment_id2 = user_equipment_id2;
 		this.invite_code = invite_code;
