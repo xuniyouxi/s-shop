@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-12-10 16:17:54
+Date: 2018-12-10 19:01:58
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -54,7 +54,7 @@ INSERT INTO `t_biscuits` VALUES ('1', '免责声明', '第一条 本网站所刊
 DROP TABLE IF EXISTS `t_exchange`;
 CREATE TABLE `t_exchange` (
   `exchange_id` int(11) NOT NULL,
-  `user_id` varchar(11) DEFAULT NULL COMMENT '用户id',
+  `user_id` varchar(255) DEFAULT NULL COMMENT '用户id',
   `goods_id` int(11) DEFAULT NULL COMMENT '兑换货物id',
   `goods_energyNum` double(255,0) DEFAULT NULL COMMENT '价值能量',
   `exchange_time` datetime DEFAULT NULL COMMENT '兑换时间',
@@ -92,7 +92,7 @@ CREATE TABLE `t_goods` (
 -- ----------------------------
 DROP TABLE IF EXISTS `t_identify_code`;
 CREATE TABLE `t_identify_code` (
-  `user_id` varchar(11) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
   `identify_code` int(11) DEFAULT NULL,
   `used_static` varchar(255) DEFAULT NULL,
   `used_method` varchar(255) DEFAULT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE `t_identify_code` (
 DROP TABLE IF EXISTS `t_pool_operation`;
 CREATE TABLE `t_pool_operation` (
   `operation_id` int(11) NOT NULL,
-  `user_id` varchar(11) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
   `into_balance` int(11) DEFAULT NULL COMMENT '使用多少可用余额转入能量池',
   `operation_time` datetime DEFAULT NULL COMMENT '操作记录时间',
   PRIMARY KEY (`operation_id`)
@@ -126,7 +126,8 @@ DROP TABLE IF EXISTS `t_team`;
 CREATE TABLE `t_team` (
   `team_id` int(11) NOT NULL,
   `team_sum` int(11) DEFAULT NULL COMMENT '队伍总人数',
-  `create_time` datetime DEFAULT NULL COMMENT '团队创建时间'
+  `create_time` datetime DEFAULT NULL COMMENT '团队创建时间',
+  KEY `team_id` (`team_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -140,9 +141,9 @@ INSERT INTO `t_team` VALUES ('1', '1', '2018-12-03 18:49:27');
 DROP TABLE IF EXISTS `t_trade_log`;
 CREATE TABLE `t_trade_log` (
   `record_id` int(11) NOT NULL COMMENT '流水id',
-  `user_id` varchar(11) DEFAULT NULL COMMENT '赠送能量人id',
+  `user_id` varchar(255) DEFAULT NULL COMMENT '赠送能量人id',
   `team_id` int(11) NOT NULL COMMENT '用户的团队id 团队id为0代表没有团队',
-  `to_user_id` varchar(11) DEFAULT NULL COMMENT '被赠送能量人id',
+  `to_user_id` varchar(255) DEFAULT NULL COMMENT '被赠送能量人id',
   `trade_number` double DEFAULT NULL COMMENT '赠送数量',
   `service_charge` double(255,0) DEFAULT NULL,
   `trade_time` datetime DEFAULT NULL COMMENT '赠送时间',
@@ -170,16 +171,18 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
+INSERT INTO `t_user` VALUES ('', '110', '3f824e181c827b1e5706ad71560c9b7a', '1', '2018-12-09 15:15:11');
 INSERT INTO `t_user` VALUES ('3b5c2f23df0f42eda54c213f0da1291b', '15524835211', '386f72fbd88bdd3047b862a26a981808', '2', '2018-12-06 19:05:09');
-INSERT INTO `t_user` VALUES ('7e9116e48973453790d8ddb30fc06707', '110', '3f824e181c827b1e5706ad71560c9b7a', '1', '2018-12-09 15:15:11');
-INSERT INTO `t_user` VALUES ('ae3390f356c14cf988936e15d2391eb8', '451', '11111', '1', '2018-12-07 08:57:08');
+INSERT INTO `t_user` VALUES ('649e8385f163472f9dec50520cc0de73', '2', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:39');
+INSERT INTO `t_user` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '386f72fbd88bdd3047b862a26a981808\r\n386f72fbd88bdd3047b862a26a981808\r\n386f72fbd88bdd3047b862a26a981808\r\n386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:19');
+INSERT INTO `t_user` VALUES ('f875175a53ad42feb4edc1f46b21d35f', '3', '386f72fbd88bdd3047b862a26a981808\r\n', '1', '2018-12-07 18:42:03');
 
 -- ----------------------------
 -- Table structure for t_user_data
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user_data`;
 CREATE TABLE `t_user_data` (
-  `user_id` varchar(11) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
   `user_realname` varchar(255) DEFAULT NULL COMMENT '用户昵称，系统生成不可更改',
   `user_name` varchar(255) DEFAULT NULL COMMENT '用户自设昵称可以修改',
   `user_wxcode` varchar(255) DEFAULT NULL COMMENT '微信号',
@@ -194,28 +197,34 @@ CREATE TABLE `t_user_data` (
   `pool_usedCapacity` int(255) DEFAULT NULL COMMENT '能量池已经用的能量',
   `pool_rank` int(255) DEFAULT NULL COMMENT '能量池等级',
   `user_vip` int(255) DEFAULT NULL COMMENT '用户星级',
-  `create_time` datetime DEFAULT NULL COMMENT '申请时间',
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `t_user_data_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='每次有新用户在注册的时候，会递归查询数据库，找爹和爹的爹的爹的爹，他们的间接邀请人数统一+1，新用户的父亲的直接推荐人数+1（按照星际等级更新用户vip等级）。\r\n如果，此时有满足星级用户条件，且一直到祖宗位置都没有团队，那么这个人独立成团队，下属所有用户跟团，此人祖宗id置0，下属祖宗id置为他。\r\n如果在他之上原先就有团队，那么不独立成团队。\r\n最初的注册50人的id为最初团队id，不记录奖励';
 
 -- ----------------------------
 -- Records of t_user_data
 -- ----------------------------
-INSERT INTO `t_user_data` VALUES ('51511', '毛泽东', '小毛子', '84484848', '848488', null, '82888', '78181', '515151', '湖南省长沙市', 'img/sss/ads', '3515', '48848', '11', '1', '2018-12-06 23:43:36');
+INSERT INTO `t_user_data` VALUES ('649e8385f163472f9dec50520cc0de73', '毛泽东', '小毛子', '29959', '649e8385f163472f9dec50520cc0de73', '2515', '151515151', '1515151115', '1515', '北京市南锣鼓巷', 'img/asd', '151', '151', '1', '2');
+INSERT INTO `t_user_data` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '邓小平', '小邓子', '84848', '649e8385f163472f9dec50520cc0de73', '151', '49844846', '16516511618', '5151', '南京市板鸭区29号', 'img/asd/asd', '488', '18', '2', '2');
 
 -- ----------------------------
 -- Table structure for t_user_team
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user_team`;
 CREATE TABLE `t_user_team` (
-  `user_id` varchar(11) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
   `team_id` int(11) DEFAULT NULL COMMENT '用户的团队id 团队id为0代表没有团队',
   `invited_father` varchar(255) DEFAULT NULL COMMENT '用户的被邀请的爸爸id',
   `invited_sum` int(255) DEFAULT NULL COMMENT '用户间接推荐的总人数',
   `member_layer` int(255) DEFAULT NULL COMMENT '队员层数，比如小明属于金字塔的第三层，最上面为第一层',
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  KEY `team_id` (`team_id`),
+  CONSTRAINT `t_user_team_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`user_id`),
+  CONSTRAINT `t_user_team_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `t_team` (`team_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户团队相关';
 
 -- ----------------------------
 -- Records of t_user_team
 -- ----------------------------
+INSERT INTO `t_user_team` VALUES ('649e8385f163472f9dec50520cc0de73', '1', 'null', '0', '1');
+INSERT INTO `t_user_team` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '649e8385f163472f9dec50520cc0de73', '0', '2');
