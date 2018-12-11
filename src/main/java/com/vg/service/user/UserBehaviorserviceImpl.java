@@ -12,8 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.Encrypt.MD5;
+import com.vg.config.Encrypt.UUID8;
 import com.vg.config.Util.BackJSON;
 import com.vg.entity.User;
+import com.vg.entity.UserTeam;
+import com.vg.entity.EVO.UserLogin;
+import com.vg.entity.EVO.UserRegister;
 import com.vg.mapper.user.UserBehaviorMapper;
 
 @Service
@@ -23,6 +27,47 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 	@Autowired
 	UserBehaviorMapper userbehavhourmapper;
+
+	// 用户注册
+	public BackJSON UserRegister(UserRegister userRegister) throws Exception {
+		System.out.println(new Date());
+		BackJSON backJSON = new BackJSON();
+		System.out.println(userRegister);
+		String father_id = userbehavhourmapper.getUserIdByinviteCode(userRegister.getFather_inviteCode());
+		if (father_id == null) {
+			backJSON.setCode(401);
+			backJSON.setData("邀请码不存在");
+			return backJSON;
+		}
+		if (userbehavhourmapper.getUserIdByPhone(userRegister.getUser_phone()) > 0) {
+			backJSON.setCode(402);
+			backJSON.setData("手机号码重复");
+			return backJSON;
+		}
+		User user = new User();
+		user.setCreate_time(new Date());
+		String new_user = UUID.randomUUID().toString().replaceAll("-", "");
+		user.setUser_id(new_user);
+		user.setUser_role(1);
+		user.setUser_phone(userRegister.getUser_phone());
+		user.setUser_password(MD5.md5(userRegister.getUser_password()));
+		if (userbehavhourmapper.createUser(user) < 1) {
+			backJSON.setCode(403);
+			backJSON.setData("创建用户失败请重新创建");
+			return backJSON;
+		}
+		String new_InviteCode = userbehavhourmapper.getSysInviteCode();
+		userRegister.setUser_id(new_user);
+		userRegister.setInvite_code(Integer.parseInt(new_InviteCode) + 2 + "");
+		userRegister.setUser_realname(UUID8.getShortUuid());
+		// 插入user_data
+		userbehavhourmapper.updataSysInviteCode(Integer.parseInt(new_InviteCode) + 2 + "");
+		userbehavhourmapper.insertUserData(userRegister);
+		UserTeam userteam = userbehavhourmapper.getUserTemaById(father_id);
+		System.out.println(userteam);
+
+		return null;
+	}
 
 	// 测试
 	@Override
@@ -56,13 +101,19 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 	// 用户登录
 	@Override
-	public BackJSON login(User user) throws Exception {
+	public BackJSON login(UserLogin user) throws Exception {
 		BackJSON backJSON = new BackJSON();
-		String ssss = user.getUser_password();
-		System.out.println(ssss);
 		user.setUser_password(MD5.md5(user.getUser_password()));
 		User res = userbehavhourmapper.getUserByPhoneAndPass(user);
 		if (res != null) {
+			Map<String, String> userIMIE = userbehavhourmapper.getUserIMIE(res.getUser_id());
+			System.out.println(userIMIE);
+			if (!(userIMIE.get("user_equipment_id1").equals(user.getUser_equipment_id()))
+					&& !(userIMIE.get("user_equipment_id2") .equals(user.getUser_equipment_id())) ) {
+				backJSON.setCode(405);
+				backJSON.setData("不是指定设备");
+				return backJSON;
+			}
 			String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
 			System.out.println(token);
 			System.out.println(JWTUtil.parseJWT(token));
@@ -92,25 +143,5 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 		return backJSON;
 	}
-	//用户注册
-	@Override
-	public BackJSON SetPassword(User user) throws Exception {
-		user.setUser_id(UUID.randomUUID().toString().replaceAll("-",""));
-		user.setUser_role(1);
-		user.setUser_password(MD5.md5(user.getUser_password()));
-		user.setCreate_time(new Date());
-		
-		BackJSON backJSON = new BackJSON();
-		int res = userbehavhourmapper.SetPassword(user);
-		if (res > 0) {
-			String token = JWTUtil.createJWT(user.getUser_id(), user.getUser_role());
-			backJSON.setCode(200);
-			backJSON.setData(user);
-		} else {
-			backJSON.setCode(404);
-			backJSON.setData("注册失败");
-		}
 
-		return backJSON;
-	}
 }

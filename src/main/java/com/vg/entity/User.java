@@ -3,7 +3,8 @@ package com.vg.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class User implements Serializable {
 	/**
@@ -18,7 +19,7 @@ public class User implements Serializable {
 
 	private String user_password;
 
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd", timezone="GMT+8")
 	private Date create_time;
 
 	public String getUser_id() {

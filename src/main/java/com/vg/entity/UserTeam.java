@@ -67,5 +67,11 @@ public class UserTeam implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public String toString() {
+		return "UserTeam [user_id=" + user_id + ", team_id=" + team_id + ", invited_father=" + invited_father
+				+ ", invited_sum=" + invited_sum + ", member_layer=" + member_layer + "]";
+	}
+
 	
 }

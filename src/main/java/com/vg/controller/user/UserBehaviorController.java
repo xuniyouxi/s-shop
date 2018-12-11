@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vg.config.MyAnn.Authorization;
 import com.vg.config.Util.BackJSON;
 import com.vg.entity.User;
+import com.vg.entity.EVO.UserLogin;
+import com.vg.entity.EVO.UserRegister;
 import com.vg.service.user.UserBehaviorservice;
+import com.vg.service.user.UserBehaviorserviceImpl;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -23,6 +26,8 @@ public class UserBehaviorController {
 
 	@Autowired
 	UserBehaviorservice userbehaviorservice;
+	@Autowired
+	UserBehaviorserviceImpl userbehaviorserviceimpl;
 
 	// 注册获取验证码 http://localhost:8080/vg/user/register
 	@RequestMapping(value = "/register")
@@ -33,19 +38,19 @@ public class UserBehaviorController {
 
 	}
 
-	// 注册设置密码 http://localhost:8080/vg/user/SetPassword
+	// 注册 http://localhost:8080/vg/user/SetPassword
 	@PostMapping({ "/register" })
 	@Authorization(authorization = "open")
-	public BackJSON register(@RequestBody User user) throws Exception {
-		return userbehaviorservice.SetPassword(user);
+	public BackJSON register(@RequestBody UserRegister userRegister) throws Exception {
+		
+		return  userbehaviorserviceimpl.UserRegister(userRegister);
 	}
 
 	// 登陆 http://localhost:8080/vg/user/login
 	@PostMapping(value = "/login")
 	@Authorization(authorization = "open")
-	public BackJSON login(@RequestBody User user) throws Exception {
-		System.out.println("asda");
-		return userbehaviorservice.login(user);
+	public BackJSON login(@RequestBody UserLogin userlogin) throws Exception {
+		return userbehaviorservice.login(userlogin);
 	}
 
 	// 获取免责声明 http://localhost:8080/vg/user/Statement/1

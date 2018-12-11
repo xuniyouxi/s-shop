@@ -3,11 +3,13 @@ package com.vg.service.user;
 
 import com.vg.config.Util.BackJSON;
 import com.vg.entity.User;
+import com.vg.entity.EVO.UserLogin;
+import com.vg.entity.EVO.UserRegister;
 public interface UserBehaviorservice {
 
 	BackJSON getallteam();
 	//获取用户
-	BackJSON login(User user) throws Exception;
+	BackJSON login(UserLogin userlogin) throws Exception;
 	
 	//获取免责声明
 	BackJSON getStatementByFun(int bis_id);
@@ -15,6 +17,6 @@ public interface UserBehaviorservice {
 	//获取用户权限
 	int getUserRoleById(String user_id);
 	
-	//用户设置密码
-	BackJSON SetPassword(User user) throws Exception;
+	//用户注册
+	BackJSON UserRegister(UserRegister userRegister) throws Exception;
 }

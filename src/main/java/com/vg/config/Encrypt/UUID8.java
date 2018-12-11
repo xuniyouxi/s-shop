@@ -16,7 +16,7 @@ public class UUID8 {
 			int x = Integer.parseInt(str, 16);
 			shortBuffer.append(chars[x % 0x3E]);
 		}
-		return "#"+shortBuffer.toString();
+		return shortBuffer.toString();
 
 	}
 
