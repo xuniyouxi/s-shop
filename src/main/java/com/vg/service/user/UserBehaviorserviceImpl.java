@@ -21,7 +21,7 @@ import com.vg.entity.EVO.UserRegister;
 import com.vg.mapper.user.UserBehaviorMapper;
 
 @Service
-
+//asdasdasdasds
 @CacheConfig()
 public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
