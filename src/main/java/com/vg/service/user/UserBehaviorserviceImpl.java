@@ -14,6 +14,7 @@ import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.Encrypt.MD5;
 import com.vg.config.Encrypt.UUID8;
 import com.vg.config.Util.BackJSON;
+import com.vg.entity.Team;
 import com.vg.entity.User;
 import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
@@ -69,21 +70,11 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		return null;
 	}
 
-	// 测试
+	// 测试分页
 	@Override
-	public BackJSON getallteam() {
-		BackJSON backJSON = new BackJSON();
-		List<Map<String, Object>> res = userbehavhourmapper.getallteam();
-		if (res != null) {
-			backJSON.setCode(200);
-			backJSON.setData(res);
-
-		} else {
-			backJSON.setCode(201);
-			backJSON.setData("操作失败");
-		}
-
-		return backJSON;
+	public List<Team>  getallteam() {
+		List<Team> res = userbehavhourmapper.getallteam();
+		return res;
 	}
 
 	// 获取用户的权限,拦截器用

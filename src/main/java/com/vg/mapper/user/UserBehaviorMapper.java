@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import com.vg.entity.Team;
 import com.vg.entity.User;
 import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
@@ -18,7 +19,7 @@ public interface UserBehaviorMapper {
 
 	// 测试查询所有team
 	@Select({ "select * from t_team" })
-	List<Map<String, Object>> getallteam();
+	List<Team> getallteam();
 
 	// 获取系统当前邀请码
 	@Select({ "select bis_content from t_biscuits where bis_id=2" })
