@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-12-10 19:01:58
+Date: 2018-12-14 00:20:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,11 +25,13 @@ CREATE TABLE `authorization_code` (
   `apply_admin` varchar(255) NOT NULL COMMENT '签发人',
   `apply_time` datetime NOT NULL COMMENT '签发时间',
   PRIMARY KEY (`code_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of authorization_code
 -- ----------------------------
+INSERT INTO `authorization_code` VALUES ('1', '1', '1', '2018-12-13 22:36:56');
+INSERT INTO `authorization_code` VALUES ('2', '234', '1', '2018-12-13 22:36:56');
 
 -- ----------------------------
 -- Table structure for t_biscuits
@@ -41,12 +43,14 @@ CREATE TABLE `t_biscuits` (
   `bis_content` text COMMENT '小功能的作用',
   `bis_state` int(255) DEFAULT NULL COMMENT '使用状态 0 未使用 1正在用',
   PRIMARY KEY (`bis_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_biscuits
 -- ----------------------------
 INSERT INTO `t_biscuits` VALUES ('1', '免责声明', '第一条 本网站所刊载的所有资料及图表仅供参考使用。刊载这些文档并不构成对任何股份的收购、购买、认购、抛售或持有的邀约或意图。参阅本网站上所刊的文档的人士，应被视为已确认得悉上述立场。投资者依据本网站提供的信息、资料及图表进行金融、证券等投资项目所造成的盈亏与本网站无关。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第二条 本网站的用户在参加网站举办的各种活动时，我们将在您的同意及确认下，通过注册表格等形式要求您提供一些个人资料，如：您的姓名、性别、年龄、出生日期、身份证号、家庭住址、教育程度、企业情况、所属行业等。请您绝对放心，我们在未经您同意的情况下，绝对不会将您的任何资料以任何方式泄露给任何第三方。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第三条 当政府司法机关依照法定程序要求本网站披露个人资料时，我们将根据执法单位之要求或为公共安全之目的提供个人资料。在此情况下之任何披露，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第四条 由于用户将个人密码告知他人或与他人共享注册账户，由此导致的任何个人资料泄露，本网站不负任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第五条 任何由于黑客攻击、计算机病毒侵人或发作、因政府管制而造成的暂时性关闭等影响网络正常经营的不可抗力而造成的个人资料泄露、丢失、被盗用或被窜改等，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第六条 由于与本网站链接的其他网站所造成之个人资料泄露及由此而导致的任何法律争议和后果，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第七条 本网站如因系统维护或升级而需暂停服务时，将事先公告。若因线路及非本企业控制范围外的硬件故障或其他不可抗力而导致暂停服务，于暂停服务期间造成的一切不便与损失，本网站不负任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第八条 本网站使用者因为违反本声明的规定而触犯中华人民共和国法律的，一切后果自己负责，本网站不承担任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第九条 凡以任何方式登录本网站或直接、间接使用本网站资料者，视为自愿接受本网站声明的约束。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第十条 本声明未涉及的问题参见国家有关法律法规，当本声明与国家法律法规冲突时，以国家法律法规为准。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第十一条 本网站之声明以及其修改权、更新权及最终解释权均属东方财富网所有。', '1');
+INSERT INTO `t_biscuits` VALUES ('2', '个人邀请码', '4035', '1');
+INSERT INTO `t_biscuits` VALUES ('3', '联系电话', '15353101818', '1');
 
 -- ----------------------------
 -- Table structure for t_exchange
@@ -92,16 +96,27 @@ CREATE TABLE `t_goods` (
 -- ----------------------------
 DROP TABLE IF EXISTS `t_identify_code`;
 CREATE TABLE `t_identify_code` (
-  `user_id` varchar(255) NOT NULL,
+  `user_phone` varchar(255) NOT NULL,
   `identify_code` int(11) DEFAULT NULL,
-  `used_static` varchar(255) DEFAULT NULL,
-  `used_method` varchar(255) DEFAULT NULL,
-  `used_time` datetime DEFAULT NULL COMMENT 'code发送时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `used_static` int(255) DEFAULT NULL COMMENT '0 没有被用了 1 被用了',
+  `used_method` int(255) DEFAULT NULL COMMENT '1 注册用了 2 修改密码用了',
+  `used_time` datetime DEFAULT NULL COMMENT '验证码发送时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='短信验证码表';
 
 -- ----------------------------
 -- Records of t_identify_code
 -- ----------------------------
+INSERT INTO `t_identify_code` VALUES ('15524835211', '38778', '0', '1', '2018-12-13 22:55:44');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '37328', '0', '1', '2018-12-13 23:00:46');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '62872', '0', '1', '2018-12-13 23:01:24');
+INSERT INTO `t_identify_code` VALUES ('13029492533', '36383', '0', '1', '2018-12-13 23:18:41');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '51351', '0', '1', '2018-12-13 23:19:01');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '50200', '0', '1', '2018-12-13 23:20:43');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '68367', '0', '1', '2018-12-13 23:33:42');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '88242', '0', '1', '2018-12-13 23:34:53');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '74505', '1', '1', '2018-12-14 00:10:04');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '34262', '1', '1', '2018-12-14 00:17:15');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '38314', '1', '1', '2018-12-14 00:18:48');
 
 -- ----------------------------
 -- Table structure for t_pool_operation
@@ -134,6 +149,18 @@ CREATE TABLE `t_team` (
 -- Records of t_team
 -- ----------------------------
 INSERT INTO `t_team` VALUES ('1', '1', '2018-12-03 18:49:27');
+INSERT INTO `t_team` VALUES ('2', '1', null);
+INSERT INTO `t_team` VALUES ('3', '1', null);
+INSERT INTO `t_team` VALUES ('4', '1', null);
+INSERT INTO `t_team` VALUES ('5', '3', null);
+INSERT INTO `t_team` VALUES ('6', '288', null);
+INSERT INTO `t_team` VALUES ('9', null, null);
+INSERT INTO `t_team` VALUES ('8', null, null);
+INSERT INTO `t_team` VALUES ('99', null, null);
+INSERT INTO `t_team` VALUES ('88', null, null);
+INSERT INTO `t_team` VALUES ('77', null, null);
+INSERT INTO `t_team` VALUES ('22', null, null);
+INSERT INTO `t_team` VALUES ('33', null, null);
 
 -- ----------------------------
 -- Table structure for t_trade_log
@@ -162,7 +189,7 @@ CREATE TABLE `t_user` (
   `user_id` varchar(255) NOT NULL,
   `user_phone` varchar(255) DEFAULT NULL COMMENT '用户账号',
   `user_password` varchar(255) DEFAULT NULL COMMENT '用户密码',
-  `user_role` int(255) DEFAULT NULL COMMENT '1普通用户 2管理员',
+  `user_role` int(255) DEFAULT NULL COMMENT '1普通用户 2管理员 999为失效用户',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_phone` (`user_phone`)
@@ -171,11 +198,9 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('', '110', '3f824e181c827b1e5706ad71560c9b7a', '1', '2018-12-09 15:15:11');
-INSERT INTO `t_user` VALUES ('3b5c2f23df0f42eda54c213f0da1291b', '15524835211', '386f72fbd88bdd3047b862a26a981808', '2', '2018-12-06 19:05:09');
 INSERT INTO `t_user` VALUES ('649e8385f163472f9dec50520cc0de73', '2', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:39');
-INSERT INTO `t_user` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '386f72fbd88bdd3047b862a26a981808\r\n386f72fbd88bdd3047b862a26a981808\r\n386f72fbd88bdd3047b862a26a981808\r\n386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:19');
-INSERT INTO `t_user` VALUES ('f875175a53ad42feb4edc1f46b21d35f', '3', '386f72fbd88bdd3047b862a26a981808\r\n', '1', '2018-12-07 18:42:03');
+INSERT INTO `t_user` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:19');
+INSERT INTO `t_user` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', '3565028633', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-12 22:50:09');
 
 -- ----------------------------
 -- Table structure for t_user_data
@@ -190,7 +215,7 @@ CREATE TABLE `t_user_data` (
   `authorization_code` int(10) DEFAULT NULL COMMENT '激活码，对应authorization_code',
   `user_equipment_id1` varchar(255) DEFAULT NULL COMMENT '用户手机的ime码',
   `user_equipment_id2` varchar(255) DEFAULT NULL COMMENT '用户手机的ime码',
-  `invite_code` varchar(255) DEFAULT NULL COMMENT '用户自己的邀请码',
+  `invite_code` varchar(255) DEFAULT NULL COMMENT '用户自己的邀请码  //如果用户未激活，那么邀请码为父亲的id',
   `user_address` varchar(255) DEFAULT NULL COMMENT '用户的收货地址',
   `user_head_picture` varchar(255) DEFAULT NULL COMMENT '用户头像',
   `user_balance` double(255,0) DEFAULT NULL COMMENT '用户的余额',
@@ -206,6 +231,7 @@ CREATE TABLE `t_user_data` (
 -- ----------------------------
 INSERT INTO `t_user_data` VALUES ('649e8385f163472f9dec50520cc0de73', '毛泽东', '小毛子', '29959', '649e8385f163472f9dec50520cc0de73', '2515', '151515151', '1515151115', '1515', '北京市南锣鼓巷', 'img/asd', '151', '151', '1', '2');
 INSERT INTO `t_user_data` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '邓小平', '小邓子', '84848', '649e8385f163472f9dec50520cc0de73', '151', '49844846', '16516511618', '5151', '南京市板鸭区29号', 'img/asd/asd', '488', '18', '2', '2');
+INSERT INTO `t_user_data` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', 'iZdbPf21', null, null, null, null, 'aaaaaaaaaaaaaaaa', null, 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for t_user_team

@@ -23,6 +23,8 @@ import com.github.pagehelper.PageHelper;
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.MyAnn.Authorization;
 import com.vg.config.Util.BackJSON;
+import com.vg.config.Util.SmsSample;
+import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
 import com.vg.entity.User;
 import com.vg.entity.EVO.UserLogin;
@@ -54,18 +56,27 @@ public class UserBehaviorController {
 	// token心跳验证 http://localhost:8080/vg/user/TokenHeartBeat/sdasdsad
 	@RequestMapping(value = "/TokenHeartBeat/{user_id}")
 	@Authorization(authorization = "open")
-	public JSONObject TokenHeartBeat(HttpServletRequest httpRequest,@PathVariable String user_id) {
+	public JSONObject TokenHeartBeat(HttpServletRequest httpRequest, @PathVariable String user_id) {
 		String token = httpRequest.getHeader("token");
-		return userbehaviorserviceimpl.TokenHeartBeat(token, user_id);
+		return userbehaviorservice.TokenHeartBeat(token, user_id);
 	}
 
-	// 注册获取验证码 http://localhost:8080/vg/user/register
-	@RequestMapping(value = "/register")
+	// 注册获取验证码 http://localhost:8080/vg/user/getScodeRegistering/15524835211
+	@RequestMapping(value = "/getScodeRegistering/{Phone}")
 	@Authorization(authorization = "open")
-	public BackJSON register() {
+	public JSONObject getScodeRegistering(@PathVariable String Phone) {
 		// System.out.println( UUID.randomUUID().toString().replaceAll("-",""));
-		return null;
+		IdentifyCode con = new IdentifyCode();
+		con.setUser_phone(Phone);
+		return userbehaviorservice.getScodeRegistering(con);
 
+	}
+
+	// 注册发送验证码后,查看验证码是否有效
+	@RequestMapping(value = "/CheckRegistSCode/{user_phone}/{code}")
+	@Authorization(authorization = "open")
+	public JSONObject CheckRegistSCode(@PathVariable String user_phone, @PathVariable int code) {
+		return userbehaviorservice.CheckRegistShortMessage(user_phone, code);
 	}
 
 	// 注册 http://localhost:8080/vg/user/SetPassword
@@ -73,7 +84,7 @@ public class UserBehaviorController {
 	@Authorization(authorization = "open")
 	public BackJSON register(@RequestBody UserRegister userRegister) throws Exception {
 
-		return userbehaviorserviceimpl.UserRegister(userRegister);
+		return userbehaviorservice.UserRegister(userRegister);
 	}
 
 	// 登陆 http://localhost:8080/vg/user/login

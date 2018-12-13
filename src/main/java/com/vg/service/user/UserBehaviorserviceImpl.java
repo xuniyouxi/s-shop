@@ -15,6 +15,9 @@ import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.Encrypt.MD5;
 import com.vg.config.Encrypt.UUID8;
 import com.vg.config.Util.BackJSON;
+import com.vg.config.Util.CheckPhoneNub;
+import com.vg.config.Util.SmsSample;
+import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
 import com.vg.entity.User;
 import com.vg.entity.UserTeam;
@@ -30,8 +33,55 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 	@Autowired
 	UserBehaviorMapper userbehavhourmapper;
-	
-	//心跳验证
+
+	// 注册发送验证码后,查看验证码是否有效
+	@Override
+	public JSONObject CheckRegistShortMessage(String user_phone, int code) {
+		JSONObject jsonobj = new JSONObject();
+		long used_time = new Date().getTime()-600000;
+		IdentifyCode identifyCode = userbehavhourmapper.getShortMessageByPhoneAndCode(user_phone, code,new Date(used_time));
+		System.out.println(identifyCode);
+		if(identifyCode==null) {
+			jsonobj.put("code", 400);
+			jsonobj.put("data", "验证码错误");
+			return jsonobj;
+		}
+		identifyCode.setUsed_static(1);
+		if(userbehavhourmapper.UpdateIdentifyCodeState(identifyCode)!=1) {
+			jsonobj.put("code", 400);
+			jsonobj.put("data", "验证码错误");
+			return jsonobj;
+		}
+		jsonobj.put("code", 200);
+		jsonobj.put("data", "验证码成功");
+		return jsonobj;
+	}
+
+	// 用户注册时候,获取短信验证码
+	@Override
+	public JSONObject getScodeRegistering(IdentifyCode identifyCode) {
+		JSONObject jsonobj = new JSONObject();
+		if (!CheckPhoneNub.isMobiPhoneNum(identifyCode.getUser_phone())) {
+			jsonobj.put("code", 401);
+			jsonobj.put("data", "手机号码不正确");
+			return jsonobj;
+		}
+		int SendCode = (int) ((Math.random() * 9 + 1) * 10000);
+		identifyCode.setIdentify_code(SendCode);
+		identifyCode.setUsed_time(new Date());
+		identifyCode.setUsed_method(1);
+		String res = SmsSample.SendMessage(identifyCode.getUser_phone(), SendCode);
+		if (userbehavhourmapper.insertCodeByuserphone(identifyCode) == 1 && res.equals("0")) {
+			jsonobj.put("code", 200);
+			jsonobj.put("data", "发送成功");
+			return jsonobj;
+		}
+		jsonobj.put("code", 400);
+		jsonobj.put("data", "发送失败");
+		return jsonobj;
+	}
+
+	// 心跳验证
 	@Override
 	public JSONObject TokenHeartBeat(String token, String user_id) {
 		JSONObject jsonobj = new JSONObject();
@@ -45,7 +95,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		long surplusTime = content.getExpiration().getTime() - new Date().getTime();
 		String userId = (String) content.get("userId");
 		System.out.println(surplusTime);
-		if(!userId.equals(user_id)) {
+		if (!userId.equals(user_id)) {
 			jsonobj.put("code", 401);
 			jsonobj.put("data", "token和用户不符");
 			return jsonobj;
@@ -60,8 +110,6 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		jsonobj.put("data", "token有效期还富裕");
 		return jsonobj;
 	}
-
-	
 
 	// 用户注册
 	public BackJSON UserRegister(UserRegister userRegister) throws Exception {
@@ -169,6 +217,5 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 		return backJSON;
 	}
-
 
 }

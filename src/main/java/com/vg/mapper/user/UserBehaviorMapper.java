@@ -1,5 +1,6 @@
 package com.vg.mapper.user;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
 import com.vg.entity.User;
 import com.vg.entity.UserTeam;
@@ -64,4 +66,16 @@ public interface UserBehaviorMapper {
 	// 通过user_id获取用户的IMIE码
 	@Select({ "select user_equipment_id1,user_equipment_id2 from t_user_data WHERE user_id=#{user_id}" })
 	Map<String, String> getUserIMIE(String user_id);
+	
+	//注册时生成短信码
+	@Insert({"INSERT INTO t_identify_code (user_phone, identify_code, used_static,used_method,used_time) VALUES (#{user_phone},#{identify_code},0,#{used_method},#{used_time})"})
+	int insertCodeByuserphone(IdentifyCode identifyCode);
+	
+	//注册时查询短信验证码是否有效
+	@Select({"select * from t_identify_code WHERE user_phone =#{user_phone} and identify_code=#{code} and used_time>#{used_time} and used_static= 0"})
+	IdentifyCode getShortMessageByPhoneAndCode(String user_phone ,int code,Date used_time);
+	
+	//注册时更新短信验证码的使用
+	@Update({"UPDATE  t_identify_code SET used_static= 1 WHERE user_phone=#{user_phone} AND identify_code=#{identify_code} AND used_time = #{used_time} "})
+	int UpdateIdentifyCodeState(IdentifyCode identifyCode);
 }

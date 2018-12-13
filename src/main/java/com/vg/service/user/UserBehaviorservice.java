@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Util.BackJSON;
+import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
 import com.vg.entity.User;
 import com.vg.entity.EVO.UserLogin;
@@ -26,4 +27,10 @@ public interface UserBehaviorservice {
 	
 	//心跳验证
 	JSONObject TokenHeartBeat(String token ,String user_id);
+	
+	//用户注册时候获取验证码
+	JSONObject getScodeRegistering(IdentifyCode identifyCode);
+	
+	//注册发送验证码后,查看验证码是否有效
+	JSONObject CheckRegistShortMessage(String user_phone ,int code);
 }
