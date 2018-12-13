@@ -17,7 +17,7 @@ import java.util.UUID;
  */
 public class JWTUtil {
 	private final static String key = "woaizhongguogongchandang";
-	private final static long ttlMillis = 360000;//3600000一小时
+	private final static long ttlMillis = 3600000;//3600000一小时
 	/**
 	 * 用户登录成功后生成Jwt 使用Hs256算法 私匙使用用户密码
 	 *
