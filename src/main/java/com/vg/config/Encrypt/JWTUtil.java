@@ -8,11 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.vg.entity.User;
 
 /**
  * lzy
@@ -22,7 +17,7 @@ import com.vg.entity.User;
  */
 public class JWTUtil {
 	private final static String key = "woaizhongguogongchandang";
-	private final static long ttlMillis = 3600000;//3600000一小时
+	private final static long ttlMillis = 360000;//3600000一小时
 	/**
 	 * 用户登录成功后生成Jwt 使用Hs256算法 私匙使用用户密码
 	 *
@@ -101,5 +96,8 @@ public class JWTUtil {
 			return null;
 		}
 
+	}
+	public static long get_ttlMillis() {
+		return ttlMillis;
 	}
 }

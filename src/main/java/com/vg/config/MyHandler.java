@@ -40,10 +40,10 @@ public class MyHandler implements HandlerInterceptor {
 						System.out.println("虚假token滚蛋");
 						return false;
 					}
-					if (user_role == 1 && useraut.authorization().equals("user")) {
+					if (user_role == 1 && (useraut.authorization().equals("user")||useraut.authorization().equals("open"))) {
 						System.out.println("访问了user接口，且权限对的上");
 						return true;
-					} else if (user_role == 2 && useraut.authorization().equals("admin")) {
+					} else if (user_role == 2 && (useraut.authorization().equals("user")||useraut.authorization().equals("open"))) {
 						System.out.println("访问了admin接口，且权限对的上");
 						return true;
 					}

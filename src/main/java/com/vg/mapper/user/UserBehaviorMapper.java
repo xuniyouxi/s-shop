@@ -42,7 +42,7 @@ public interface UserBehaviorMapper {
 	int getUserRoleById(String user_id);
 
 	// 创建用户
-	@Insert("INSERT INTO t_user VALUES (#{user_id},#{user_phone},#{user_password},1,#{create_time})")
+	@Insert("INSERT INTO t_user VALUES (#{user_id},#{user_phone},#{user_password},999,#{create_time})")
 	int createUser(User user);
 
 	// 获取用户通过邀请码查询
