@@ -16,7 +16,7 @@ public class SmsSample {
 	public static String SendMessage(String Phone,int i) {
 		String Username = "qazwsx12"; //在短信宝注册的用户名
 		String Password = "qazwsx12"; //在短信宝注册的密码
-		String testContent = "【Vb】您的验证码是:"+i+",５分钟内有效。若非本人操作请忽略此消息。"; // 注意测试时，也请带上公司简称或网站签名，发送正规内容短信。千万不要发送无意义的内容：例如 测一下、您好。否则可能会收不到
+		String testContent = "【VG】您的验证码是:"+i+",５分钟内有效。若非本人操作请忽略此消息。"; // 注意测试时，也请带上公司简称或网站签名，发送正规内容短信。千万不要发送无意义的内容：例如 测一下、您好。否则可能会收不到
 
 		String httpUrl = "http://api.smsbao.com/sms";
 

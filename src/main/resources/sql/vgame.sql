@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-12-14 00:20:48
+Date: 2018-12-14 00:28:11
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -106,17 +106,6 @@ CREATE TABLE `t_identify_code` (
 -- ----------------------------
 -- Records of t_identify_code
 -- ----------------------------
-INSERT INTO `t_identify_code` VALUES ('15524835211', '38778', '0', '1', '2018-12-13 22:55:44');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '37328', '0', '1', '2018-12-13 23:00:46');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '62872', '0', '1', '2018-12-13 23:01:24');
-INSERT INTO `t_identify_code` VALUES ('13029492533', '36383', '0', '1', '2018-12-13 23:18:41');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '51351', '0', '1', '2018-12-13 23:19:01');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '50200', '0', '1', '2018-12-13 23:20:43');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '68367', '0', '1', '2018-12-13 23:33:42');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '88242', '0', '1', '2018-12-13 23:34:53');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '74505', '1', '1', '2018-12-14 00:10:04');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '34262', '1', '1', '2018-12-14 00:17:15');
-INSERT INTO `t_identify_code` VALUES ('15524835211', '38314', '1', '1', '2018-12-14 00:18:48');
 
 -- ----------------------------
 -- Table structure for t_pool_operation
