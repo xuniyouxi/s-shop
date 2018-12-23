@@ -34,12 +34,15 @@ public class UserServiceImpl implements UserService {
 		return json;
 	}
 	@Override
-	public JSONObject untie(String user_id, int num) {
-		JSONObject json = new JSONObject();
-		json.put("code", 400);
+	public BackJSON untie(String user_id, int num) {
+		BackJSON json = new BackJSON(400);
+		JSONObject rjson = new JSONObject();
+		rjson.put("result", 0);
 		if(um.untieEquipment(user_id, "user_equipment_id"+num)==1) {
-			json.replace("code", 202);
+			json.setCode(200);
+			rjson.replace("result", 1);
 		}
+		json.setData(rjson);
 		return json;
 	}
 	@Override
@@ -53,11 +56,15 @@ public class UserServiceImpl implements UserService {
 		return json;
 	}
 	@Override
-	public JSONObject alterInfo(UserInfo user) {
-		JSONObject json = new JSONObject();
-		json.put("code", 400);
-		if(um.alterInfo(user)==1)
-			json.replace("code", 202);
+	public BackJSON alterInfo(UserInfo user) {
+		BackJSON json = new BackJSON(400);
+		JSONObject rjson = new JSONObject();
+		rjson.put("result", 0);
+		if(um.alterInfo(user)==1) {
+			json.setCode(200);
+			rjson.replace("result", 1);
+		}
+		json.setData(rjson);
 		return json;
 	}
 	@Override
@@ -72,59 +79,65 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	@Cacheable(value = "contactPhone")
-	public JSONObject contactUS() {
-		JSONObject json = new JSONObject();
-		json.put("code", 400);
+	public BackJSON contactUS() {
+		BackJSON json = new BackJSON(400);
 		String phone = um.contactUS();
 		if(phone!=null) {
-			json.replace("code", 200);
-			json.put("phone", phone);
+			JSONObject rjson = new JSONObject();
+			rjson.put("phone", phone);
+			json.setData(rjson);
+			json.setCode(200);
 		}
 		return json;
 	}
 	@Override
-	public JSONObject getTeamNum(String user_id) {
-		JSONObject json = new JSONObject();
-		json.put("code", 400);
+	public BackJSON getTeamNum(String user_id) {
+		BackJSON json = new BackJSON(400);
 		Integer num = um.getTeamNum(user_id);
+		JSONObject rjson = new JSONObject();
 		if(num!=null) {
-			json.replace("code", 200);
-			json.put("team_num", num);
+			json.setCode(200);
+			rjson.put("team_num", num);
+			json.setData(rjson);
 		} else {
-			json.replace("code", 200);
-			json.put("team_num", 0);
+			json.setCode(200);
+			rjson.put("team_num", 0);
+			json.setData(rjson);
 		}
 		return json;
 	}
 	@Override
-	public JSONObject truePhone(String user_id, String user_phone) {
-		JSONObject json = new JSONObject();
-		json.put("code", 400);
+	public BackJSON truePhone(String user_id, String user_phone) {
+		BackJSON json = new BackJSON(400);
 		String phone = um.getPhone(user_id);
+		JSONObject rjson = new JSONObject();
 		if(phone!=null) {
-			json.replace("code", 200);
+			json.setCode(200);
 			if(user_phone.equals(phone))
-				json.put("result", true);
+				rjson.put("result", 1);
 			else
-				json.put("result", false);
+				rjson.put("result", 0);
+			json.setData(rjson);
 		}
 		return json;
 	}
 	@Override
-	public JSONObject resetPassword(String user_id, String new_password, int type) {
-		JSONObject json = new JSONObject();
-		json.put("code", 400);
+	public BackJSON resetPassword(String user_id, String new_password, int type) {
+		BackJSON json = new BackJSON(400);
+		JSONObject rjson = new JSONObject();
+		rjson.put("result", 0);
 		if(type==1) {
 			if(um.alterLoginpwd(user_id, new_password)==1) {
-				json.replace("code", 202);
-				json.put("result", true);
+				json.setCode(200);
+				rjson.replace("result", 1);
 			}
 		} else if(type==2) {
 			if(um.alterPaypwd(user_id, new_password)==1) {
-				json.replace("code", 202);
-				json.put("result", true);
+				json.setCode(200);
+				rjson.replace("result", 1);
 			}
 		}
+		json.setData(rjson);
 		return json;
 	}
 
