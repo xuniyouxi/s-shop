@@ -98,7 +98,7 @@ public class UserBehaviorController {
 	@GetMapping({ "/Statement/{bis_id}" })
 	@Authorization(authorization = "open")
 	public BackJSON getStatement(@PathVariable int bis_id) {
-		return userbehaviorservice.getStatementByFun(bis_id);
+		return userbehaviorservice.getStatementByFun(1);
 	}
 
 	// 填写激活码
