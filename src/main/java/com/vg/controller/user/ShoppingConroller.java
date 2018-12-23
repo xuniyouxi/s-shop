@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.vg.config.MyAnn.Authorization;
 import com.vg.config.Util.BackJSON;
 import com.vg.service.user.ShoppingService;
@@ -37,12 +36,12 @@ public class ShoppingConroller {
 	}
 	@Authorization(authorization="user")
 	@PostMapping("exchange/{user_id}")
-	public JSONObject exchange(@PathVariable(value="user_id")String user_id) {
+	public BackJSON exchange(@PathVariable(value="user_id")String user_id) {
 		return ss.exchange(user_id);
 	}
 	@Authorization(authorization="user")
 	@PostMapping("confirmExchange/{user_id}/{goods_id}")
-	public JSONObject confrimExchange(@PathVariable("user_id")String user_id, @PathVariable("goods_id")Integer goods_id) {
+	public BackJSON confrimExchange(@PathVariable("user_id")String user_id, @PathVariable("goods_id")Integer goods_id) {
 		return ss.confrimExchange(user_id, goods_id);
 	}
 	

@@ -40,26 +40,31 @@ public class ShoppingServiceImpl implements ShoppingService{
 		return json;
 	}
 	@Override
-	public JSONObject exchange(String user_id) {
-		JSONObject json = new JSONObject();
-		json.put("code", 400);
+	public BackJSON exchange(String user_id) {
+		BackJSON json = new BackJSON(400);
+		JSONObject rjson = new JSONObject();
 		Map<String, Object> ab = sm.getAddressandBalance(user_id);
 		if(ab!=null) {
 			if(ab.get("user_address")!=null)
-				json.put("ifAddress", "true");
+				rjson.put("ifAddress", 1);
 			else
-				json.put("ifAddress", "false");
-			json.put("user_balance", ab.get("user_balance"));
-			json.replace("code", 200);
+				rjson.put("ifAddress", 0);
+			rjson.put("user_balance", ab.get("user_balance"));
+			json.setCode(200);
+			json.setData(rjson);
 		}
 		return json;
 	}
 	@Override
-	public JSONObject confrimExchange(String user_id, Integer goods_id) {
-		JSONObject json = new JSONObject();
-		json.put("code", 400);
-		if(sm.confirmExchange(user_id, goods_id, new Timestamp(System.currentTimeMillis()))==1)
-			json.replace("code", 201);
+	public BackJSON confrimExchange(String user_id, Integer goods_id) {
+		BackJSON json = new BackJSON(400);
+		JSONObject rjson = new JSONObject();
+		rjson.put("result", 0);
+		if(sm.confirmExchange(user_id, goods_id, new Timestamp(System.currentTimeMillis()))==1) {
+			json.setCode(200);
+			rjson.replace("result", 1);
+		}
+		json.setData(rjson);
 		return json;
 	}
 
