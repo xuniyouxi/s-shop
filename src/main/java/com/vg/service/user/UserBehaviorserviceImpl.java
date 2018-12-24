@@ -21,7 +21,10 @@ import com.vg.config.Util.SmsSample;
 import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
 import com.vg.entity.User;
+import com.vg.entity.UserData;
+import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
+import com.vg.entity.EVO.UserRegister;
 import com.vg.mapper.user.UserBehaviorMapper;
 
 import io.jsonwebtoken.Claims;
@@ -223,6 +226,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			System.out.println(token);
 			System.out.println(JWTUtil.parseJWT(token));
 			userdata.put("token", token);
+			userdata.put("user_phone", user.getUser_phone());
 			userdata.remove("user_pay_password");
 			userdata.remove("user_equipment_id2");
 			userdata.remove("user_equipment_id1");
@@ -234,7 +238,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			backJSON.setData(msg);
 		} else {
 			backJSON.setCode(200);
-			msg.put("msg","请求未认证,跳转登录页");
+			msg.put("msg","账号或密码错误");
 			msg.put("result", 0);
 			backJSON.setData(msg);
 		}
