@@ -1,6 +1,7 @@
 package com.vg.service.user;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,9 @@ public class ShoppingServiceImpl implements ShoppingService{
 		BackJSON json = new BackJSON(200);
 		List<GlanceGoods> goods = sm.getGlanceGoods(type_r, type_e);
 		if(goods.size()>0) {
-			json.setData(goods);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", goods);
+			json.setData(map);
 //			json.setCode(200);
 		}
 		return json;
@@ -34,7 +37,9 @@ public class ShoppingServiceImpl implements ShoppingService{
 		BackJSON json = new BackJSON(200);
 		List<ExchangeRecord> records = sm.getExchangeRecord(user_id, type_r, type_e, type_t);
 		if(records.size()>0) {
-			json.setData(records);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", records);
+			json.setData(map);
 //			json.setCode(200);
 		}
 		return json;
