@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
 import com.vg.entity.User;
+import com.vg.entity.UserData;
 import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
 import com.vg.entity.EVO.UserRegister;
@@ -23,6 +24,11 @@ public interface UserBehaviorMapper {
 	@Select({ "select * from t_team" })
 	List<Team> getallteam();
 
+	//更新用户role
+	@Update({"UPDATE t_user SET user_role=1 WHERE user_id=#{user_id}" })
+	public int updateUserRole(String user_id);
+	
+	
 	// 获取系统当前邀请码
 	@Select({ "select bis_content from t_biscuits where bis_id=2" })
 	String getSysInviteCode();
@@ -32,7 +38,7 @@ public interface UserBehaviorMapper {
 	int updataSysInviteCode(String code);
 
 	// 验证登录
-	@Select({ "select * from t_user where user_phone = #{user_phone} and user_password=#{user_password}" })
+	@Select({ "select * from t_user where user_role =1 and user_phone = #{user_phone} and user_password=#{user_password} AND (user_role=1 OR user_role=999)" })
 	User getUserByPhoneAndPass(UserLogin userlogin);
 
 	// 获取免责声明
@@ -64,8 +70,8 @@ public interface UserBehaviorMapper {
 	UserTeam getUserTemaById(String user_id);
 
 	// 通过user_id获取用户的IMIE码
-	@Select({ "select user_equipment_id1,user_equipment_id2 from t_user_data WHERE user_id=#{user_id}" })
-	Map<String, String> getUserIMIE(String user_id);
+	@Select({ "select * from t_user_data WHERE user_id=#{user_id}" })
+	Map<String, Object> getUserIMIE(String user_id);
 	
 	//注册时生成短信码
 	@Insert({"INSERT INTO t_identify_code (user_phone, identify_code, used_static,used_method,used_time) VALUES (#{user_phone},#{identify_code},0,#{used_method},#{used_time})"})

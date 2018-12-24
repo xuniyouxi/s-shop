@@ -52,10 +52,21 @@ public class UserBehaviorController {
 		PageHelper.startPage(kaishi, size);
 		return userbehaviorservice.getallteam();
 	}
+	
+	 //激活游戏
+	@PutMapping({"/activateGame"})
+	@Authorization(authorization = "open")
+	public JSONObject activateGame( @RequestBody Map<String, String> data) {
+
+		return userbehaviorservice.activateGame(data);
+	}
+	
+	
+	
 
 	// token心跳验证 http://localhost:8080/vg/user/TokenHeartBeat/sdasdsad
 	@RequestMapping(value = "/TokenHeartBeat/{user_id}")
-	@Authorization(authorization = "open")
+	@Authorization(authorization = "user")
 	public JSONObject TokenHeartBeat(HttpServletRequest httpRequest, @PathVariable String user_id) {
 		String token = httpRequest.getHeader("token");
 		return userbehaviorservice.TokenHeartBeat(token, user_id);
@@ -89,7 +100,8 @@ public class UserBehaviorController {
 
 	// 登陆 http://localhost:8080/vg/user/login
 	@PostMapping(value = "/login")
-	@Authorization(authorization = "open")
+	@Authorization(authorization = "open") 
+	
 	public BackJSON login(@RequestBody UserLogin userlogin) throws Exception {
 		return userbehaviorservice.login(userlogin);
 	}
@@ -101,7 +113,6 @@ public class UserBehaviorController {
 		return userbehaviorservice.getStatementByFun(1);
 	}
 
-	// 填写激活码
-//	@PostMapping({"/SetPassword"})
+
 
 }

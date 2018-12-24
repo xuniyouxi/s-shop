@@ -2,6 +2,7 @@ package com.vg.service.user;
 
 
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Util.BackJSON;
@@ -33,4 +34,7 @@ public interface UserBehaviorservice {
 	
 	//注册发送验证码后,查看验证码是否有效
 	JSONObject CheckRegistShortMessage(String user_phone ,int code);
+
+	//用户激活游戏
+	JSONObject activateGame(Map<String, String> data);
 }
