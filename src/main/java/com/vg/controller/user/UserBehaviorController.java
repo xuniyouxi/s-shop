@@ -57,7 +57,7 @@ public class UserBehaviorController {
 	@PutMapping({"/activateGame"})
 	@Authorization(authorization = "open")
 	public JSONObject activateGame( @RequestBody Map<String, String> data) {
-
+				
 		return userbehaviorservice.activateGame(data);
 	}
 	

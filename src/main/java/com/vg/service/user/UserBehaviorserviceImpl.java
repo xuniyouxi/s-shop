@@ -21,10 +21,7 @@ import com.vg.config.Util.SmsSample;
 import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
 import com.vg.entity.User;
-import com.vg.entity.UserData;
-import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
-import com.vg.entity.EVO.UserRegister;
 import com.vg.mapper.user.UserBehaviorMapper;
 
 import io.jsonwebtoken.Claims;
