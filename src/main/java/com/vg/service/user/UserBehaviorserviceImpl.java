@@ -44,7 +44,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	public JSONObject activateGame(Map<String, String> data) {  // user_id authorization_code 
 		// TODO Auto-generated method stub
 		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("code", data);
+		jsonobj.put("code", 200);
 		//更新权限
 		if(	userbehavhourmapper.updateUserRole(data.get("user_id"))==1){
 			//开始设置自己的爸爸，添加t_user_team表,更新队伍id，更新t_user_team表中自己层数
@@ -53,7 +53,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			//查询所有祖宗，如果满足vip条件，那么脱离原树，重新当祖宗
 		}
 		else {
-			jsonobj.put(code, "400");
+			jsonobj.put(code, 200);
 			jsonobj.put(this.data, "操作失败");
 		}
 		return jsonobj;
@@ -63,35 +63,45 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	
 	// 注册发送验证码后,查看验证码是否有效
 	@Override
-	public JSONObject CheckRegistShortMessage(String user_phone, int code) {
-		JSONObject jsonobj = new JSONObject();
+	public BackJSON CheckRegistShortMessage(String user_phone, int code) {
+		BackJSON backJSON = new BackJSON();
+		Map<String, Object> msg = new HashMap<>();
 		long used_time = new Date().getTime()-600000;
 		IdentifyCode identifyCode = userbehavhourmapper.getShortMessageByPhoneAndCode(user_phone, code,new Date(used_time));
 		System.out.println(identifyCode);
 		if(identifyCode==null) {
-			jsonobj.put(this.code, 400);
-			jsonobj.put(data, "验证码错误");
-			return jsonobj;
+			msg.put("msg", "验证码错误");
+			msg.put("result", 0);
+			backJSON.setCode(200);
+			backJSON.setData(msg);
+			return backJSON;
 		}
 		identifyCode.setUsed_static(1);
 		if(userbehavhourmapper.UpdateIdentifyCodeState(identifyCode)!=1) {
-			jsonobj.put(this.code, 400);
-			jsonobj.put("data", "验证码错误");
-			return jsonobj;
+			backJSON.setCode(200);
+			msg.put("msg", "验证码错误");
+			msg.put("result", 0);
+			backJSON.setData(msg);
+			return backJSON;
 		}
-		jsonobj.put(this.code, 200);
-		jsonobj.put(data, "验证码成功");
-		return jsonobj;
+		msg.put("msg", "验证通过");
+		msg.put("result", 1);
+		backJSON.setCode(200);
+		backJSON.setData(msg);
+		return backJSON;
 	}
 
 	// 用户注册时候,获取短信验证码
 	@Override
-	public JSONObject getScodeRegistering(IdentifyCode identifyCode) {
-		JSONObject jsonobj = new JSONObject();
+	public BackJSON getScodeRegistering(IdentifyCode identifyCode) {
+		BackJSON BackJSON = new BackJSON();
+		Map<String, Object> msg = new HashMap<>();
 		if (!CheckPhoneNub.isMobiPhoneNum(identifyCode.getUser_phone())) {
-			jsonobj.put(code, 401);
-			jsonobj.put(data, "手机号码不正确");
-			return jsonobj;
+			BackJSON.setCode(200);
+			msg.put("msg", "手机号码不正确");
+			msg.put("result", 0);
+			BackJSON.setData(msg);
+			return BackJSON;
 		}
 		int SendCode = (int) ((Math.random() * 9 + 1) * 10000);
 		identifyCode.setIdentify_code(SendCode);
@@ -99,13 +109,17 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		identifyCode.setUsed_method(1);
 		String res = SmsSample.SendMessage(identifyCode.getUser_phone(), SendCode);
 		if (userbehavhourmapper.insertCodeByuserphone(identifyCode) == 1 && res.equals("0")) {
-			jsonobj.put(code, 200);
-			jsonobj.put(data, "发送成功");
-			return jsonobj;
+			BackJSON.setCode(200);
+			msg.put("msg", "发送成功");
+			msg.put("result", 1);
+			BackJSON.setData(msg);
+			return BackJSON;
 		}
-		jsonobj.put(code, 400);
-		jsonobj.put(data, "发送失败");
-		return jsonobj;
+		BackJSON.setCode(200);
+		msg.put("msg", "发送失败");
+		msg.put("result", 0);
+		BackJSON.setData(msg);
+		return BackJSON;
 	}
 
 	// 心跳验证
@@ -144,15 +158,20 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	public BackJSON UserRegister(UserRegister userRegister) throws Exception {
 		System.out.println(new Date());
 		BackJSON backJSON = new BackJSON();
+		Map<String, Object> msg = new HashMap<>();
 		String father_id = userbehavhourmapper.getUserIdByinviteCode(userRegister.getFather_inviteCode());
 		if (father_id == null) {
-			backJSON.setCode(401);
-			backJSON.setData("邀请码不存在");
+			msg.put("msg", "邀请码不存在");
+			msg.put("result", 0);
+			backJSON.setCode(200);
+			backJSON.setData(msg);
 			return backJSON;
 		}
-		if (userbehavhourmapper.getUserIdByPhone(userRegister.getUser_phone()) > 0) {
-			backJSON.setCode(402);
-			backJSON.setData("手机号码重复");
+		if (userbehavhourmapper.getUserIdByPhone(userRegister.getUser_phone()) > 0||CheckPhoneNub.isMobiPhoneNum(userRegister.getUser_phone())==false) {
+			msg.put("msg", "手机号码重复或号码无效");
+			msg.put("result", 0);
+			backJSON.setCode(200);
+			backJSON.setData(msg);
 			return backJSON;
 		}
 		User user = new User();
@@ -164,8 +183,10 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		user.setUser_password(MD5.md5(userRegister.getUser_password()));
 		//创建用户时，用户权限为999代表失效用户，激活后才能使用
 		if (userbehavhourmapper.createUser(user) < 1) {
-			backJSON.setCode(403);
-			backJSON.setData("创建用户失败请重新创建");
+			msg.put("msg", "创建用户失败请重新创建");
+			msg.put("result", 0);
+			backJSON.setCode(200);
+			backJSON.setData(msg);
 			return backJSON;
 		}
 //		String new_InviteCode = userbehavhourmapper.getSysInviteCode();
@@ -179,7 +200,9 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 //		UserTeam userteam = userbehavhourmapper.getUserTemaById(father_id);
 		userbehavhourmapper.insertUserData(userRegister);
 		backJSON.setCode(200);
-		backJSON.setData("成功创建用户，等待填写激活码");
+		msg.put("msg", "成功创建用户，等待填写激活码");
+		msg.put("result", 1);
+		backJSON.setData(msg);
 		return backJSON;
 		
 	}
@@ -217,7 +240,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			if (!(userdata.get("user_equipment_id1").equals(user.getUser_equipment_id()))
 					&& !(userdata.get("user_equipment_id2").equals(user.getUser_equipment_id()))) {
 				backJSON.setCode(200);
-				msg.put("result", "0");
+				msg.put("result", 0);
 				msg.put("msg", "不是指定设备");
 				backJSON.setData(msg);
 				return backJSON;
@@ -233,7 +256,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			userdata.remove("authorization_code");
 			userdata.put("user_equipment_id", user.getUser_equipment_id());
 			backJSON.setCode(200);
-			msg.put("result", "1");
+			msg.put("result",1);
 			msg.put("data", userdata);
 			backJSON.setData(msg);
 		} else {

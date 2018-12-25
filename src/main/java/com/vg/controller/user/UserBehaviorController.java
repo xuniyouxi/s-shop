@@ -75,7 +75,7 @@ public class UserBehaviorController {
 	// 注册获取验证码 http://localhost:8080/vg/user/getScodeRegistering/15524835211
 	@RequestMapping(value = "/getScodeRegistering/{Phone}")
 	@Authorization(authorization = "open")
-	public JSONObject getScodeRegistering(@PathVariable String Phone) {
+	public BackJSON getScodeRegistering(@PathVariable String Phone) {
 		// System.out.println( UUID.randomUUID().toString().replaceAll("-",""));
 		IdentifyCode con = new IdentifyCode();
 		con.setUser_phone(Phone);
@@ -86,7 +86,7 @@ public class UserBehaviorController {
 	// 注册发送验证码后,查看验证码是否有效
 	@RequestMapping(value = "/CheckRegistSCode/{user_phone}/{code}")
 	@Authorization(authorization = "open")
-	public JSONObject CheckRegistSCode(@PathVariable String user_phone, @PathVariable int code) {
+	public BackJSON CheckRegistSCode(@PathVariable String user_phone, @PathVariable int code) {
 		return userbehaviorservice.CheckRegistShortMessage(user_phone, code);
 	}
 
