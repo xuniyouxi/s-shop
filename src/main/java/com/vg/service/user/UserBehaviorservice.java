@@ -30,10 +30,10 @@ public interface UserBehaviorservice {
 	JSONObject TokenHeartBeat(String token ,String user_id);
 	
 	//用户注册时候获取验证码
-	JSONObject getScodeRegistering(IdentifyCode identifyCode);
+	BackJSON getScodeRegistering(IdentifyCode identifyCode);
 	
 	//注册发送验证码后,查看验证码是否有效
-	JSONObject CheckRegistShortMessage(String user_phone ,int code);
+	BackJSON CheckRegistShortMessage(String user_phone ,int code);
 
 	//用户激活游戏
 	JSONObject activateGame(Map<String, String> data);
