@@ -41,7 +41,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	
 	//用户激活
 	@Override
-	public JSONObject activateGame(Map<String, String> data) {
+	public JSONObject activateGame(Map<String, String> data) {  // user_id authorization_code 
 		// TODO Auto-generated method stub
 		JSONObject jsonobj = new JSONObject();
 		jsonobj.put("code", data);
