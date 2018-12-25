@@ -1,5 +1,8 @@
 package com.vg.service.user;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Encrypt.MD5;
 import com.vg.config.Util.BackJSON;
+import com.vg.config.Util.Value;
 import com.vg.entity.EVO.UserInfo;
 import com.vg.mapper.user.UserMapper;
 
@@ -144,6 +149,34 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		json.setData(rjson);
+		return json;
+	}
+	@Override
+	@Transactional
+	public BackJSON updateHeadPic(String user_id, MultipartFile user_head_pic) {
+		BackJSON json = new BackJSON(200);
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("result", 0);
+		String path = Value.getImgpath()+"user"+File.separator+user_id+File.separator+"headImg";
+		File file = new File(path);
+		if(!file.exists())
+			file.mkdirs();
+		String[] piclist = file.list();
+		for(String picname : piclist) {
+			file = new File(path, picname);
+			if(!file.delete())
+				System.out.println("wrong!!!  fail to delete "+user_id+"'s head_pic.");
+		}
+		String originalPicName = user_head_pic.getOriginalFilename();
+		file = new File(path+File.separator+originalPicName);
+		try {
+			user_head_pic.transferTo(file);
+			if(um.alterHeadImg(user_id, originalPicName)==1)
+				map.replace("result", 1);
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+		json.setData(map);
 		return json;
 	}
 

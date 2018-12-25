@@ -13,11 +13,11 @@ public class Exceptioncontroller {
 	@ExceptionHandler(Exception.class)
 	public String exceptHand(Exception ex) {
 		System.out.println("cuole ");
-		return "{'code':'500'}";
+		return "{\"code\":500}";
 	}
 	@ExceptionHandler(AbstractMethodError.class)
 	public String exceptHand2(Exception ex) {
 		System.out.println("cuole ");
-		return "{'code':'500'}";
+		return "{\"code\":500}";
 	}
 }

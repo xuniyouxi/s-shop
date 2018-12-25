@@ -4,12 +4,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.vg.config.MyAnn.Authorization;
 import com.vg.config.Util.BackJSON;
@@ -25,6 +26,7 @@ import com.vg.service.user.UserService;
 @RestController
 @RequestMapping("/userInfo/")
 public class UserController {
+	
 
 	@Autowired
 	private UserService us;
@@ -37,7 +39,7 @@ public class UserController {
 	}
 	//解除绑定
 	@Authorization(authorization="user")
-	@PatchMapping("untie/{user_id}/{equipment_num}")
+	@PostMapping("untie/{user_id}/{equipment_num}")
 	public BackJSON untie(@PathVariable("user_id") String user_id, @PathVariable("equipment_num") int equipment_num) {
 		return us.untie(user_id, equipment_num);
 	}
@@ -82,6 +84,12 @@ public class UserController {
 	@PostMapping("resetPassword")
 	public BackJSON resetPassword(@RequestBody Map<String, Object> map) {
 		return us.resetPassword((String)map.get("user_id"), (String)map.get("new_password"), (Integer)map.get("type"));
+	}
+	//更新头像
+	@Authorization(authorization="user")
+	@PostMapping("updateHeadPic")
+	public BackJSON updateHeadPic(@RequestParam("user_id") String user_id, @RequestParam("head_picture") MultipartFile file) {
+		return us.updateHeadPic(user_id, file);
 	}
 	
 
