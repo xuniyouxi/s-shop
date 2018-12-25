@@ -77,9 +77,10 @@ public class MvcConfig implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		try {
 			File file = ResourceUtils.getFile("classpath:");
-			String path = file.getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
+			String path = file.getParentFile().getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
 			//Windows上测试需要在前面 file:
-			path = "file:"+path;
+//			String path = file.getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
+//			path = "file:"+path;
 			registry.addResourceHandler("/userImg/**").addResourceLocations(path+"user"+File.separator);
 			registry.addResourceHandler("/storeImg/**").addResourceLocations(path+"admin"+File.separator+"storeImg"+File.separator);
 		} catch (FileNotFoundException e) {
