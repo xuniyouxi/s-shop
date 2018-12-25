@@ -90,7 +90,7 @@ public class UserBehaviorController {
 		return userbehaviorservice.CheckRegistShortMessage(user_phone, code);
 	}
 
-	// 注册 http://localhost:8080/vg/user/SetPassword
+	// 注册 http://localhost:8080/vg/user/register
 	@PostMapping({ "/register" })
 	@Authorization(authorization = "open")
 	public BackJSON register(@RequestBody UserRegister userRegister) throws Exception {
