@@ -37,39 +37,36 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	UserBehaviorMapper userbehavhourmapper;
 	private String code;
 	private String data;
-	
-	
-	//用户激活
+
+	// 用户激活
 	@Override
-	public JSONObject activateGame(Map<String, String> data) {  // user_id authorization_code 
+	public JSONObject activateGame(Map<String, String> data) { // user_id authorization_code
 		// TODO Auto-generated method stub
 		JSONObject jsonobj = new JSONObject();
 		jsonobj.put("code", 200);
-		//更新权限
-		if(	userbehavhourmapper.updateUserRole(data.get("user_id"))==1){
-			//开始设置自己的爸爸，添加t_user_team表,更新队伍id，更新t_user_team表中自己层数
-			//更新自己的邀请码，更新自己的池子币数量，更新余额t_user_data
-			//*****找他所有上层的人。间接邀请人数+1，从爷爷开始
-			//查询所有祖宗，如果满足vip条件，那么脱离原树，重新当祖宗
-		}
-		else {
+		// 更新权限
+		if (userbehavhourmapper.updateUserRole(data.get("user_id")) == 1) {
+			// 开始设置自己的爸爸，添加t_user_team表,更新队伍id，更新t_user_team表中自己层数
+			// 更新自己的邀请码，更新自己的池子币数量，更新余额t_user_data
+			// *****找他所有上层的人。间接邀请人数+1，从爷爷开始
+			// 查询所有祖宗，如果满足vip条件，那么脱离原树，重新当祖宗
+		} else {
 			jsonobj.put(code, 200);
 			jsonobj.put(this.data, "操作失败");
 		}
 		return jsonobj;
 	}
 
-	
-	
 	// 注册发送验证码后,查看验证码是否有效
 	@Override
 	public BackJSON CheckRegistShortMessage(String user_phone, int code) {
 		BackJSON backJSON = new BackJSON();
 		Map<String, Object> msg = new HashMap<>();
-		long used_time = new Date().getTime()-600000;
-		IdentifyCode identifyCode = userbehavhourmapper.getShortMessageByPhoneAndCode(user_phone, code,new Date(used_time));
+		long used_time = new Date().getTime() - 600000;
+		IdentifyCode identifyCode = userbehavhourmapper.getShortMessageByPhoneAndCode(user_phone, code,
+				new Date(used_time));
 		System.out.println(identifyCode);
-		if(identifyCode==null) {
+		if (identifyCode == null) {
 			msg.put("msg", "验证码错误");
 			msg.put("result", 0);
 			backJSON.setCode(200);
@@ -77,7 +74,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			return backJSON;
 		}
 		identifyCode.setUsed_static(1);
-		if(userbehavhourmapper.UpdateIdentifyCodeState(identifyCode)!=1) {
+		if (userbehavhourmapper.UpdateIdentifyCodeState(identifyCode) != 1) {
 			backJSON.setCode(200);
 			msg.put("msg", "验证码错误");
 			msg.put("result", 0);
@@ -144,9 +141,9 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		if (surplusTime > 0 && surplusTime < JWTUtil.get_ttlMillis() / 4) {
 			int user_role = userbehavhourmapper.getUserRoleById(user_id);
 			jsonobj.put(code, 200);
-			Map<String, String> res = new HashMap<>(); 
-			res.put("token",  JWTUtil.createJWT(user_id, user_role));
-			jsonobj.put(data,res);
+			Map<String, String> res = new HashMap<>();
+			res.put("token", JWTUtil.createJWT(user_id, user_role));
+			jsonobj.put(data, res);
 			return jsonobj;
 		}
 		jsonobj.put(code, 201);
@@ -167,7 +164,8 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			backJSON.setData(msg);
 			return backJSON;
 		}
-		if (userbehavhourmapper.getUserIdByPhone(userRegister.getUser_phone()) > 0||CheckPhoneNub.isMobiPhoneNum(userRegister.getUser_phone())==false) {
+		if (userbehavhourmapper.getUserIdByPhone(userRegister.getUser_phone()) > 0
+				|| CheckPhoneNub.isMobiPhoneNum(userRegister.getUser_phone()) == false) {
 			msg.put("msg", "手机号码重复或号码无效");
 			msg.put("result", 0);
 			backJSON.setCode(200);
@@ -181,7 +179,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		user.setUser_role(1);
 		user.setUser_phone(userRegister.getUser_phone());
 		user.setUser_password(MD5.md5(userRegister.getUser_password()));
-		//创建用户时，用户权限为999代表失效用户，激活后才能使用
+		// 创建用户时，用户权限为999代表失效用户，激活后才能使用
 		if (userbehavhourmapper.createUser(user) < 1) {
 			msg.put("msg", "创建用户失败请重新创建");
 			msg.put("result", 0);
@@ -204,7 +202,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		msg.put("result", 1);
 		backJSON.setData(msg);
 		return backJSON;
-		
+
 	}
 
 	// 测试分页
@@ -235,38 +233,69 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		user.setUser_password(MD5.md5(user.getUser_password()));
 		User res = userbehavhourmapper.getUserByPhoneAndPass(user);
 		if (res != null) {
-			Map<String, Object>  userdata = userbehavhourmapper.getUserIMIE(res.getUser_id());
-			System.out.println(userdata);
+			Map<String, Object> userdata = userbehavhourmapper.getUserIMIE(res.getUser_id());
+
 			if (!(userdata.get("user_equipment_id1").equals(user.getUser_equipment_id()))
+					&& userdata.get("user_equipment_id2").equals("NULL")) {
+				if (userbehavhourmapper.updatauser_equipment_id2(user.getUser_equipment_id(), res.getUser_id()) != 1) {
+					backJSON.setCode(200);
+					msg.put("result", 0);
+					msg.put("msg", "登录异常");
+					backJSON.setData(msg);
+					return backJSON;
+				}
+
+				System.out.println("我是null");
+				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
+				System.out.println(token);
+				System.out.println(JWTUtil.parseJWT(token));
+				userdata.put("token", token);
+				userdata.put("user_phone", user.getUser_phone());
+				userdata.remove("user_pay_password");
+				userdata.remove("user_equipment_id2");
+				userdata.remove("user_equipment_id1");
+				userdata.remove("authorization_code");
+				userdata.put("user_equipment_id", user.getUser_equipment_id());
+				userdata.put("user_role", res.getUser_role());
+				backJSON.setCode(200);
+				msg.put("result", 1);
+				msg.put("data", userdata);
+				backJSON.setData(msg);
+				return backJSON;
+			} else if (!(userdata.get("user_equipment_id1").equals(user.getUser_equipment_id()))
 					&& !(userdata.get("user_equipment_id2").equals(user.getUser_equipment_id()))) {
 				backJSON.setCode(200);
 				msg.put("result", 0);
 				msg.put("msg", "不是指定设备");
 				backJSON.setData(msg);
 				return backJSON;
+			} else {
+				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
+				System.out.println(token);
+				System.out.println(JWTUtil.parseJWT(token));
+				userdata.put("token", token);
+				userdata.put("user_phone", user.getUser_phone());
+				userdata.remove("user_pay_password");
+				userdata.remove("user_equipment_id2");
+				userdata.remove("user_equipment_id1");
+				userdata.remove("authorization_code");
+				userdata.put("user_equipment_id", user.getUser_equipment_id());
+				userdata.put("user_role", res.getUser_role());
+				backJSON.setCode(200);
+				msg.put("result", 1);
+				msg.put("data", userdata);
+				backJSON.setData(msg);
+				return backJSON;
 			}
-			String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
-			System.out.println(token);
-			System.out.println(JWTUtil.parseJWT(token));
-			userdata.put("token", token);
-			userdata.put("user_phone", user.getUser_phone());
-			userdata.remove("user_pay_password");
-			userdata.remove("user_equipment_id2");
-			userdata.remove("user_equipment_id1");
-			userdata.remove("authorization_code");
-			userdata.put("user_equipment_id", user.getUser_equipment_id());
-			backJSON.setCode(200);
-			msg.put("result",1);
-			msg.put("data", userdata);
-			backJSON.setData(msg);
+
 		} else {
 			backJSON.setCode(200);
-			msg.put("msg","账号或密码错误");
+			msg.put("msg", "账号或密码错误");
 			msg.put("result", 0);
 			backJSON.setData(msg);
+			return backJSON;
 		}
 
-		return backJSON;
 	}
 
 	// 获取小功能
@@ -285,6 +314,5 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 		return backJSON;
 	}
-
 
 }
