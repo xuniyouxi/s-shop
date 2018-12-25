@@ -1,14 +1,14 @@
 package com.vg.config;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.vg.config.Util.Value;
 
 
 //https://blog.csdn.net/thekey1314/article/details/81044999 解决静态资源不能访问的坑
@@ -75,17 +75,12 @@ public class MvcConfig implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		try {
-			File file = ResourceUtils.getFile("classpath:");
-			String path = file.getParentFile().getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
-			//Windows上测试需要在前面 file:
-//			String path = file.getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
-//			path = "file:"+path;
-			registry.addResourceHandler("/userImg/**").addResourceLocations(path+"user"+File.separator);
-			registry.addResourceHandler("/storeImg/**").addResourceLocations(path+"admin"+File.separator+"storeImg"+File.separator);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+//		windows 下这样是可以的
+//		file = ResourceUtils.getFile("classpath:");
+//		String path = file.getParentFile().getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
+		String path = Value.getImgpath();
+		registry.addResourceHandler("/userImg/**").addResourceLocations(path+"user"+File.separator);
+		registry.addResourceHandler("/storeImg/**").addResourceLocations(path+"admin"+File.separator+"storeImg"+File.separator);
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
 	

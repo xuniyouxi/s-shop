@@ -1,5 +1,7 @@
 package com.vg.service.user;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.vg.config.Util.BackJSON;
 import com.vg.entity.EVO.UserInfo;
 
@@ -14,5 +16,6 @@ public interface UserService {
 	public BackJSON getTeamNum(String user_id);
 	public BackJSON truePhone(String user_id, String user_phone);
 	public BackJSON resetPassword(String user_id, String new_password, int type);
+	public BackJSON updateHeadPic(String user_id, MultipartFile file);
 	
 }

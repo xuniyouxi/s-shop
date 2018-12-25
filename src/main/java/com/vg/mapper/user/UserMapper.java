@@ -17,7 +17,7 @@ public interface UserMapper {
 	Map<String, String> getEquipment(String user_id);
 	
 	//弱方法
-	@Update("update t_user_data set ${param2}= null where user_id='${param1}'")
+	@Update("update t_user_data set ${param2}='NULL' where user_id='${param1}'")
 	int untieEquipment(String user_id, String user_equipment);
 	
 	@Select("select user_realname, user_name, user_wxcode, user_address, invite_code from t_user_data where user_id=#{user_id}")
@@ -44,6 +44,9 @@ public interface UserMapper {
 	
 	@Update("update t_user_data set user_pay_password = #{param2} where user_id=#{param1}")
 	int alterPaypwd(String user_id, String new_password);
+	
+	@Update("update t_user_data set user_head_picture=#{param2} where user_id=#{param1}")
+	int alterHeadImg(String user_id, String user_head_pic);
 	
 	
 }
