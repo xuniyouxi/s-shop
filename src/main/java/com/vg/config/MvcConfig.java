@@ -1,8 +1,13 @@
 package com.vg.config;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
@@ -59,5 +64,29 @@ public class MvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(securityInterceptor()).addPathPatterns("/**");
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}
+
+	
+	/*
+	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurer#addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry)
+	 * 静态资源处理
+	 * url示例：
+	 * 用户头像：https://www.azstudio.top/vg/userImg/{userId}/headImg/{xxx.jpg}
+	 * 商城图片：https://www.azstudio.top/vg/storeImg/{xxx.jpg}
+	 */
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		try {
+			File file = ResourceUtils.getFile("classpath:");
+			String path = file.getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
+			//Windows上测试需要在前面 file:
+			path = "file:"+path;
+			registry.addResourceHandler("/userImg/**").addResourceLocations(path+"user"+File.separator);
+			registry.addResourceHandler("/storeImg/**").addResourceLocations(path+"admin"+File.separator+"storeImg"+File.separator);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		WebMvcConfigurer.super.addResourceHandlers(registry);
+	}
+	
 
 }

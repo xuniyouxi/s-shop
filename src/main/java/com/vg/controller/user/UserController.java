@@ -25,6 +25,7 @@ import com.vg.service.user.UserService;
 @RestController
 @RequestMapping("/userInfo/")
 public class UserController {
+	
 
 	@Autowired
 	private UserService us;
