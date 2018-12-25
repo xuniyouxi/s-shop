@@ -38,8 +38,13 @@ public interface UserBehaviorMapper {
 	int updataSysInviteCode(String code);
 
 	// 验证登录
-	@Select({ "select * from t_user where user_role =1 and user_phone = #{user_phone} and user_password=#{user_password} AND (user_role=1 OR user_role=999)" })
+	@Select({ "select * from t_user where  user_phone = #{user_phone} and user_password=#{user_password} AND (user_role=1 OR user_role=999)" })
 	User getUserByPhoneAndPass(UserLogin userlogin);
+	
+	//登录时更新第二个设备，如果为空
+	@Update({"UPDATE t_user_data SET user_equipment_id2=#{user_equipment_id2} WHERE user_id=#{user_id}"})
+	int updatauser_equipment_id2(String user_equipment_id2,String user_id);
+	
 
 	// 获取免责声明
 	@Select({ "select bis_name,bis_content from t_biscuits WHERE bis_state=1 AND bis_id=#{arg0}" })
@@ -62,7 +67,7 @@ public interface UserBehaviorMapper {
 	Integer getUserIdByPhone(String user_phone);
 
 	// 注册时插入userdata
-	@Insert("INSERT INTO t_user_data (user_id, user_realname,user_equipment_id1,invite_code,user_balance,pool_usedCapacity,pool_rank,user_vip) VALUES (#{user_id}, #{user_realname},#{user_equipment_id1},#{invite_code},0,0,0,0)")
+	@Insert("INSERT INTO t_user_data (user_id, user_realname,user_equipment_id1,invite_code,user_balance,pool_usedCapacity,pool_rank,user_vip,user_equipment_id2) VALUES (#{user_id}, #{user_realname},#{user_equipment_id1},#{invite_code},0,0,0,0,'NULL')")
 	int insertUserData(UserRegister userRegister);
 
 	// 通过id获取用户所属团队信息
