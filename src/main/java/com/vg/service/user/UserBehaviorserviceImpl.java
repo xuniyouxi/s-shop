@@ -228,24 +228,23 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	// 用户登录
 	@Override
 	public BackJSON login(UserLogin user) throws Exception {
+
 		BackJSON backJSON = new BackJSON();
 		Map<String, Object> msg = new HashMap<>();
 		user.setUser_password(MD5.md5(user.getUser_password()));
 		User res = userbehavhourmapper.getUserByPhoneAndPass(user);
 		if (res != null) {
 			Map<String, Object> userdata = userbehavhourmapper.getUserIMIE(res.getUser_id());
-
-			if (!(userdata.get("user_equipment_id1").equals(user.getUser_equipment_id()))
+			if (userdata.get("user_equipment_id1").equals("NULL")
 					&& userdata.get("user_equipment_id2").equals("NULL")) {
-				if (userbehavhourmapper.updatauser_equipment_id2(user.getUser_equipment_id(), res.getUser_id()) != 1) {
+				if (userbehavhourmapper.updatauser_equipment_id1(user.getUser_equipment_id(), res.getUser_id()) != 1) {
+					// 如果两个都是空，就更新第一个设备号
 					backJSON.setCode(200);
 					msg.put("result", 0);
 					msg.put("msg", "登录异常");
 					backJSON.setData(msg);
 					return backJSON;
 				}
-
-				System.out.println("我是null");
 				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
 				System.out.println(token);
 				System.out.println(JWTUtil.parseJWT(token));
@@ -262,33 +261,88 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				msg.put("data", userdata);
 				backJSON.setData(msg);
 				return backJSON;
-			} else if (!(userdata.get("user_equipment_id1").equals(user.getUser_equipment_id()))
-					&& !(userdata.get("user_equipment_id2").equals(user.getUser_equipment_id()))) {
+			} else if (userdata.get("user_equipment_id1").equals("NULL")
+					&& !userdata.get("user_equipment_id2").equals(user.getUser_equipment_id())) {
+				if (userbehavhourmapper.updatauser_equipment_id1(user.getUser_equipment_id(), res.getUser_id()) != 1) {
+					// 如果两个都是空，就更新第一个设备号
+					backJSON.setCode(200);
+					msg.put("result", 0);
+					msg.put("msg", "登录异常");
+					backJSON.setData(msg);
+					return backJSON;
+				}
+				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
+				System.out.println(token);
+				System.out.println(JWTUtil.parseJWT(token));
+				userdata.put("token", token);
+				userdata.put("user_phone", user.getUser_phone());
+				userdata.remove("user_pay_password");
+				userdata.remove("user_equipment_id2");
+				userdata.remove("user_equipment_id1");
+				userdata.remove("authorization_code");
+				userdata.put("user_equipment_id", user.getUser_equipment_id());
+				userdata.put("user_role", res.getUser_role());
 				backJSON.setCode(200);
-				msg.put("result", 0);
-				msg.put("msg", "不是指定设备");
+				msg.put("result", 1);
+				msg.put("data", userdata);
+				backJSON.setData(msg);
+				return backJSON;
+			} else if (userdata.get("user_equipment_id2").equals("NULL")
+					&& !userdata.get("user_equipment_id1").equals(user.getUser_equipment_id())) {
+				if (userbehavhourmapper.updatauser_equipment_id2(user.getUser_equipment_id(), res.getUser_id()) != 1) {
+					// 如果两个都是空，就更新第一个设备号
+					backJSON.setCode(200);
+					msg.put("result", 0);
+					msg.put("msg", "登录异常");
+					backJSON.setData(msg);
+					return backJSON;
+				}
+				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
+				System.out.println(token);
+				System.out.println(JWTUtil.parseJWT(token));
+				userdata.put("token", token);
+				userdata.put("user_phone", user.getUser_phone());
+				userdata.remove("user_pay_password");
+				userdata.remove("user_equipment_id2");
+				userdata.remove("user_equipment_id1");
+				userdata.remove("authorization_code");
+				userdata.put("user_equipment_id", user.getUser_equipment_id());
+				userdata.put("user_role", res.getUser_role());
+				backJSON.setCode(200);
+				msg.put("result", 1);
+				msg.put("data", userdata);
 				backJSON.setData(msg);
 				return backJSON;
 			} else {
-				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
-				System.out.println(token);
-				System.out.println(JWTUtil.parseJWT(token));
-				userdata.put("token", token);
-				userdata.put("user_phone", user.getUser_phone());
-				userdata.remove("user_pay_password");
-				userdata.remove("user_equipment_id2");
-				userdata.remove("user_equipment_id1");
-				userdata.remove("authorization_code");
-				userdata.put("user_equipment_id", user.getUser_equipment_id());
-				userdata.put("user_role", res.getUser_role());
-				backJSON.setCode(200);
-				msg.put("result", 1);
-				msg.put("data", userdata);
-				backJSON.setData(msg);
-				return backJSON;
-			}
+				if ((userdata.get("user_equipment_id1").equals(user.getUser_equipment_id()))
+						|| userdata.get("user_equipment_id2").equals(user.getUser_equipment_id())) {
+					String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
+					System.out.println(token);
+					System.out.println(JWTUtil.parseJWT(token));
+					userdata.put("token", token);
+					userdata.put("user_phone", user.getUser_phone());
+					userdata.remove("user_pay_password");
+					userdata.remove("user_equipment_id2");
+					userdata.remove("user_equipment_id1");
+					userdata.remove("authorization_code");
+					userdata.put("user_equipment_id", user.getUser_equipment_id());
+					userdata.put("user_role", res.getUser_role());
+					backJSON.setCode(200);
+					msg.put("result", 1);
+					msg.put("data", userdata);
+					backJSON.setData(msg);
+					return backJSON;
 
+				} else {
+					backJSON.setCode(200);
+					msg.put("result", 0);
+					msg.put("msg", "不是指定设备");
+					backJSON.setData(msg);
+					return backJSON;
+				}
+			}
 		} else {
+
 			backJSON.setCode(200);
 			msg.put("msg", "账号或密码错误");
 			msg.put("result", 0);

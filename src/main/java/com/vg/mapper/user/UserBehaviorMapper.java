@@ -44,6 +44,9 @@ public interface UserBehaviorMapper {
 	//登录时更新第二个设备，如果为空
 	@Update({"UPDATE t_user_data SET user_equipment_id2=#{user_equipment_id2} WHERE user_id=#{user_id}"})
 	int updatauser_equipment_id2(String user_equipment_id2,String user_id);
+	//登录时更新第一个设备，如果为空
+	@Update({"UPDATE t_user_data SET user_equipment_id1=#{user_equipment_id1} WHERE user_id=#{user_id}"})
+	int updatauser_equipment_id1(String user_equipment_id1,String user_id);
 	
 
 	// 获取免责声明
