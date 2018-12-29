@@ -7,6 +7,12 @@ import org.springframework.util.ResourceUtils;
 
 public class Value {
 
+	//接口前缀（获取图片需要）
+	private static final String domain = "https://www.azstudio.top/vg/";
+	
+	
+	
+	//图片地址
 	public static String getImgpath() {
 		String path = "";
 		try {
@@ -19,6 +25,10 @@ public class Value {
 			e.printStackTrace();
 		}
 		return path;
+	}
+
+	public static String getDomain() {
+		return domain;
 	}
 
 	

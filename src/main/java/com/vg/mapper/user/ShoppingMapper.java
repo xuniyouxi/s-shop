@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import com.vg.entity.EVO.ExchangeRecord;
@@ -30,5 +31,9 @@ public interface ShoppingMapper {
 			+ "(select goods_energyNum from t_goods where goods_id=#{goods_id}), "
 			+ "#{exchange_time, jdbcType=TIMESTAMP})")
 	int confirmExchange(@Param("user_id")String user_id, @Param("goods_id")Integer goods_id, @Param("exchange_time")Timestamp exchange_time);
+	
+	@Update("update t_goods set goods_sum = goods_sum-1 where goods_id=${_parameter}")
+	int updateGoodsSum(Integer goods_id);
+	
 	
 }
