@@ -13,6 +13,13 @@ public class IdentifyCode {
 
 	private Date used_time;
 
+	public IdentifyCode(String user_phone, Integer identify_code, Date used_time) {
+		super();
+		this.user_phone = user_phone;
+		this.identify_code = identify_code;
+		this.used_time = used_time;
+	}
+
 	public String getUser_phone() {
 		return user_phone;
 	}

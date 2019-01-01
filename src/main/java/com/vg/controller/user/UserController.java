@@ -27,7 +27,6 @@ import com.vg.service.user.UserService;
 @RequestMapping("/userInfo/")
 public class UserController {
 	
-
 	@Autowired
 	private UserService us;
 	
@@ -90,6 +89,24 @@ public class UserController {
 	@PostMapping("updateHeadPic")
 	public BackJSON updateHeadPic(@RequestParam("user_id") String user_id, @RequestParam("head_picture") MultipartFile file) {
 		return us.updateHeadPic(user_id, file);
+	}
+	//发送验证码
+	@Authorization(authorization="user")
+	@PostMapping("newIdentifyCode/{user_phone}")
+	public BackJSON newIdentifyCode(@PathVariable String user_phone) {
+		return us.newIdentifyCode(user_phone);
+	}
+	//验证验证码
+	@Authorization(authorization="user")
+	@PostMapping("checkIdentifyCode/{user_phone}/{identify_code}")
+	public BackJSON checkIdentifyCode(@PathVariable("user_phone")String phone, @PathVariable("identify_code")int code){
+		return us.checkIdentifyCode(phone, code);
+	}
+	//获取轮播图
+	@Authorization(authorization="open")
+	@GetMapping("getSlidePicture")
+	public BackJSON getSlidePicture() {
+		return us.getSlidePicture();
 	}
 	
 
