@@ -32,8 +32,9 @@ public interface ShoppingMapper {
 			+ "#{exchange_time, jdbcType=TIMESTAMP})")
 	int confirmExchange(@Param("user_id")String user_id, @Param("goods_id")Integer goods_id, @Param("exchange_time")Timestamp exchange_time);
 	
-	@Update("update t_goods set goods_sum = goods_sum-1 where goods_id=${_parameter}")
-	int updateGoodsSum(Integer goods_id);
+	@Update("update t_goods g, t_user_data ud set g.goods_sum = g.goods_sum-1, ud.user_balance = ud.user_balance-g.goods_energyNum "
+			+ "where g.goods_id=#{goods_id} and ud.user_id=#{user_id}")
+	int updateGoodsSum(@Param("user_id")String user_id, @Param("goods_id")Integer goods_id);
 	
 	
 }

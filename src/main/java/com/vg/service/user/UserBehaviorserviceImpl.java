@@ -25,6 +25,7 @@ import com.vg.entity.UserData;
 import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
 import com.vg.entity.EVO.UserRegister;
+import com.vg.mapper.admin.systemMapper;
 import com.vg.mapper.user.UserBehaviorMapper;
 
 import io.jsonwebtoken.Claims;
@@ -35,15 +36,42 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 	@Autowired
 	UserBehaviorMapper userbehavhourmapper;
+	@Autowired
+	systemMapper systemMapper;
 	private String code;
 	private String data;
+
+	
+	//首页查询
+	@Override
+	public BackJSON getfastPage(String user_id) {
+		// TODO Auto-generated method stub
+		BackJSON backJSON = new BackJSON();
+		backJSON.setCode(200);
+		HashMap<String, Object> res = userbehavhourmapper.getfirstPageuserData(user_id);
+		backJSON.setData(res);
+		return backJSON;
+	}
+	
+	// 资产页查询
+	@Override
+	public BackJSON getUserassetsPage(String user_id) {
+		BackJSON backJSON = new BackJSON();
+		HashMap<String, Object> res = userbehavhourmapper.getUserassetsPage(user_id);
+		backJSON.setCode(200);
+		int pool_sum = Integer.parseInt(systemMapper.getPoolRankSum("pool" + res.get("pool_rank") + "_sum"));
+		res.put("pool_sum",pool_sum);
+		res.put("pool_balance", pool_sum - (int) res.get("pool_usedCapacity"));
+		backJSON.setData(res);
+		return backJSON;
+	}
 
 	// 用户激活
 	@Override
 	public JSONObject activateGame(Map<String, String> data) { // user_id authorization_code
 		// TODO Auto-generated method stub
 		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("code", 200);
+		jsonobj.put(code, 200);
 		// 更新权限
 		if (userbehavhourmapper.updateUserRole(data.get("user_id")) == 1) {
 			// 开始设置自己的爸爸，添加t_user_team表,更新队伍id，更新t_user_team表中自己层数
@@ -368,5 +396,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 		return backJSON;
 	}
+
+
 
 }

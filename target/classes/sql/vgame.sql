@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-12-14 00:28:11
+Date: 2019-01-01 17:33:54
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,6 +32,28 @@ CREATE TABLE `authorization_code` (
 -- ----------------------------
 INSERT INTO `authorization_code` VALUES ('1', '1', '1', '2018-12-13 22:36:56');
 INSERT INTO `authorization_code` VALUES ('2', '234', '1', '2018-12-13 22:36:56');
+
+-- ----------------------------
+-- Table structure for sys_operation
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_operation`;
+CREATE TABLE `sys_operation` (
+  `operation_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `operation_name` varchar(255) DEFAULT NULL,
+  `operation_content` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`operation_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_operation
+-- ----------------------------
+INSERT INTO `sys_operation` VALUES ('1', 'pool_rate', '3.0');
+INSERT INTO `sys_operation` VALUES ('2', 'pool0_sum', '200');
+INSERT INTO `sys_operation` VALUES ('3', 'pool1_sum', '300');
+INSERT INTO `sys_operation` VALUES ('4', 'pool2_sum', '400');
+INSERT INTO `sys_operation` VALUES ('5', 'pool3_sum', '500');
+INSERT INTO `sys_operation` VALUES ('6', 'pool4_sum', '600');
+INSERT INTO `sys_operation` VALUES ('7', 'pool5_sum', '700');
 
 -- ----------------------------
 -- Table structure for t_biscuits
@@ -57,7 +79,7 @@ INSERT INTO `t_biscuits` VALUES ('3', '联系电话', '15353101818', '1');
 -- ----------------------------
 DROP TABLE IF EXISTS `t_exchange`;
 CREATE TABLE `t_exchange` (
-  `exchange_id` int(11) NOT NULL,
+  `exchange_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) DEFAULT NULL COMMENT '用户id',
   `goods_id` int(11) DEFAULT NULL COMMENT '兑换货物id',
   `goods_energyNum` double(255,0) DEFAULT NULL COMMENT '价值能量',
@@ -106,6 +128,15 @@ CREATE TABLE `t_identify_code` (
 -- ----------------------------
 -- Records of t_identify_code
 -- ----------------------------
+INSERT INTO `t_identify_code` VALUES ('15524835211', '95204', '0', '1', '2018-12-25 13:13:13');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '11894', '0', '1', '2018-12-25 13:16:32');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '61700', '0', '1', '2018-12-25 13:21:23');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '82367', '1', '1', '2018-12-25 13:27:04');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '80780', '0', '1', '2018-12-25 13:30:07');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '60107', '1', '1', '2018-12-25 13:32:17');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '63799', '1', '1', '2018-12-25 13:35:40');
+INSERT INTO `t_identify_code` VALUES ('15524835211', '50969', '0', '1', '2018-12-25 16:00:07');
+INSERT INTO `t_identify_code` VALUES ('17628663291', '16014', '0', '1', '2018-12-25 16:13:07');
 
 -- ----------------------------
 -- Table structure for t_pool_operation
@@ -187,8 +218,18 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
+INSERT INTO `t_user` VALUES ('096914eeaa8d4b5bb4a94cfe0e00153a', '1315236', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-25 00:14:27');
+INSERT INTO `t_user` VALUES ('0ce0ef60bc304804ba6ac0ccc013c9da', '111111111', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-23 23:37:07');
+INSERT INTO `t_user` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '1111223322', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-24 00:49:47');
+INSERT INTO `t_user` VALUES ('3c789aa58d024907b1f40f50051982f8', '13152362488', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 15:33:24');
+INSERT INTO `t_user` VALUES ('44fa1d49b76843ec808be230c9b3d0d4', '15353969153', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 14:56:46');
+INSERT INTO `t_user` VALUES ('4d8848be5f3046e3b547bfd6fee49c59', '18742527429', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 14:35:29');
 INSERT INTO `t_user` VALUES ('649e8385f163472f9dec50520cc0de73', '2', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:39');
+INSERT INTO `t_user` VALUES ('72e326e07b7b43f0b91564318f941c52', '18742527413', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 13:48:26');
+INSERT INTO `t_user` VALUES ('7c783e21813f42e9be962efe94ce76be', '13892528159', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 14:31:02');
 INSERT INTO `t_user` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:19');
+INSERT INTO `t_user` VALUES ('c4d8813cfc844dd383dbb11a921d8acb', '13892528157', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-29 10:15:04');
+INSERT INTO `t_user` VALUES ('e0d84a1c3d3e41a68c8dba582cd30a15', '144806015151515', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 13:45:46');
 INSERT INTO `t_user` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', '3565028633', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-12 22:50:09');
 
 -- ----------------------------
@@ -202,13 +243,13 @@ CREATE TABLE `t_user_data` (
   `user_wxcode` varchar(255) DEFAULT NULL COMMENT '微信号',
   `user_pay_password` varchar(255) DEFAULT NULL COMMENT '交易密码',
   `authorization_code` int(10) DEFAULT NULL COMMENT '激活码，对应authorization_code',
-  `user_equipment_id1` varchar(255) DEFAULT NULL COMMENT '用户手机的ime码',
+  `user_equipment_id1` varchar(255) NOT NULL COMMENT '用户手机的ime码',
   `user_equipment_id2` varchar(255) DEFAULT NULL COMMENT '用户手机的ime码',
   `invite_code` varchar(255) DEFAULT NULL COMMENT '用户自己的邀请码  //如果用户未激活，那么邀请码为父亲的id',
   `user_address` varchar(255) DEFAULT NULL COMMENT '用户的收货地址',
   `user_head_picture` varchar(255) DEFAULT NULL COMMENT '用户头像',
   `user_balance` double(255,0) DEFAULT NULL COMMENT '用户的余额',
-  `pool_usedCapacity` int(255) DEFAULT NULL COMMENT '能量池已经用的能量',
+  `pool_usedCapacity` int(255) DEFAULT NULL COMMENT '能量池已经被使用的能量',
   `pool_rank` int(255) DEFAULT NULL COMMENT '能量池等级',
   `user_vip` int(255) DEFAULT NULL COMMENT '用户星级',
   PRIMARY KEY (`user_id`),
@@ -218,9 +259,19 @@ CREATE TABLE `t_user_data` (
 -- ----------------------------
 -- Records of t_user_data
 -- ----------------------------
-INSERT INTO `t_user_data` VALUES ('649e8385f163472f9dec50520cc0de73', '毛泽东', '小毛子', '29959', '649e8385f163472f9dec50520cc0de73', '2515', '151515151', '1515151115', '1515', '北京市南锣鼓巷', 'img/asd', '151', '151', '1', '2');
-INSERT INTO `t_user_data` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '邓小平', '小邓子', '84848', '649e8385f163472f9dec50520cc0de73', '151', '49844846', '16516511618', '5151', '南京市板鸭区29号', 'img/asd/asd', '488', '18', '2', '2');
-INSERT INTO `t_user_data` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', 'iZdbPf21', null, null, null, null, 'aaaaaaaaaaaaaaaa', null, 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('096914eeaa8d4b5bb4a94cfe0e00153a', 'IprAQCJL', null, null, null, '111', 'aaaaaaa1aaaaaaaaa', 'aaaaaa1a1aaaaaaaaa', '000000', '三里屯', null, '4399', '0', '1', '0');
+INSERT INTO `t_user_data` VALUES ('0ce0ef60bc304804ba6ac0ccc013c9da', 'kPU3rtAD', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '东软路', null, '4399', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '9ueqLwbG', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '北大街20号', null, '4399', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('3c789aa58d024907b1f40f50051982f8', 'Pw6eCXsr', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('44fa1d49b76843ec808be230c9b3d0d4', 'G2UWsECc', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('4d8848be5f3046e3b547bfd6fee49c59', 'FIzgJ4xs', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('649e8385f163472f9dec50520cc0de73', '毛泽东', '小毛子', '29959', '649e8385f163472f9dec50520cc0de73', '2515', 'NULL', 'NULL', '1515', '南京板鸭街', 'img/asd', '4399', '151', '1', '2');
+INSERT INTO `t_user_data` VALUES ('72e326e07b7b43f0b91564318f941c52', 'idy24Q8Y', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('7c783e21813f42e9be962efe94ce76be', 'IkacCqP1', null, null, null, null, 'aaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaa222', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '邓小平', '小邓子', '84848', '649e8385f163472f9dec50520cc0de73', '151', 'aaaaaaa1aaaaaaaaa', 'NULL', '5151', '苟佳巴村', 'img/asd/asd', '4399', '18', '2', '2');
+INSERT INTO `t_user_data` VALUES ('c4d8813cfc844dd383dbb11a921d8acb', 'M0T6c8FH', null, null, null, null, '879681888888', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('e0d84a1c3d3e41a68c8dba582cd30a15', 'QtWXUyF9', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', 'iZdbPf21', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '垃圾村', null, '4399', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for t_user_team
@@ -228,10 +279,13 @@ INSERT INTO `t_user_data` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', 'iZdbPf21'
 DROP TABLE IF EXISTS `t_user_team`;
 CREATE TABLE `t_user_team` (
   `user_id` varchar(255) NOT NULL,
-  `team_id` int(11) DEFAULT NULL COMMENT '用户的团队id 团队id为0代表没有团队',
-  `invited_father` varchar(255) DEFAULT NULL COMMENT '用户的被邀请的爸爸id',
-  `invited_sum` int(255) DEFAULT NULL COMMENT '用户间接推荐的总人数',
-  `member_layer` int(255) DEFAULT NULL COMMENT '队员层数，比如小明属于金字塔的第三层，最上面为第一层',
+  `team_id` int(11) NOT NULL COMMENT '用户的团队id 团队id为0代表没有团队',
+  `invited_father` varchar(255) NOT NULL COMMENT '用户的被邀请的爸爸id',
+  `invited_sum` int(255) NOT NULL COMMENT '用户间接推荐的总人数',
+  `invited_son` int(255) NOT NULL COMMENT '用户直接推荐总人数',
+  `invited_bonus` double(255,0) NOT NULL COMMENT '用户已经获得的推荐奖励',
+  `invited_today_bonus` double(255,0) DEFAULT NULL COMMENT '用户获得团队的当日奖励',
+  `member_layer` int(255) NOT NULL COMMENT '队员层数，比如小明属于金字塔的第三层，最上面为第一层',
   PRIMARY KEY (`user_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `t_user_team_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`user_id`),
@@ -241,5 +295,6 @@ CREATE TABLE `t_user_team` (
 -- ----------------------------
 -- Records of t_user_team
 -- ----------------------------
-INSERT INTO `t_user_team` VALUES ('649e8385f163472f9dec50520cc0de73', '1', 'null', '0', '1');
-INSERT INTO `t_user_team` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '649e8385f163472f9dec50520cc0de73', '0', '2');
+INSERT INTO `t_user_team` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '1', '1', '0', '1', '2', '1', '9');
+INSERT INTO `t_user_team` VALUES ('649e8385f163472f9dec50520cc0de73', '1', 'null', '0', '1', '1', '1', '1');
+INSERT INTO `t_user_team` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '649e8385f163472f9dec50520cc0de73', '0', '1', '1', '1', '2');

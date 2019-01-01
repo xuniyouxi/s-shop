@@ -71,13 +71,14 @@ public class ShoppingServiceImpl implements ShoppingService{
 		return json;
 	}
 	@Override
+	@Transactional
 	public BackJSON confrimExchange(String user_id, Integer goods_id) {
 		BackJSON json = new BackJSON(200);
 		JSONObject rjson = new JSONObject();
 		rjson.put("result", 0);
 		if(sm.confirmExchange(user_id, goods_id, new Timestamp(System.currentTimeMillis()))==1) {
 //			json.setCode(200);
-			if(sm.updateGoodsSum(goods_id)==1)
+			if(sm.updateGoodsSum(user_id, goods_id)>0)
 				rjson.replace("result", 1);
 		}
 		json.setData(rjson);

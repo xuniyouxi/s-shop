@@ -1,6 +1,7 @@
 package com.vg.mapper.user;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,4 +93,13 @@ public interface UserBehaviorMapper {
 	//注册时更新短信验证码的使用
 	@Update({"UPDATE  t_identify_code SET used_static= 1 WHERE user_phone=#{user_phone} AND identify_code=#{identify_code} AND used_time = #{used_time} "})
 	int UpdateIdentifyCodeState(IdentifyCode identifyCode);
+	
+	//获取用户资产页信息
+	@Select({"select a.pool_rank,a.pool_usedCapacity,b.invited_bonus,b.invited_son,b.invited_sum from t_user_data a LEFT JOIN t_user_team b ON a.user_id=b.user_id WHERE a.user_id =#{user_id}"})
+	HashMap<String, Object> getUserassetsPage(String user_id);
+	
+	//首页用户数据
+	@Select({"select a.user_vip,a.user_balance,b.invited_today_bonus from t_user_data a LEFT JOIN t_user_team b ON a.user_id=b.user_id WHERE a. user_id=#{user_id}"})
+	HashMap<String, Object> getfirstPageuserData(String user_id);
+	
 }

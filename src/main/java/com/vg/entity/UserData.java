@@ -15,8 +15,8 @@ public class UserData implements Serializable {
 	private String invite_code;
 	private String user_address;
 	private String user_head_picture;
-	private String user_balance;
-	private Integer pool_usedCapacity;
+	private double user_balance;
+	private int pool_usedCapacity;
 	private Integer pool_rank;
 	private Integer user_vip;
 
@@ -108,19 +108,19 @@ public class UserData implements Serializable {
 		this.user_head_picture = user_head_picture;
 	}
 
-	public String getUser_balance() {
+	public double getUser_balance() {
 		return user_balance;
 	}
 
-	public void setUser_balance(String user_balance) {
+	public void setUser_balance(double user_balance) {
 		this.user_balance = user_balance;
 	}
 
-	public Integer getPool_usedCapacity() {
+	public int getPool_usedCapacity() {
 		return pool_usedCapacity;
 	}
 
-	public void setPool_usedCapacity(Integer pool_usedCapacity) {
+	public void setPool_usedCapacity(int pool_usedCapacity) {
 		this.pool_usedCapacity = pool_usedCapacity;
 	}
 
@@ -142,8 +142,8 @@ public class UserData implements Serializable {
 
 	public UserData(Integer user_id, String user_realname, String user_name, String user_wxcode,
 			String user_pay_password, Integer authorization_code, String user_equipment_id1, String user_equipment_id2,
-			String invite_code, String user_address, String user_head_picture, String user_balance,
-			Integer pool_usedCapacity, Integer pool_rank, Integer user_vip) {
+			String invite_code, String user_address, String user_head_picture, double user_balance,
+			int pool_usedCapacity, Integer pool_rank, Integer user_vip) {
 		super();
 		this.user_id = user_id;
 		this.user_realname = user_realname;

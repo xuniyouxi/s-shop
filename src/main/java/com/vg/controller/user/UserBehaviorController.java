@@ -53,16 +53,33 @@ public class UserBehaviorController {
 		return userbehaviorservice.getallteam();
 	}
 	
-	 //激活游戏
-	@PutMapping({"/activateGame"})
+	// fastPage
+	// http://localhost:8080/vg/user/fastPage/c3c1319afb5447aaba9f48d7b8634bc4
+	@RequestMapping(value = "/fastPage/{user_id}")
 	@Authorization(authorization = "open")
-	public JSONObject activateGame( @RequestBody Map<String, String> data) {
-				// user_id authorization_code 
+	public BackJSON fastPage(@PathVariable String user_id) {
+
+		return userbehaviorservice.getfastPage(user_id);
+	}
+
+
+	// 资产页查询
+	// http://localhost:8080/vg/user/assetsPage/c3c1319afb5447aaba9f48d7b8634bc4
+	@RequestMapping(value = "/assetsPage/{user_id}")
+	@Authorization(authorization = "open")
+	public BackJSON assetsPage(@PathVariable String user_id) {
+		// pool_rank能量池等级 pool_rank*X - pool_usedCapacity=能量池能量 invited_bonus用户已经获得的推荐奖励
+		// invited_son直接推荐总人数 invited_sum间接推荐总人数
+		return userbehaviorservice.getUserassetsPage(user_id);
+	}
+
+	// 激活游戏
+	@PutMapping({ "/activateGame" })
+	@Authorization(authorization = "open")
+	public JSONObject activateGame(@RequestBody Map<String, String> data) {
+		// user_id authorization_code
 		return userbehaviorservice.activateGame(data);
 	}
-	
-	
-	
 
 	// token心跳验证 http://localhost:8080/vg/user/TokenHeartBeat/sdasdsad
 	@RequestMapping(value = "/TokenHeartBeat/{user_id}")
@@ -100,8 +117,8 @@ public class UserBehaviorController {
 
 	// 登陆 http://localhost:8080/vg/user/login
 	@PostMapping(value = "/login")
-	@Authorization(authorization = "open") 
-	
+	@Authorization(authorization = "open")
+
 	public BackJSON login(@RequestBody UserLogin userlogin) throws Exception {
 		return userbehaviorservice.login(userlogin);
 	}
@@ -112,7 +129,5 @@ public class UserBehaviorController {
 	public BackJSON getStatement(@PathVariable int bis_id) {
 		return userbehaviorservice.getStatementByFun(1);
 	}
-
-
 
 }

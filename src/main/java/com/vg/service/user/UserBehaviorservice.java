@@ -37,4 +37,10 @@ public interface UserBehaviorservice {
 
 	//用户激活游戏
 	JSONObject activateGame(Map<String, String> data);
+	
+	//查询用户资产页
+	BackJSON getUserassetsPage(String user_id);
+	
+	//查询首页详情
+	BackJSON getfastPage(String user_id);
 }
