@@ -82,7 +82,11 @@ public class UserServiceImpl implements UserService {
 		BackJSON json = new BackJSON(200);
 		Map<String, String> tm = um.getCenter(user_id);
 		if(!tm.isEmpty()) {
-			String user_head_picture = Value.getDomain()+"userImg/"+user_id+"/headImg/"+tm.get("user_head_picture");
+			String user_head_picture = tm.get("user_head_picture");
+			if(user_head_picture==null) {
+				user_head_picture = Value.getDomain()+"userImg/defaultImg/default.jpg";
+			} else 
+				user_head_picture = Value.getDomain()+"userImg/"+user_id+"/headImg/"+user_head_picture;
 			tm.replace("user_head_picture", user_head_picture);
 			json.setData(tm);
 //			json.setCode(200);
