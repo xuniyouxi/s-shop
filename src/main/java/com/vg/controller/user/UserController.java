@@ -90,7 +90,6 @@ public class UserController {
 		JSONObject json = JSONObject.parseObject(data);
 		String user_id = json.getString("user_id");
 		String head_picture = json.getString("head_picture");
-		System.out.println(head_picture);
 		return us.updateHeadPic(user_id, head_picture);
 	}
 	//发送验证码

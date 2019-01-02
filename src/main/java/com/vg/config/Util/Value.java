@@ -17,7 +17,9 @@ public class Value {
 		String path = "";
 		try {
 			File file = new File(ResourceUtils.getURL("classpath:").getPath());
+//			System.out.println(file.getPath());
 			path = file.getParentFile().getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
+//			System.out.println(path);
 			//Windows下eclipse里运行是下边这个，把下面两个注释打开
 //			path = file.getParentFile().getParent()+File.separator+"vgameResource"+File.separator;
 //			path = "file:"+path;

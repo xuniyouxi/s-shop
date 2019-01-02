@@ -163,7 +163,9 @@ public class UserServiceImpl implements UserService {
 		BackJSON json = new BackJSON(200);
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("result", 0);
-		String path = Value.getImgpath()+"user"+File.separator+user_id+File.separator+"headImg";
+		//前边有个file:，它就在当前文件夹下新建了file：...
+//		String path = Value.getImgpath()+"user"+File.separator+user_id+File.separator+"headImg";
+		String path = "vgameResource"+File.separator+"user"+File.separator+user_id+File.separator+"headImg";
 		File file = new File(path);
 		if(!file.exists())
 			file.mkdirs();
