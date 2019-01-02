@@ -1,7 +1,6 @@
 package com.vg.service.user;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Encrypt.MD5;
 import com.vg.config.Util.BackJSON;
+import com.vg.config.Util.Base64Utils;
 import com.vg.config.Util.CheckPhoneNub;
 import com.vg.config.Util.SmsSample;
 import com.vg.config.Util.Value;
@@ -160,7 +159,7 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	@Transactional
-	public BackJSON updateHeadPic(String user_id, MultipartFile user_head_pic) {
+	public BackJSON updateHeadPic(String user_id, String fileStr) {
 		BackJSON json = new BackJSON(200);
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("result", 0);
@@ -174,15 +173,30 @@ public class UserServiceImpl implements UserService {
 			if(!file.delete())
 				System.out.println("wrong!!!  fail to delete "+user_id+"'s head_pic.");
 		}
-		String originalPicName = user_head_pic.getOriginalFilename();
-		file = new File(path+File.separator+originalPicName);
+		String picName = Base64Utils.randString(3)+".jpg";
+		boolean fileResult = Base64Utils.base64ToImage(fileStr, path+File.separator+picName);
+		if(fileResult&&um.alterHeadImg(user_id, picName)==1)
+			map.replace("result", 1);
+		//下面的方法并没有成功
+		/*byte[] b = Base64Utils.decodeFromString(fileStr);
+		OutputStream os = null;
 		try {
-			user_head_pic.transferTo(file);
-			if(um.alterHeadImg(user_id, originalPicName)==1)
+			os = new FileOutputStream(path+File.separator+picName);
+			os.write(b);
+			os.flush();
+			if(um.alterHeadImg(user_id, picName)==1)
 				map.replace("result", 1);
-		} catch (IllegalStateException | IOException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}*/
 		json.setData(map);
 		return json;
 	}

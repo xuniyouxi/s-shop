@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONObject;
 import com.vg.config.MyAnn.Authorization;
 import com.vg.config.Util.BackJSON;
 import com.vg.entity.EVO.UserInfo;
@@ -87,8 +86,12 @@ public class UserController {
 	//更新头像
 	@Authorization(authorization="user")
 	@PostMapping("updateHeadPic")
-	public BackJSON updateHeadPic(@RequestParam("user_id") String user_id, @RequestParam("head_picture") MultipartFile file) {
-		return us.updateHeadPic(user_id, file);
+	public BackJSON updateHeadPic(@RequestBody String data) {
+		JSONObject json = JSONObject.parseObject(data);
+		String user_id = json.getString("user_id");
+		String head_picture = json.getString("head_picture");
+		System.out.println(head_picture);
+		return us.updateHeadPic(user_id, head_picture);
 	}
 	//发送验证码
 	@Authorization(authorization="user")
