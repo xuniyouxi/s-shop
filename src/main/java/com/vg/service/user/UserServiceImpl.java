@@ -1,8 +1,9 @@
 package com.vg.service.user;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Encrypt.MD5;
 import com.vg.config.Util.BackJSON;
+import com.vg.config.Util.Base64Utils;
+import com.vg.config.Util.CheckPhoneNub;
+import com.vg.config.Util.SmsSample;
 import com.vg.config.Util.Value;
+import com.vg.entity.IdentifyCode;
 import com.vg.entity.EVO.UserInfo;
 import com.vg.mapper.user.UserMapper;
 
@@ -78,7 +82,11 @@ public class UserServiceImpl implements UserService {
 		BackJSON json = new BackJSON(200);
 		Map<String, String> tm = um.getCenter(user_id);
 		if(!tm.isEmpty()) {
-			String user_head_picture = Value.getDomain()+"userImg/"+user_id+"/headImg/"+tm.get("user_head_picture");
+			String user_head_picture = tm.get("user_head_picture");
+			if(user_head_picture==null) {
+				user_head_picture = Value.getDomain()+"userImg/defaultImg/default.jpg";
+			} else 
+				user_head_picture = Value.getDomain()+"userImg/"+user_id+"/headImg/"+user_head_picture;
 			tm.replace("user_head_picture", user_head_picture);
 			json.setData(tm);
 //			json.setCode(200);
@@ -155,11 +163,13 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	@Transactional
-	public BackJSON updateHeadPic(String user_id, MultipartFile user_head_pic) {
+	public BackJSON updateHeadPic(String user_id, String fileStr) {
 		BackJSON json = new BackJSON(200);
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("result", 0);
-		String path = Value.getImgpath()+"user"+File.separator+user_id+File.separator+"headImg";
+		//前边有个file:，它就在当前文件夹下新建了file：...
+//		String path = Value.getImgpath()+"user"+File.separator+user_id+File.separator+"headImg";
+		String path = "vgameResource"+File.separator+"user"+File.separator+user_id+File.separator+"headImg";
 		File file = new File(path);
 		if(!file.exists())
 			file.mkdirs();
@@ -169,15 +179,75 @@ public class UserServiceImpl implements UserService {
 			if(!file.delete())
 				System.out.println("wrong!!!  fail to delete "+user_id+"'s head_pic.");
 		}
-		String originalPicName = user_head_pic.getOriginalFilename();
-		file = new File(path+File.separator+originalPicName);
+		String picName = Base64Utils.randString(3)+".jpg";
+		boolean fileResult = Base64Utils.base64ToImage(fileStr, path+File.separator+picName);
+		if(fileResult&&um.alterHeadImg(user_id, picName)==1)
+			map.replace("result", 1);
+		//下面的方法并没有成功
+		/*byte[] b = Base64Utils.decodeFromString(fileStr);
+		OutputStream os = null;
 		try {
-			user_head_pic.transferTo(file);
-			if(um.alterHeadImg(user_id, originalPicName)==1)
+			os = new FileOutputStream(path+File.separator+picName);
+			os.write(b);
+			os.flush();
+			if(um.alterHeadImg(user_id, picName)==1)
 				map.replace("result", 1);
-		} catch (IllegalStateException | IOException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}*/
+		json.setData(map);
+		return json;
+	}
+	@Override
+	@Transactional
+	public BackJSON newIdentifyCode(String phone) {
+		BackJSON json = new BackJSON(200);
+		JSONObject rjson = new JSONObject();
+		rjson.put("result", 0);
+		if (!CheckPhoneNub.isMobiPhoneNum(phone)) {
+			rjson.put("result", 2);
+			json.setData(rjson);
+			return json;
 		}
+		int code = (int) ((Math.random() * 9 + 1) * 10000);
+		IdentifyCode identifyCode = new IdentifyCode(phone, code, new Date(System.currentTimeMillis()));
+		String res = SmsSample.SendMessage(phone, code);
+		if(um.newIdentifyCode(identifyCode)==1 && res.equals("0")) {
+			rjson.replace("result", 1);
+		}
+		json.setData(rjson);
+		return json;
+	}
+	@Override
+	public BackJSON checkIdentifyCode(String phone, int code) {
+		BackJSON json = new BackJSON(200);
+		JSONObject rjson = new JSONObject();
+		rjson.put("result", 0);
+		long start = System.currentTimeMillis()-300000;
+		IdentifyCode identifyCode = new IdentifyCode(phone, code, new Date(start));
+		if(um.ifIdentifyCodeTrue(identifyCode)==1)
+			rjson.replace("result", 1);
+		json.setData(rjson);
+		return json;
+	}
+	@Override
+	public BackJSON getSlidePicture() {
+		BackJSON json = new BackJSON(200);
+		Map<String, Object> map = new HashMap<String, Object>(); 
+		List<String> pics = um.getSlidePicture();
+		String domain = Value.getDomain()+"slidePicture/";
+		for(int i=0; i<pics.size(); i++) {
+			pics.set(i, domain+pics.get(i));
+		}
+		map.put("piclist", pics);
 		json.setData(map);
 		return json;
 	}

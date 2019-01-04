@@ -1,12 +1,15 @@
 package com.vg.mapper.user;
 
+import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.springframework.stereotype.Repository;
 
+import com.vg.entity.IdentifyCode;
 import com.vg.entity.EVO.UserInfo;
 
 @Repository
@@ -48,5 +51,14 @@ public interface UserMapper {
 	@Update("update t_user_data set user_head_picture=#{param2} where user_id=#{param1}")
 	int alterHeadImg(String user_id, String user_head_pic);
 	
+	@Insert("insert into t_identify_code values(#{user_phone}, #{identify_code}, 0, 2, #{used_time})")
+	int newIdentifyCode(IdentifyCode identifyCode);
+	
+	@Update("update t_identify_code set used_static=1 where "
+			+ "used_static=0 and used_method=2 and user_phone=#{user_phone} and identify_code=#{identify_code} and used_time>=#{used_time}")
+	int ifIdentifyCodeTrue(IdentifyCode identifyCode);
+	
+	@Select("select bis_content from t_biscuits where bis_name='slidepic' and bis_state=1")
+	List<String> getSlidePicture();
 	
 }

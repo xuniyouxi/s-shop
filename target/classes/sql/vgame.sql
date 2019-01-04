@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : lzy
-Source Server Version : 50721
+Source Server         : battlecall
+Source Server Version : 50720
 Source Host           : localhost:3306
 Source Database       : vgame
 
 Target Server Type    : MYSQL
-Target Server Version : 50721
+Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2019-01-01 17:33:54
+Date: 2019-01-01 23:05:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,7 @@ CREATE TABLE `authorization_code` (
   `apply_admin` varchar(255) NOT NULL COMMENT '签发人',
   `apply_time` datetime NOT NULL COMMENT '签发时间',
   PRIMARY KEY (`code_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of authorization_code
@@ -42,7 +42,7 @@ CREATE TABLE `sys_operation` (
   `operation_name` varchar(255) DEFAULT NULL,
   `operation_content` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`operation_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_operation
@@ -56,6 +56,23 @@ INSERT INTO `sys_operation` VALUES ('6', 'pool4_sum', '600');
 INSERT INTO `sys_operation` VALUES ('7', 'pool5_sum', '700');
 
 -- ----------------------------
+-- Table structure for t_admin
+-- ----------------------------
+DROP TABLE IF EXISTS `t_admin`;
+CREATE TABLE `t_admin` (
+  `admin_id` int(11) NOT NULL,
+  `admin_name` varchar(255) DEFAULT NULL,
+  `admin_rank` varchar(255) DEFAULT NULL,
+  `admin_static` varchar(255) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`admin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_admin
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for t_biscuits
 -- ----------------------------
 DROP TABLE IF EXISTS `t_biscuits`;
@@ -65,7 +82,7 @@ CREATE TABLE `t_biscuits` (
   `bis_content` text COMMENT '小功能的作用',
   `bis_state` int(255) DEFAULT NULL COMMENT '使用状态 0 未使用 1正在用',
   PRIMARY KEY (`bis_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_biscuits
@@ -73,6 +90,9 @@ CREATE TABLE `t_biscuits` (
 INSERT INTO `t_biscuits` VALUES ('1', '免责声明', '第一条 本网站所刊载的所有资料及图表仅供参考使用。刊载这些文档并不构成对任何股份的收购、购买、认购、抛售或持有的邀约或意图。参阅本网站上所刊的文档的人士，应被视为已确认得悉上述立场。投资者依据本网站提供的信息、资料及图表进行金融、证券等投资项目所造成的盈亏与本网站无关。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第二条 本网站的用户在参加网站举办的各种活动时，我们将在您的同意及确认下，通过注册表格等形式要求您提供一些个人资料，如：您的姓名、性别、年龄、出生日期、身份证号、家庭住址、教育程度、企业情况、所属行业等。请您绝对放心，我们在未经您同意的情况下，绝对不会将您的任何资料以任何方式泄露给任何第三方。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第三条 当政府司法机关依照法定程序要求本网站披露个人资料时，我们将根据执法单位之要求或为公共安全之目的提供个人资料。在此情况下之任何披露，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第四条 由于用户将个人密码告知他人或与他人共享注册账户，由此导致的任何个人资料泄露，本网站不负任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第五条 任何由于黑客攻击、计算机病毒侵人或发作、因政府管制而造成的暂时性关闭等影响网络正常经营的不可抗力而造成的个人资料泄露、丢失、被盗用或被窜改等，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第六条 由于与本网站链接的其他网站所造成之个人资料泄露及由此而导致的任何法律争议和后果，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第七条 本网站如因系统维护或升级而需暂停服务时，将事先公告。若因线路及非本企业控制范围外的硬件故障或其他不可抗力而导致暂停服务，于暂停服务期间造成的一切不便与损失，本网站不负任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第八条 本网站使用者因为违反本声明的规定而触犯中华人民共和国法律的，一切后果自己负责，本网站不承担任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第九条 凡以任何方式登录本网站或直接、间接使用本网站资料者，视为自愿接受本网站声明的约束。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第十条 本声明未涉及的问题参见国家有关法律法规，当本声明与国家法律法规冲突时，以国家法律法规为准。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第十一条 本网站之声明以及其修改权、更新权及最终解释权均属东方财富网所有。', '1');
 INSERT INTO `t_biscuits` VALUES ('2', '个人邀请码', '4035', '1');
 INSERT INTO `t_biscuits` VALUES ('3', '联系电话', '15353101818', '1');
+INSERT INTO `t_biscuits` VALUES ('4', 'slidepic', '1.jpg', '1');
+INSERT INTO `t_biscuits` VALUES ('5', 'slidepic', '2.jpg', '1');
+INSERT INTO `t_biscuits` VALUES ('6', 'slidepic', '3.jpg', '1');
 
 -- ----------------------------
 -- Table structure for t_exchange
@@ -137,6 +157,7 @@ INSERT INTO `t_identify_code` VALUES ('15524835211', '60107', '1', '1', '2018-12
 INSERT INTO `t_identify_code` VALUES ('15524835211', '63799', '1', '1', '2018-12-25 13:35:40');
 INSERT INTO `t_identify_code` VALUES ('15524835211', '50969', '0', '1', '2018-12-25 16:00:07');
 INSERT INTO `t_identify_code` VALUES ('17628663291', '16014', '0', '1', '2018-12-25 16:13:07');
+INSERT INTO `t_identify_code` VALUES ('18741069601', '85968', '1', '2', '2019-01-01 22:36:12');
 
 -- ----------------------------
 -- Table structure for t_pool_operation
