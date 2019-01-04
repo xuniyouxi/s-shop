@@ -18,8 +18,10 @@ import com.vg.config.Encrypt.UUID8;
 import com.vg.config.Util.BackJSON;
 import com.vg.config.Util.CheckPhoneNub;
 import com.vg.config.Util.SmsSample;
+import com.vg.entity.Exchange;
 import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
+import com.vg.entity.TradeLog;
 import com.vg.entity.User;
 import com.vg.entity.UserData;
 import com.vg.entity.UserTeam;
@@ -41,8 +43,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	private String code;
 	private String data;
 
-	
-	//首页查询
+	// 首页查询
 	@Override
 	public BackJSON getfastPage(String user_id) {
 		// TODO Auto-generated method stub
@@ -52,7 +53,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		backJSON.setData(res);
 		return backJSON;
 	}
-	
+
 	// 资产页查询
 	@Override
 	public BackJSON getUserassetsPage(String user_id) {
@@ -60,29 +61,103 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		HashMap<String, Object> res = userbehavhourmapper.getUserassetsPage(user_id);
 		backJSON.setCode(200);
 		int pool_sum = Integer.parseInt(systemMapper.getPoolRankSum("pool" + res.get("pool_rank") + "_sum"));
-		res.put("pool_sum",pool_sum);
+		res.put("pool_sum", pool_sum);
 		res.put("pool_balance", pool_sum - (int) res.get("pool_usedCapacity"));
 		backJSON.setData(res);
 		return backJSON;
 	}
+	// 用户交易
+	@Override
+	public BackJSON changepower(TradeLog tradeLog) {
+		BackJSON backJSON = new BackJSON();
+		Map<String, Object> msg = new HashMap<>();
+		msg.put("msg", "交易成功");
+		msg.put("result", 1);
+		backJSON.setCode(200);
+		backJSON.setData(msg);
+		return backJSON;
+
+	}
+	//转入能量池
+	@Override
+	public BackJSON addpower(String user_id,int power) {
+		BackJSON backJSON = new BackJSON();
+		Map<String, Object> msg = new HashMap<>();
+		msg.put("msg", "转入成功");
+		msg.put("result", 1);
+		backJSON.setCode(200);
+		backJSON.setData(msg);
+		return backJSON;
+
+	}
 
 	// 用户激活
 	@Override
-	public JSONObject activateGame(Map<String, String> data) { // user_id authorization_code
-		// TODO Auto-generated method stub
-		JSONObject jsonobj = new JSONObject();
-		jsonobj.put(code, 200);
+	public BackJSON activateGame(Map<String, String> data) { // user_id authorization_code
+		BackJSON backJSON = new BackJSON();
+		Map<String, Object> msg = new HashMap<>();
+		backJSON.setCode(200);
+		int code_id = 0;
+		// 判断激活码
+		try {
+			code_id = userbehavhourmapper.getauthorization_codeid(data.get("activate_code"));
+		} catch (Exception e) {
+			msg.put("msg", "激活码不存在");
+			msg.put("result", 0);
+			backJSON.setData(msg);
+			return backJSON;
+		}
 		// 更新权限
 		if (userbehavhourmapper.updateUserRole(data.get("user_id")) == 1) {
-			// 开始设置自己的爸爸，添加t_user_team表,更新队伍id，更新t_user_team表中自己层数
-			// 更新自己的邀请码，更新自己的池子币数量，更新余额t_user_data
-			// *****找他所有上层的人。间接邀请人数+1，从爷爷开始
-			// 查询所有祖宗，如果满足vip条件，那么脱离原树，重新当祖宗
+			// 用户的userdata信息
+			Map<String, Object> userData = userbehavhourmapper.getUserIMIE(data.get("user_id"));
+			// 用户他爹的userteam信息
+			UserTeam fatherTeam = userbehavhourmapper.getUserTemaById((String) userData.get("invite_code"));
+			UserTeam userTeam = new UserTeam();
+			userTeam.setUser_id((String) userData.get("user_id"));
+			userTeam.setInvited_father((String) userData.get("invite_code"));
+			userTeam.setMember_layer(fatherTeam.getMember_layer() + 1);
+			userTeam.setInvited_bonus((double) 0);
+			userTeam.setTeam_id(fatherTeam.getTeam_id());
+			userbehavhourmapper.creatuserteam(userTeam);
+			String new_InviteCode = userbehavhourmapper.getSysInviteCode();
+			userData.replace("invite_code", new_InviteCode + 2);
+			userbehavhourmapper.updataSysInviteCode(Integer.parseInt(new_InviteCode) + 2 + "");
+			// 更新自己的data表
+			userbehavhourmapper.jihuoUpdata(data.get("user_id"), new_InviteCode);
+			// 更新他爹的team表
+			fatherTeam.setInvited_son(fatherTeam.getInvited_son() + 1);
+			userbehavhourmapper.updataUserTeam(fatherTeam);
+
+			// 从他爷爷开始递归到祖宗，间接人数+1
+			UserTeam user_father = userbehavhourmapper.getfatheridformteam(fatherTeam.getInvited_father());
+			UserTeam ut = new UserTeam();
+			ut.setUser_id(user_father.getUser_id());
+			ut.setInvited_sum(user_father.getInvited_sum() + 1);
+			ut.setInvited_father(user_father.getInvited_father());
+			System.out.println(user_father);
+			try {
+				while (userbehavhourmapper.updataUserTeam(ut) == 1) {
+					user_father = userbehavhourmapper.getfatheridformteam(ut.getInvited_father());
+					ut.setUser_id(user_father.getUser_id());
+					ut.setInvited_sum(user_father.getInvited_sum() + 1);
+					ut.setInvited_father(user_father.getInvited_father());
+				}
+			} catch (Exception e) {
+				// 递归结束，全员加一
+			}
+
+			msg.put("msg", "激活成功");
+			msg.put("result", 1);
+			backJSON.setData(msg);
+
 		} else {
-			jsonobj.put(code, 200);
-			jsonobj.put(this.data, "操作失败");
+			msg.put("msg", "激活失败");
+			msg.put("result", 0);
+			backJSON.setData(msg);
 		}
-		return jsonobj;
+		userbehavhourmapper.updataauthorcode(code_id);
+		return backJSON;
 	}
 
 	// 注册发送验证码后,查看验证码是否有效
@@ -396,7 +471,5 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 		return backJSON;
 	}
-
-
 
 }

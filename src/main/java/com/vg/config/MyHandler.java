@@ -1,5 +1,6 @@
 package com.vg.config;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.MyAnn.Authorization;
 import com.vg.service.user.UserBehaviorservice;
@@ -22,6 +24,11 @@ public class MyHandler implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=utf-8");
+
+
+		JSONObject res = new JSONObject();
 		if (!(handler instanceof HandlerMethod)) {
 			System.out.println("可能请求了静态资源，放过");
 			return true;
@@ -35,15 +42,20 @@ public class MyHandler implements HandlerInterceptor {
 			if (token != null && method.isAnnotationPresent(Authorization.class)) {
 				Authorization useraut = method.getAnnotation(Authorization.class);
 				try {
-					int user_role = ubservice.getUserRoleById((String) JWTUtil.parseJWT(request.getHeader("token")).get("userId"));
-					if(user_role==0) {
+					int user_role = ubservice
+							.getUserRoleById((String) JWTUtil.parseJWT(request.getHeader("token")).get("userId"));
+					if (user_role == 0) {
+
+					
 						System.out.println("虚假token滚蛋");
 						return false;
 					}
-					if (user_role == 1 && (useraut.authorization().equals("user")||useraut.authorization().equals("open"))) {
+					if (user_role == 1
+							&& (useraut.authorization().equals("user") || useraut.authorization().equals("open"))) {
 						System.out.println("访问了user接口，且权限对的上");
 						return true;
-					} else if (user_role == 2 && (useraut.authorization().equals("user")||useraut.authorization().equals("open"))) {
+					} else if (user_role == 2
+							&& (useraut.authorization().equals("user") || useraut.authorization().equals("open"))) {
 						System.out.println("访问了admin接口，且权限对的上");
 						return true;
 					}
@@ -53,6 +65,7 @@ public class MyHandler implements HandlerInterceptor {
 						return false;
 					}
 				} catch (Exception e) {
+
 					System.out.println("假冒token");
 					return false;
 				}

@@ -7,6 +7,7 @@ public class authorization_code {
 	private String code_content;
 	private String apply_admin;
 	private Date apply_time;
+	private Integer used_state;
 
 	public Integer getCode_id() {
 		return code_id;
@@ -40,12 +41,22 @@ public class authorization_code {
 		this.apply_time = apply_time;
 	}
 
-	public authorization_code(Integer code_id, String code_content, String apply_admin, Date apply_time) {
+	public Integer getUsed_state() {
+		return used_state;
+	}
+
+	public void setUsed_state(Integer used_state) {
+		this.used_state = used_state;
+	}
+
+	public authorization_code(Integer code_id, String code_content, String apply_admin, Date apply_time,
+			Integer used_state) {
 		super();
 		this.code_id = code_id;
 		this.code_content = code_content;
 		this.apply_admin = apply_admin;
 		this.apply_time = apply_time;
+		this.used_state = used_state;
 	}
 
 	public authorization_code() {

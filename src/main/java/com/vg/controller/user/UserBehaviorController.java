@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +27,7 @@ import com.vg.config.Util.BackJSON;
 import com.vg.config.Util.SmsSample;
 import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
+import com.vg.entity.TradeLog;
 import com.vg.entity.User;
 import com.vg.entity.EVO.UserLogin;
 import com.vg.entity.EVO.UserRegister;
@@ -52,7 +54,7 @@ public class UserBehaviorController {
 		PageHelper.startPage(kaishi, size);
 		return userbehaviorservice.getallteam();
 	}
-	
+
 	// fastPage
 	// http://localhost:8080/vg/user/fastPage/c3c1319afb5447aaba9f48d7b8634bc4
 	@RequestMapping(value = "/fastPage/{user_id}")
@@ -61,7 +63,6 @@ public class UserBehaviorController {
 
 		return userbehaviorservice.getfastPage(user_id);
 	}
-
 
 	// 资产页查询
 	// http://localhost:8080/vg/user/assetsPage/c3c1319afb5447aaba9f48d7b8634bc4
@@ -76,9 +77,25 @@ public class UserBehaviorController {
 	// 激活游戏
 	@PutMapping({ "/activateGame" })
 	@Authorization(authorization = "open")
-	public JSONObject activateGame(@RequestBody Map<String, String> data) {
+	public BackJSON activateGame(@RequestBody Map<String, String> data) {
 		// user_id authorization_code
 		return userbehaviorservice.activateGame(data);
+	}
+
+	// 用户交换能量
+	@PostMapping({ "/userexchangepower" })
+	@Authorization(authorization = "open")
+	public BackJSON changepower(@RequestBody TradeLog tradeLog) {
+		// user_id authorization_code
+		return userbehaviorservice.changepower(tradeLog);
+	}
+	// 用户添加能量到能量池
+	@PostMapping({ "/addenergy/{user_id}/{energy}" })
+	@Authorization(authorization = "open")
+	public BackJSON addpower(@PathVariable String user_id ,@PathVariable int energy) {
+		// user_id authorization_code
+	
+		return userbehaviorservice.addpower(user_id,energy);
 	}
 
 	// token心跳验证 http://localhost:8080/vg/user/TokenHeartBeat/sdasdsad
