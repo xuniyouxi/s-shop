@@ -1,6 +1,5 @@
 package com.vg.config;
 
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.MyAnn.Authorization;
+import com.vg.config.Util.PrintJSON;
 import com.vg.service.user.UserBehaviorservice;
 
 @Configuration
@@ -24,11 +23,10 @@ public class MyHandler implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json; charset=utf-8");
+//		response.setCharacterEncoding("UTF-8");
+//		response.setContentType("application/json; charset=utf-8");
 
 
-		JSONObject res = new JSONObject();
 		if (!(handler instanceof HandlerMethod)) {
 			System.out.println("可能请求了静态资源，放过");
 			return true;
@@ -45,12 +43,13 @@ public class MyHandler implements HandlerInterceptor {
 					int user_role = ubservice
 							.getUserRoleById((String) JWTUtil.parseJWT(request.getHeader("token")).get("userId"));
 					if (user_role == 0) {
-
-					
+						//token不对,返回状态码
+						String data = "{\"code\":250}";
+						PrintJSON.printJson(response, data);
+						
 						System.out.println("虚假token滚蛋");
 						return false;
-					}
-					if (user_role == 1
+					} else if (user_role == 1
 							&& (useraut.authorization().equals("user") || useraut.authorization().equals("open"))) {
 						System.out.println("访问了user接口，且权限对的上");
 						return true;
@@ -61,11 +60,18 @@ public class MyHandler implements HandlerInterceptor {
 					}
 
 					else {
+						//token不对,返回状态码
+						String data = "{\"code\":250}";
+						PrintJSON.printJson(response, data);
+						
 						System.out.println("访问的接口和权限对不上");
 						return false;
 					}
 				} catch (Exception e) {
-
+					//token不对,返回状态码
+					String data = "{\"code\":250}";
+					PrintJSON.printJson(response, data);
+					
 					System.out.println("假冒token");
 					return false;
 				}
