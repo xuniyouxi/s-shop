@@ -1,7 +1,7 @@
 package com.vg.config;
 
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,24 +11,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.MyAnn.Authorization;
+import com.vg.config.Util.PrintJSON;
+import com.vg.config.Util.TokenHeader;
+import com.vg.mapper.user.UserBehaviorMapper;
 import com.vg.service.user.UserBehaviorservice;
 
 @Configuration
 public class MyHandler implements HandlerInterceptor {
 	@Autowired
 	UserBehaviorservice ubservice;
+	@Autowired
+	UserBehaviorMapper userbehavhourmapper;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json; charset=utf-8");
+//		response.setCharacterEncoding("UTF-8");
+//		response.setContentType("application/json; charset=utf-8");
 
-
-		JSONObject res = new JSONObject();
 		if (!(handler instanceof HandlerMethod)) {
 			System.out.println("可能请求了静态资源，放过");
 			return true;
@@ -42,15 +44,39 @@ public class MyHandler implements HandlerInterceptor {
 			if (token != null && method.isAnnotationPresent(Authorization.class)) {
 				Authorization useraut = method.getAnnotation(Authorization.class);
 				try {
-					int user_role = ubservice
-							.getUserRoleById((String) JWTUtil.parseJWT(request.getHeader("token")).get("userId"));
-					if (user_role == 0) {
-
-					
-						System.out.println("虚假token滚蛋");
+					// 获取token内容
+					Map<String, Object> user_token = JWTUtil.parseJWT(token);
+					// {IMEI=aaaaaaaaaaaaaaaa, exp=1547117485,
+					// userId=649e8385f163472f9dec50520cc0de73, iat=1547113885,
+					// jti=eed3a4fb-14db-4a53-b5ad-9f91a982fcb2}
+					// 通过token的id查询部分用户信息
+					Map<String, Object> userInfo = userbehavhourmapper
+							.getuserInfoByid((String) user_token.get("userId"));
+					// {user_role=1, token_id=NULL, user_equipment_id1=aaaaaaaaaaaaaaaa,
+					// user_id=649e8385f163472f9dec50520cc0de73, user_equipment_id2=NULL}+++++++
+					if (!user_token.get("IMEI").equals(userInfo.get("user_equipment_id1"))
+							&& !user_token.get("IMEI").equals(userInfo.get("user_equipment_id2"))) {
+						System.out.println("imei码对不上");
+						String data = "{\"code\":250}";
+						PrintJSON.printJson(response, data);
 						return false;
 					}
-					if (user_role == 1
+					if (!user_token.get("IMEI").equals(userInfo.get("token_id"))) {
+						System.out.println("此账号已登录");
+						String data = "{\"code\":250}";
+						PrintJSON.printJson(response, data);
+						return false;
+					}
+
+					int user_role = (int) userInfo.get("user_role");
+					if (user_role == 0) {
+						// token不对,返回状态码
+						String data = "{\"code\":250}";
+						PrintJSON.printJson(response, data);
+
+						System.out.println("虚假token滚蛋");
+						return false;
+					} else if (user_role == 1
 							&& (useraut.authorization().equals("user") || useraut.authorization().equals("open"))) {
 						System.out.println("访问了user接口，且权限对的上");
 						return true;
@@ -61,10 +87,17 @@ public class MyHandler implements HandlerInterceptor {
 					}
 
 					else {
+						// token不对,返回状态码
+						String data = "{\"code\":250}";
+						PrintJSON.printJson(response, data);
+
 						System.out.println("访问的接口和权限对不上");
 						return false;
 					}
 				} catch (Exception e) {
+					// token不对,返回状态码
+					String data = "{\"code\":250}";
+					PrintJSON.printJson(response, data);
 
 					System.out.println("假冒token");
 					return false;

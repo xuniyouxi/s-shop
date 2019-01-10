@@ -3,6 +3,8 @@ package com.vg.service.user;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Util.BackJSON;
 import com.vg.entity.Exchange;
@@ -18,7 +20,7 @@ public interface UserBehaviorservice {
 	List<Team> getallteam();
 
 	// 获取用户
-	BackJSON login(UserLogin userlogin) throws Exception;
+	BackJSON login(UserLogin userlogin, HttpServletResponse response) throws Exception;
 
 	// 获取免责声明
 	BackJSON getStatementByFun(int bis_id);
@@ -27,7 +29,7 @@ public interface UserBehaviorservice {
 	int getUserRoleById(String user_id);
 
 	// 用户交换能量
-	BackJSON changepower(TradeLog tradeLog);
+	BackJSON changepower(TradeLog tradeLog) throws Exception;
 
 	// 转入能量池
 	BackJSON addpower(String user_id, int power);
@@ -52,4 +54,9 @@ public interface UserBehaviorservice {
 
 	// 查询首页详情
 	BackJSON getfastPage(String user_id);
+	
+	//获取用户交易记录
+	BackJSON getusertradeLog(String User_id,int kaishi,int size);
+	
+	
 }

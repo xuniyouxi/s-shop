@@ -9,13 +9,15 @@ public class TradeLog {
 
 	private Integer team_id;
 
-	private String to_user_id;
-
 	private Double trade_number;
 
 	private Double service_charge;
 
 	private Date trade_time;
+
+	private String touser_phone;
+
+	private String pay_password;
 
 	public Integer getRecord_id() {
 		return record_id;
@@ -39,14 +41,6 @@ public class TradeLog {
 
 	public void setTeam_id(Integer team_id) {
 		this.team_id = team_id;
-	}
-
-	public String getTo_user_id() {
-		return to_user_id;
-	}
-
-	public void setTo_user_id(String to_user_id) {
-		this.to_user_id = to_user_id;
 	}
 
 	public Double getTrade_number() {
@@ -73,16 +67,33 @@ public class TradeLog {
 		this.trade_time = trade_time;
 	}
 
-	public TradeLog(Integer record_id, String user_id, Integer team_id, String to_user_id, Double trade_number,
-			Double service_charge, Date trade_time) {
+	public String getTouser_phone() {
+		return touser_phone;
+	}
+
+	public void setTouser_phone(String touser_phone) {
+		this.touser_phone = touser_phone;
+	}
+
+	public String getPay_password() {
+		return pay_password;
+	}
+
+	public void setPay_password(String pay_password) {
+		this.pay_password = pay_password;
+	}
+
+	public TradeLog(Integer record_id, String user_id, Integer team_id, Double trade_number, Double service_charge,
+			Date trade_time, String touser_phone, String pay_password) {
 		super();
 		this.record_id = record_id;
 		this.user_id = user_id;
 		this.team_id = team_id;
-		this.to_user_id = to_user_id;
 		this.trade_number = trade_number;
 		this.service_charge = service_charge;
 		this.trade_time = trade_time;
+		this.touser_phone = touser_phone;
+		this.pay_password = pay_password;
 	}
 
 	public TradeLog() {
@@ -90,5 +101,4 @@ public class TradeLog {
 		// TODO Auto-generated constructor stub
 	}
 
-	
 }

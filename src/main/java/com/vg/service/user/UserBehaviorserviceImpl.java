@@ -6,18 +6,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.Encrypt.MD5;
 import com.vg.config.Encrypt.UUID8;
 import com.vg.config.Util.BackJSON;
 import com.vg.config.Util.CheckPhoneNub;
 import com.vg.config.Util.SmsSample;
+import com.vg.config.Util.TokenHeader;
 import com.vg.entity.Exchange;
 import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
@@ -29,10 +36,12 @@ import com.vg.entity.EVO.UserLogin;
 import com.vg.entity.EVO.UserRegister;
 import com.vg.mapper.admin.systemMapper;
 import com.vg.mapper.user.UserBehaviorMapper;
+import com.vg.mapper.user.UserMapper;
 
 import io.jsonwebtoken.Claims;
 
 @Service
+@Transactional
 @CacheConfig()
 public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
@@ -60,35 +69,92 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		BackJSON backJSON = new BackJSON();
 		HashMap<String, Object> res = userbehavhourmapper.getUserassetsPage(user_id);
 		backJSON.setCode(200);
+		// 用户等级对应的能量池总数
 		int pool_sum = Integer.parseInt(systemMapper.getPoolRankSum("pool" + res.get("pool_rank") + "_sum"));
 		res.put("pool_sum", pool_sum);
 		res.put("pool_balance", pool_sum - (int) res.get("pool_usedCapacity"));
 		backJSON.setData(res);
 		return backJSON;
 	}
+
 	// 用户交易
 	@Override
-	public BackJSON changepower(TradeLog tradeLog) {
+	public BackJSON changepower(TradeLog tradeLog) throws Exception {
 		BackJSON backJSON = new BackJSON();
-		Map<String, Object> msg = new HashMap<>();
-		msg.put("msg", "交易成功");
-		msg.put("result", 1);
 		backJSON.setCode(200);
+		Map<String, Object> msg = new HashMap<>();
+		UserData userData = userbehavhourmapper.getuserDataByPayPass(tradeLog.getUser_id(),
+				MD5.md5(tradeLog.getPay_password()), tradeLog.getTrade_number());
+		if (userData == null) {
+			msg.put("msg", "交易失败,请查看密码或余额");
+			msg.put("result", 0);
+			backJSON.setData(msg);
+			return backJSON;
+		}
+		UserData ToUserData = userbehavhourmapper.getuserDataByPhone(tradeLog.getTouser_phone());
+		if (ToUserData == null) {
+			msg.put("msg", "交易失败,用户不存在");
+			msg.put("result", 0);
+			backJSON.setData(msg);
+			return backJSON;
+		}
+		// 开始交易逻辑
+		// 更新自己余额
+		Double powers = tradeLog.getTrade_number() / 10;
+
+		userData.setUser_balance(userData.getUser_balance() - tradeLog.getTrade_number() - powers);
+		ToUserData.setUser_balance(ToUserData.getUser_balance() + tradeLog.getTrade_number() - powers);
+		int UserRes = userbehavhourmapper.updatauserData(userData);
+		int ToUserRes = userbehavhourmapper.updatauserData(ToUserData);
+		if (UserRes == 1 && ToUserRes == 1 && createServiceCharge(powers)) {
+			msg.put("msg", "交易成功");
+			msg.put("result", 1);
+			backJSON.setData(msg);
+			return backJSON;
+		} else
+			// 手动回滚事务
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		msg.put("msg", "交易失败");
+		msg.put("result", 0);
 		backJSON.setData(msg);
 		return backJSON;
 
 	}
-	//转入能量池
+
+	// 转入能量池
 	@Override
-	public BackJSON addpower(String user_id,int power) {
+	public BackJSON addpower(String user_id, int power) {
 		BackJSON backJSON = new BackJSON();
 		Map<String, Object> msg = new HashMap<>();
-		msg.put("msg", "转入成功");
-		msg.put("result", 1);
+		msg.put("msg", "转入失败");
+		msg.put("result", 0);
 		backJSON.setCode(200);
 		backJSON.setData(msg);
-		return backJSON;
+		if (power % 100 != 0 || power < 100) {
+			msg.put("msg", "请转整百能量,或转入能量小于100");
+			msg.put("result", 0);
+			backJSON.setData(msg);
+			return backJSON;
+		}
+		UserData userData = userbehavhourmapper.getuserDataByUserId(user_id);
+		// 用户等级对应的能量池总数
+		int pool_sum = Integer.parseInt(systemMapper.getPoolRankSum("pool" + userData.getPool_rank() + "_sum"));
+		if (pool_sum - userData.getPool_usedCapacity() < power || power > userData.getUser_balance()) {
+			msg.put("msg", "超过能量池容量或余额不足");
+			msg.put("result", 0);
+			backJSON.setData(msg);
+			return backJSON;
+		}
+		userData.setUser_balance(userData.getUser_balance() - power);
+		userData.setPool_usedCapacity(userData.getPool_usedCapacity() + power);
+		if (userbehavhourmapper.updatauserData(userData) == 1) {
+			msg.put("msg", "转入成功");
+			msg.put("result", 1);
+			backJSON.setCode(200);
+			backJSON.setData(msg);
 
+		}
+		return backJSON;
 	}
 
 	// 用户激活
@@ -110,7 +176,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		// 更新权限
 		if (userbehavhourmapper.updateUserRole(data.get("user_id")) == 1) {
 			// 用户的userdata信息
-			Map<String, Object> userData = userbehavhourmapper.getUserIMIE(data.get("user_id"));
+			Map<String, Object> userData = userbehavhourmapper.getUserData(data.get("user_id"));
 			// 用户他爹的userteam信息
 			UserTeam fatherTeam = userbehavhourmapper.getUserTemaById((String) userData.get("invite_code"));
 			UserTeam userTeam = new UserTeam();
@@ -129,14 +195,14 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			fatherTeam.setInvited_son(fatherTeam.getInvited_son() + 1);
 			userbehavhourmapper.updataUserTeam(fatherTeam);
 
-			// 从他爷爷开始递归到祖宗，间接人数+1
-			UserTeam user_father = userbehavhourmapper.getfatheridformteam(fatherTeam.getInvited_father());
-			UserTeam ut = new UserTeam();
-			ut.setUser_id(user_father.getUser_id());
-			ut.setInvited_sum(user_father.getInvited_sum() + 1);
-			ut.setInvited_father(user_father.getInvited_father());
-			System.out.println(user_father);
 			try {
+				// 从他爷爷开始递归到祖宗，间接人数+1
+				UserTeam user_father = userbehavhourmapper.getfatheridformteam(fatherTeam.getInvited_father());
+				UserTeam ut = new UserTeam();
+				ut.setUser_id(user_father.getUser_id());
+				ut.setInvited_sum(user_father.getInvited_sum() + 1);
+				ut.setInvited_father(user_father.getInvited_father());
+				System.out.println(user_father);
 				while (userbehavhourmapper.updataUserTeam(ut) == 1) {
 					user_father = userbehavhourmapper.getfatheridformteam(ut.getInvited_father());
 					ut.setUser_id(user_father.getUser_id());
@@ -245,7 +311,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			int user_role = userbehavhourmapper.getUserRoleById(user_id);
 			jsonobj.put(code, 200);
 			Map<String, String> res = new HashMap<>();
-			res.put("token", JWTUtil.createJWT(user_id, user_role));
+			res.put("token", JWTUtil.createJWT(user_id, user_role, null));
 			jsonobj.put(data, res);
 			return jsonobj;
 		}
@@ -330,14 +396,24 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 
 	// 用户登录
 	@Override
-	public BackJSON login(UserLogin user) throws Exception {
+	public BackJSON login(UserLogin user, HttpServletResponse response) throws Exception {
 
 		BackJSON backJSON = new BackJSON();
 		Map<String, Object> msg = new HashMap<>();
 		user.setUser_password(MD5.md5(user.getUser_password()));
 		User res = userbehavhourmapper.getUserByPhoneAndPass(user);
+		// 如果用户没有激活返回一个未激活吗
 		if (res != null) {
-			Map<String, Object> userdata = userbehavhourmapper.getUserIMIE(res.getUser_id());
+			if (res.getUser_role() == 999) {
+				System.out.println("未激活");
+				backJSON.setCode(200);
+				msg.put("result", 0);
+				msg.put("msg", "未激活");
+				backJSON.setData(msg);
+				TokenHeader.addTokenToResponseHeder(response, "token", "400");
+				return backJSON;
+			}
+			Map<String, Object> userdata = userbehavhourmapper.getUserData(res.getUser_id());
 			if (userdata.get("user_equipment_id1").equals("NULL")
 					&& userdata.get("user_equipment_id2").equals("NULL")) {
 				if (userbehavhourmapper.updatauser_equipment_id1(user.getUser_equipment_id(), res.getUser_id()) != 1) {
@@ -348,10 +424,9 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					backJSON.setData(msg);
 					return backJSON;
 				}
-				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
-				System.out.println(token);
+				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role(), user.getUser_equipment_id());
+				TokenHeader.addTokenToResponseHeder(response, "token", token);
 				System.out.println(JWTUtil.parseJWT(token));
-				userdata.put("token", token);
 				userdata.put("user_phone", user.getUser_phone());
 				userdata.remove("user_pay_password");
 				userdata.remove("user_equipment_id2");
@@ -362,6 +437,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				backJSON.setCode(200);
 				msg.put("result", 1);
 				msg.put("data", userdata);
+				userbehavhourmapper.updateTokenId(user.getUser_equipment_id(), (String) userdata.get("user_id"));
 				backJSON.setData(msg);
 				return backJSON;
 			} else if (userdata.get("user_equipment_id1").equals("NULL")
@@ -374,10 +450,10 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					backJSON.setData(msg);
 					return backJSON;
 				}
-				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
+				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role(), user.getUser_equipment_id());
 				System.out.println(token);
 				System.out.println(JWTUtil.parseJWT(token));
-				userdata.put("token", token);
+				TokenHeader.addTokenToResponseHeder(response, "token", token);
 				userdata.put("user_phone", user.getUser_phone());
 				userdata.remove("user_pay_password");
 				userdata.remove("user_equipment_id2");
@@ -386,6 +462,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				userdata.put("user_equipment_id", user.getUser_equipment_id());
 				userdata.put("user_role", res.getUser_role());
 				backJSON.setCode(200);
+				userbehavhourmapper.updateTokenId(user.getUser_equipment_id(), (String) userdata.get("user_id"));
 				msg.put("result", 1);
 				msg.put("data", userdata);
 				backJSON.setData(msg);
@@ -400,10 +477,10 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					backJSON.setData(msg);
 					return backJSON;
 				}
-				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
+				String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role(), user.getUser_equipment_id());
 				System.out.println(token);
 				System.out.println(JWTUtil.parseJWT(token));
-				userdata.put("token", token);
+				TokenHeader.addTokenToResponseHeder(response, "token", token);
 				userdata.put("user_phone", user.getUser_phone());
 				userdata.remove("user_pay_password");
 				userdata.remove("user_equipment_id2");
@@ -411,6 +488,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				userdata.remove("authorization_code");
 				userdata.put("user_equipment_id", user.getUser_equipment_id());
 				userdata.put("user_role", res.getUser_role());
+				userbehavhourmapper.updateTokenId(user.getUser_equipment_id(), (String) userdata.get("user_id"));
 				backJSON.setCode(200);
 				msg.put("result", 1);
 				msg.put("data", userdata);
@@ -419,10 +497,10 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			} else {
 				if ((userdata.get("user_equipment_id1").equals(user.getUser_equipment_id()))
 						|| userdata.get("user_equipment_id2").equals(user.getUser_equipment_id())) {
-					String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role());
+					String token = JWTUtil.createJWT(res.getUser_id(), res.getUser_role(), user.getUser_equipment_id());
 					System.out.println(token);
 					System.out.println(JWTUtil.parseJWT(token));
-					userdata.put("token", token);
+					TokenHeader.addTokenToResponseHeder(response, "token", token);
 					userdata.put("user_phone", user.getUser_phone());
 					userdata.remove("user_pay_password");
 					userdata.remove("user_equipment_id2");
@@ -430,6 +508,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					userdata.remove("authorization_code");
 					userdata.put("user_equipment_id", user.getUser_equipment_id());
 					userdata.put("user_role", res.getUser_role());
+					userbehavhourmapper.updateTokenId(user.getUser_equipment_id(), (String) userdata.get("user_id"));
 					backJSON.setCode(200);
 					msg.put("result", 1);
 					msg.put("data", userdata);
@@ -437,6 +516,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					return backJSON;
 
 				} else {
+					TokenHeader.addTokenToResponseHeder(response, "token", "400");
 					backJSON.setCode(200);
 					msg.put("result", 0);
 					msg.put("msg", "不是指定设备");
@@ -445,7 +525,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				}
 			}
 		} else {
-
+			TokenHeader.addTokenToResponseHeder(response, "token", "400");
 			backJSON.setCode(200);
 			msg.put("msg", "账号或密码错误");
 			msg.put("result", 0);
@@ -472,4 +552,34 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		return backJSON;
 	}
 
+	// 查询用户交易记录
+	@Override
+	public BackJSON getusertradeLog(String User_id, int kaishi, int size) {
+		PageHelper.startPage(kaishi, size);
+		List<Map<String, Object>> touser = userbehavhourmapper.getusertradeLog(User_id);
+		PageInfo<Map<String, Object>> p = new PageInfo<>(touser);
+		BackJSON backJSON = new BackJSON();
+		Map<String, Object> msg = new HashMap<>();
+		for (Map<String, Object> map : touser) {
+			map.put("toUser_name", userbehavhourmapper.getusernametradeLog((String) map.get("touser_phone")));
+
+		}
+		msg.put("page_no", kaishi);
+		msg.put("page_size", size);
+		msg.put("total_count", p.getTotal());
+		msg.put("list", touser);
+		backJSON.setCode(200);
+		backJSON.setData(msg);
+		return backJSON;
+	}
+
+	/**
+	 * 某个业务的具体了细节逻辑
+	 */
+
+	// 赠送能量的手续费逻辑,对应changepower(TradeLog tradeLog) service
+	private Boolean createServiceCharge(Double power) {
+		System.out.println("处理能量");
+		return true;
+	}
 }

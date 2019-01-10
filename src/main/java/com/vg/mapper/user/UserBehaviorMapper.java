@@ -11,7 +11,6 @@ import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.springframework.stereotype.Repository;
 
-import com.vg.entity.Biscuits;
 import com.vg.entity.IdentifyCode;
 import com.vg.entity.Team;
 import com.vg.entity.User;
@@ -30,18 +29,33 @@ public interface UserBehaviorMapper {
 	// 更新t_user_team
 	@UpdateProvider(type = userBehaviorProvider.class, method = "updatauserTeam")
 	int updataUserTeam(UserTeam userTeam);
-	
-	//获取是否有激活码
-	@Select({"select code_id from authorization_code where code_content=#{code_content} and used_state=0"})
+
+	// 更新t_user_data
+	@UpdateProvider(type = userBehaviorProvider.class, method = "updatauserData")
+	int updatauserData(UserData userData);
+
+	// 查询用户交易记录
+	@Select({ "SELECT * from t_trade_log where user_id=#{user_id}" })
+	List<Map<String, Object>> getusertradeLog(String user_id);
+
+	// 通过交易记录查询被交易昵称
+	@Select({
+			"select user_name from t_user_data WHERE user_id=(SELECT user_id from t_user where user_phone=#{user_phone})" })
+	String getusernametradeLog(String user_phone);
+
+	// 获取是否有激活码
+	@Select({ "select code_id from authorization_code where code_content=#{code_content} and used_state=0" })
 	int getauthorization_codeid(String code_content);
-	//更新激活码已使用
-	@Update({"UPDATE `authorization_code` SET `used_state`='1' WHERE code_id=#{code_id}"})
+
+	// 更新激活码已使用
+	@Update({ "UPDATE `authorization_code` SET `used_state`='1' WHERE code_id=#{code_id}" })
 	int updataauthorcode(int code_id);
-	//用户交换能量
-	
-	//通过自己id查自己爹
-	@Select({"select * from t_user_team where user_id=#{user_id}"})
+	// 用户交换能量
+
+	// 通过自己id查自己爹
+	@Select({ "select * from t_user_team where user_id=#{user_id}" })
 	UserTeam getfatheridformteam(String user_id);
+
 	// 更新用户role
 	@Update({ "UPDATE t_user SET user_role=1 WHERE user_id=#{user_id}" })
 	public int updateUserRole(String user_id);
@@ -63,6 +77,10 @@ public interface UserBehaviorMapper {
 			"select * from t_user where  user_phone = #{user_phone} and user_password=#{user_password} AND (user_role=1 OR user_role=999)" })
 	User getUserByPhoneAndPass(UserLogin userlogin);
 
+	/**
+	 * @ 登录部分
+	 * 
+	 */
 	// 登录时更新第二个设备，如果为空
 	@Update({ "UPDATE t_user_data SET user_equipment_id2=#{user_equipment_id2} WHERE user_id=#{user_id}" })
 	int updatauser_equipment_id2(String user_equipment_id2, String user_id);
@@ -70,6 +88,9 @@ public interface UserBehaviorMapper {
 	// 登录时更新第一个设备，如果为空
 	@Update({ "UPDATE t_user_data SET user_equipment_id1=#{user_equipment_id1} WHERE user_id=#{user_id}" })
 	int updatauser_equipment_id1(String user_equipment_id1, String user_id);
+	//更新token_id
+	@Update({ "UPDATE t_user SET token_id=#{token_id} WHERE user_id=#{user_id}" })
+	int updateTokenId(String token_id, String user_id);
 
 	// 获取免责声明
 	@Select({ "select bis_name,bis_content from t_biscuits WHERE bis_state=1 AND bis_id=#{arg0}" })
@@ -80,7 +101,7 @@ public interface UserBehaviorMapper {
 	int getUserRoleById(String user_id);
 
 	// 创建用户
-	@Insert("INSERT INTO t_user VALUES (#{user_id},#{user_phone},#{user_password},999,#{create_time})")
+	@Insert("INSERT INTO t_user VALUES (#{user_id},#{user_phone},#{user_password},999,'NULL',#{create_time})")
 	int createUser(User user);
 
 	// 激活时更新userdata
@@ -104,9 +125,9 @@ public interface UserBehaviorMapper {
 	@Select({ "select * from t_user_team WHERE user_id=#{user_id}" })
 	UserTeam getUserTemaById(String user_id);
 
-	// 通过user_id获取用户的IMIE码
+	// 通过user_id获取用户的Data
 	@Select({ "select * from t_user_data WHERE user_id=#{user_id}" })
-	Map<String, Object> getUserIMIE(String user_id);
+	Map<String, Object> getUserData(String user_id);
 
 	// 注册时生成短信码
 	@Insert({
@@ -132,5 +153,33 @@ public interface UserBehaviorMapper {
 	@Select({
 			"select a.user_vip,a.user_balance,b.invited_today_bonus from t_user_data a LEFT JOIN t_user_team b ON a.user_id=b.user_id WHERE a. user_id=#{user_id}" })
 	HashMap<String, Object> getfirstPageuserData(String user_id);
+
+	/**
+	 * 交易部分 18.1.8日
+	 */
+	// 判断支付密码和转出数量是否超额
+	@Select({
+			"select * from t_user_data WHERE user_id=#{user_id} AND user_pay_password=#{pay_password} AND user_balance>=#{trade_number}" })
+	UserData getuserDataByPayPass(String user_id, String pay_password, Double trade_number);
+
+	// 通过phone获取userData
+	@Select({ "select * from t_user_data WHERE user_id=(select user_id from t_user WHERE user_phone=#{user_phone})" })
+	UserData getuserDataByPhone(String user_phone);
+
+	/**
+	 * 转入能量池部分 18.1.9日
+	 */
+	// 通过userid获取userData
+	@Select({ "select * from t_user_data WHERE user_id=(select user_id from t_user WHERE user_id=#{user_id})" })
+	UserData getuserDataByUserId(String user_id);
+
+	/**
+	 * 拦截器部分
+	 * 
+	 * 
+	 */
+	// 拦截器获取用户部分信息
+	@Select("select a.user_role,a.user_id,a.token_id,b.user_equipment_id1,b.user_equipment_id2 from t_user a JOIN t_user_data b ON a.user_id = b.user_id WHERE a.user_id=#{user_id}")
+	Map<String, Object> getuserInfoByid(String user_id);
 
 }

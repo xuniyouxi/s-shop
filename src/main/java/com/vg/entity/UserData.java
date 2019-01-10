@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserData implements Serializable {
-	private Integer user_id;
+	private String user_id;
 	private String user_realname;
 	private String user_name;
 	private String user_wxcode;
@@ -15,16 +15,16 @@ public class UserData implements Serializable {
 	private String invite_code;
 	private String user_address;
 	private String user_head_picture;
-	private double user_balance;
-	private int pool_usedCapacity;
+	private Double user_balance;
+	private Integer pool_usedCapacity;
 	private Integer pool_rank;
 	private Integer user_vip;
 
-	public Integer getUser_id() {
+	public String getUser_id() {
 		return user_id;
 	}
 
-	public void setUser_id(Integer user_id) {
+	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
 
@@ -108,19 +108,19 @@ public class UserData implements Serializable {
 		this.user_head_picture = user_head_picture;
 	}
 
-	public double getUser_balance() {
+	public Double getUser_balance() {
 		return user_balance;
 	}
 
-	public void setUser_balance(double user_balance) {
+	public void setUser_balance(Double user_balance) {
 		this.user_balance = user_balance;
 	}
 
-	public int getPool_usedCapacity() {
+	public Integer getPool_usedCapacity() {
 		return pool_usedCapacity;
 	}
 
-	public void setPool_usedCapacity(int pool_usedCapacity) {
+	public void setPool_usedCapacity(Integer pool_usedCapacity) {
 		this.pool_usedCapacity = pool_usedCapacity;
 	}
 
@@ -140,10 +140,10 @@ public class UserData implements Serializable {
 		this.user_vip = user_vip;
 	}
 
-	public UserData(Integer user_id, String user_realname, String user_name, String user_wxcode,
+	public UserData(String user_id, String user_realname, String user_name, String user_wxcode,
 			String user_pay_password, Integer authorization_code, String user_equipment_id1, String user_equipment_id2,
-			String invite_code, String user_address, String user_head_picture, double user_balance,
-			int pool_usedCapacity, Integer pool_rank, Integer user_vip) {
+			String invite_code, String user_address, String user_head_picture, Double user_balance,
+			Integer pool_usedCapacity, Integer pool_rank, Integer user_vip) {
 		super();
 		this.user_id = user_id;
 		this.user_realname = user_realname;

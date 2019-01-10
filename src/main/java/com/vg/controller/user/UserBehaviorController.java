@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -55,6 +56,15 @@ public class UserBehaviorController {
 		return userbehaviorservice.getallteam();
 	}
 
+	// 获取用户交易记录
+	@GetMapping({ "/getTradeLog/{user_id}/{kaishi}/{size}" })
+	@Authorization(authorization = "open")
+	public BackJSON getTradeLog(@PathVariable String user_id, @PathVariable int kaishi, @PathVariable int size) {
+		// user_id authorization_code
+
+		return userbehaviorservice.getusertradeLog(user_id, kaishi, size);
+	}
+
 	// fastPage
 	// http://localhost:8080/vg/user/fastPage/c3c1319afb5447aaba9f48d7b8634bc4
 	@RequestMapping(value = "/fastPage/{user_id}")
@@ -67,7 +77,7 @@ public class UserBehaviorController {
 	// 资产页查询
 	// http://localhost:8080/vg/user/assetsPage/c3c1319afb5447aaba9f48d7b8634bc4
 	@RequestMapping(value = "/assetsPage/{user_id}")
-	@Authorization(authorization = "open")
+	@Authorization(authorization = "user")
 	public BackJSON assetsPage(@PathVariable String user_id) {
 		// pool_rank能量池等级 pool_rank*X - pool_usedCapacity=能量池能量 invited_bonus用户已经获得的推荐奖励
 		// invited_son直接推荐总人数 invited_sum间接推荐总人数
@@ -85,17 +95,18 @@ public class UserBehaviorController {
 	// 用户交换能量
 	@PostMapping({ "/userexchangepower" })
 	@Authorization(authorization = "open")
-	public BackJSON changepower(@RequestBody TradeLog tradeLog) {
+	public BackJSON changepower(@RequestBody TradeLog tradeLog) throws Exception {
 		// user_id authorization_code
 		return userbehaviorservice.changepower(tradeLog);
 	}
+
 	// 用户添加能量到能量池
 	@PostMapping({ "/addenergy/{user_id}/{energy}" })
 	@Authorization(authorization = "open")
-	public BackJSON addpower(@PathVariable String user_id ,@PathVariable int energy) {
+	public BackJSON addpower(@PathVariable String user_id, @PathVariable int energy) {
 		// user_id authorization_code
-	
-		return userbehaviorservice.addpower(user_id,energy);
+
+		return userbehaviorservice.addpower(user_id, energy);
 	}
 
 	// token心跳验证 http://localhost:8080/vg/user/TokenHeartBeat/sdasdsad
@@ -136,8 +147,8 @@ public class UserBehaviorController {
 	@PostMapping(value = "/login")
 	@Authorization(authorization = "open")
 
-	public BackJSON login(@RequestBody UserLogin userlogin) throws Exception {
-		return userbehaviorservice.login(userlogin);
+	public BackJSON login(@RequestBody UserLogin userlogin,HttpServletResponse response) throws Exception {
+		return userbehaviorservice.login(userlogin,response);
 	}
 
 	// 获取免责声明 http://localhost:8080/vg/user/Statement/1
