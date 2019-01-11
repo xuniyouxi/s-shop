@@ -65,6 +65,15 @@ public class UserBehaviorController {
 		return userbehaviorservice.getusertradeLog(user_id, kaishi, size);
 	}
 
+	// 获取用户转入能量池记录
+	@GetMapping({ "/getPoolLog/{user_id}/{kaishi}/{size}" })
+	@Authorization(authorization = "open")
+	public BackJSON getPoolLog(@PathVariable String user_id, @PathVariable int kaishi, @PathVariable int size) {
+		// user_id authorization_code
+
+		return userbehaviorservice.getuserPoolLog(user_id, kaishi, size);
+	}
+
 	// fastPage
 	// http://localhost:8080/vg/user/fastPage/c3c1319afb5447aaba9f48d7b8634bc4
 	@RequestMapping(value = "/fastPage/{user_id}")
@@ -147,8 +156,8 @@ public class UserBehaviorController {
 	@PostMapping(value = "/login")
 	@Authorization(authorization = "open")
 
-	public BackJSON login(@RequestBody UserLogin userlogin,HttpServletResponse response) throws Exception {
-		return userbehaviorservice.login(userlogin,response);
+	public BackJSON login(@RequestBody UserLogin userlogin, HttpServletResponse response) throws Exception {
+		return userbehaviorservice.login(userlogin, response);
 	}
 
 	// 获取免责声明 http://localhost:8080/vg/user/Statement/1

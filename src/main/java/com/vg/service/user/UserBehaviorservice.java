@@ -58,5 +58,6 @@ public interface UserBehaviorservice {
 	//获取用户交易记录
 	BackJSON getusertradeLog(String User_id,int kaishi,int size);
 	
-	
+	//获取用户转入能量池记录
+	BackJSON getuserPoolLog(String user_id,int kaishi,int size);
 }

@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
+import org.hibernate.id.enhanced.PooledLoOptimizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +28,7 @@ import com.vg.config.Util.SmsSample;
 import com.vg.config.Util.TokenHeader;
 import com.vg.entity.Exchange;
 import com.vg.entity.IdentifyCode;
+import com.vg.entity.PoolOperation;
 import com.vg.entity.Team;
 import com.vg.entity.TradeLog;
 import com.vg.entity.User;
@@ -84,8 +86,8 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		backJSON.setCode(200);
 		Map<String, Object> msg = new HashMap<>();
 		UserData userData = userbehavhourmapper.getuserDataByPayPass(tradeLog.getUser_id(),
-				MD5.md5(tradeLog.getPay_password()), tradeLog.getTrade_number());
-		if (userData == null) {
+				MD5.md5(tradeLog.getPay_password()), tradeLog.getTrade_number() + tradeLog.getTrade_number() * 1 / 10);
+		if (userData == null || tradeLog.getTrade_number() < 0) {
 			msg.put("msg", "交易失败,请查看密码或余额");
 			msg.put("result", 0);
 			backJSON.setData(msg);
@@ -101,12 +103,17 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		// 开始交易逻辑
 		// 更新自己余额
 		Double powers = tradeLog.getTrade_number() / 10;
-
+		UserTeam user_team = userbehavhourmapper.getUserTemaById(tradeLog.getUser_id());
 		userData.setUser_balance(userData.getUser_balance() - tradeLog.getTrade_number() - powers);
 		ToUserData.setUser_balance(ToUserData.getUser_balance() + tradeLog.getTrade_number() - powers);
+		tradeLog.setService_charge(tradeLog.getTrade_number() * 1 / 10);
+		tradeLog.setTrade_time(new Date());
+		tradeLog.setTeam_id(user_team.getTeam_id());
+		int resLog = userbehavhourmapper.insertTradeLog(tradeLog);
 		int UserRes = userbehavhourmapper.updatauserData(userData);
 		int ToUserRes = userbehavhourmapper.updatauserData(ToUserData);
-		if (UserRes == 1 && ToUserRes == 1 && createServiceCharge(powers)) {
+
+		if (UserRes == 1 && ToUserRes == 1 && createServiceCharge(powers) && resLog == 1) {
 			msg.put("msg", "交易成功");
 			msg.put("result", 1);
 			backJSON.setData(msg);
@@ -147,13 +154,24 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		}
 		userData.setUser_balance(userData.getUser_balance() - power);
 		userData.setPool_usedCapacity(userData.getPool_usedCapacity() + power);
-		if (userbehavhourmapper.updatauserData(userData) == 1) {
+		PoolOperation poolLog = new PoolOperation();
+		poolLog.setInto_balance(power);
+		poolLog.setUser_id(user_id);
+		poolLog.setOperation_time(new Date());
+
+		int poolLogres = userbehavhourmapper.insertPoolLog(poolLog);
+		if (userbehavhourmapper.updatauserData(userData) == 1 && poolLogres == 1) {
 			msg.put("msg", "转入成功");
 			msg.put("result", 1);
 			backJSON.setCode(200);
 			backJSON.setData(msg);
-
-		}
+			return backJSON;
+		} else
+			// 手动回滚事务
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		msg.put("msg", "转入失败");
+		msg.put("result", 0);
+		backJSON.setData(msg);
 		return backJSON;
 	}
 
@@ -573,6 +591,23 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		return backJSON;
 	}
 
+	// 查询用户转入能量池记录
+	@Override
+	public BackJSON getuserPoolLog(String user_id, int kaishi, int size) {
+		PageHelper.startPage(kaishi, size);
+		List<PoolOperation> touser = userbehavhourmapper.getPoolOperByid(user_id);
+		PageInfo<PoolOperation> p = new PageInfo<>(touser);
+		BackJSON backJSON = new BackJSON();
+		Map<String, Object> msg = new HashMap<>();
+		msg.put("page_no", kaishi);
+		msg.put("page_size", size);
+		msg.put("total_count", p.getTotal());
+		msg.put("list", touser);
+		backJSON.setCode(200);
+		backJSON.setData(msg);
+		return backJSON;
+	}
+
 	/**
 	 * 某个业务的具体了细节逻辑
 	 */
@@ -582,4 +617,5 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		System.out.println("处理能量");
 		return true;
 	}
+
 }

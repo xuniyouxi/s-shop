@@ -12,7 +12,9 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import org.springframework.stereotype.Repository;
 
 import com.vg.entity.IdentifyCode;
+import com.vg.entity.PoolOperation;
 import com.vg.entity.Team;
+import com.vg.entity.TradeLog;
 import com.vg.entity.User;
 import com.vg.entity.UserData;
 import com.vg.entity.UserTeam;
@@ -88,7 +90,8 @@ public interface UserBehaviorMapper {
 	// 登录时更新第一个设备，如果为空
 	@Update({ "UPDATE t_user_data SET user_equipment_id1=#{user_equipment_id1} WHERE user_id=#{user_id}" })
 	int updatauser_equipment_id1(String user_equipment_id1, String user_id);
-	//更新token_id
+
+	// 更新token_id
 	@Update({ "UPDATE t_user SET token_id=#{token_id} WHERE user_id=#{user_id}" })
 	int updateTokenId(String token_id, String user_id);
 
@@ -166,6 +169,10 @@ public interface UserBehaviorMapper {
 	@Select({ "select * from t_user_data WHERE user_id=(select user_id from t_user WHERE user_phone=#{user_phone})" })
 	UserData getuserDataByPhone(String user_phone);
 
+	// 添加交易记录
+	@Insert("INSERT INTO t_trade_log (`user_id`, `team_id`, `touser_phone`, `trade_number`, `service_charge`, `trade_time`) VALUES (#{user_id}, #{team_id}, #{touser_phone}, #{trade_number}, #{service_charge}, #{trade_time})")
+	int insertTradeLog(TradeLog tradeLog);
+
 	/**
 	 * 转入能量池部分 18.1.9日
 	 */
@@ -173,6 +180,12 @@ public interface UserBehaviorMapper {
 	@Select({ "select * from t_user_data WHERE user_id=(select user_id from t_user WHERE user_id=#{user_id})" })
 	UserData getuserDataByUserId(String user_id);
 
+	//转入能量池记录查询
+	@Select("select * from t_pool_operation where user_id = #{user_id}")
+	List<PoolOperation> getPoolOperByid(String user_id);
+	//插入能量池记录
+	@Insert("INSERT INTO `t_pool_operation` (`user_id`, `into_balance`, `operation_time`) VALUES (#{user_id}, #{into_balance}, #{operation_time})")
+	int insertPoolLog(PoolOperation poolOperation);
 	/**
 	 * 拦截器部分
 	 * 
