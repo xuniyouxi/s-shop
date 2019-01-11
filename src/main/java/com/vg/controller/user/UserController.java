@@ -93,13 +93,13 @@ public class UserController {
 		return us.updateHeadPic(user_id, head_picture);
 	}
 	//发送验证码
-	@Authorization(authorization="user")
+	@Authorization(authorization="open")
 	@PostMapping("newIdentifyCode/{user_phone}")
 	public BackJSON newIdentifyCode(@PathVariable String user_phone) {
 		return us.newIdentifyCode(user_phone);
 	}
 	//验证验证码
-	@Authorization(authorization="user")
+	@Authorization(authorization="open")
 	@PostMapping("checkIdentifyCode/{user_phone}/{identify_code}")
 	public BackJSON checkIdentifyCode(@PathVariable("user_phone")String phone, @PathVariable("identify_code")int code){
 		return us.checkIdentifyCode(phone, code);
