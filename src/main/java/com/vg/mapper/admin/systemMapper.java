@@ -12,5 +12,6 @@ public interface systemMapper {
 	@Select({ "SELECT operation_content from sys_operation WHERE operation_name = #{rank}" })
 	String getPoolRankSum(String rank);
 	//每天24点更新数据库的能量池稀释
+	
 
 }

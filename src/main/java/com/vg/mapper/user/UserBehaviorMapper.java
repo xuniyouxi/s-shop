@@ -180,12 +180,14 @@ public interface UserBehaviorMapper {
 	@Select({ "select * from t_user_data WHERE user_id=(select user_id from t_user WHERE user_id=#{user_id})" })
 	UserData getuserDataByUserId(String user_id);
 
-	//转入能量池记录查询
+	// 转入能量池记录查询
 	@Select("select * from t_pool_operation where user_id = #{user_id}")
 	List<PoolOperation> getPoolOperByid(String user_id);
-	//插入能量池记录
+
+	// 插入能量池记录
 	@Insert("INSERT INTO `t_pool_operation` (`user_id`, `into_balance`, `operation_time`) VALUES (#{user_id}, #{into_balance}, #{operation_time})")
 	int insertPoolLog(PoolOperation poolOperation);
+
 	/**
 	 * 拦截器部分
 	 * 
@@ -194,5 +196,9 @@ public interface UserBehaviorMapper {
 	// 拦截器获取用户部分信息
 	@Select("select a.user_role,a.user_id,a.token_id,b.user_equipment_id1,b.user_equipment_id2 from t_user a JOIN t_user_data b ON a.user_id = b.user_id WHERE a.user_id=#{user_id}")
 	Map<String, Object> getuserInfoByid(String user_id);
+
+	// 判断用户是否在一个手机上登录设备
+	@Select("select COUNT(token_id) from t_user WHERE token_id=#{token_id} AND NOT user_id=#{user_id}")
+	int getPhoneTokenidSum(String token_id, String user_id);
 
 }

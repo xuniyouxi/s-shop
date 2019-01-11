@@ -24,6 +24,7 @@ import com.vg.config.Encrypt.MD5;
 import com.vg.config.Encrypt.UUID8;
 import com.vg.config.Util.BackJSON;
 import com.vg.config.Util.CheckPhoneNub;
+import com.vg.config.Util.PrintJSON;
 import com.vg.config.Util.SmsSample;
 import com.vg.config.Util.TokenHeader;
 import com.vg.entity.Exchange;
@@ -431,7 +432,18 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				TokenHeader.addTokenToResponseHeder(response, "token", "400");
 				return backJSON;
 			}
+			// 判断这台机器有几个人在线
+			int equUsedSum = userbehavhourmapper.getPhoneTokenidSum(user.getUser_equipment_id(), res.getUser_id());
+			System.out.println(equUsedSum + "======" + res.getUser_id() + "===" + user.getUser_equipment_id());
+			if (equUsedSum > 0) {
+				backJSON.setCode(200);
+				msg.put("result", 0);
+				msg.put("msg", "当前设备超过1个账户同时登陆");
+				backJSON.setData(msg);
+				return backJSON;
+			}
 			Map<String, Object> userdata = userbehavhourmapper.getUserData(res.getUser_id());
+
 			if (userdata.get("user_equipment_id1").equals("NULL")
 					&& userdata.get("user_equipment_id2").equals("NULL")) {
 				if (userbehavhourmapper.updatauser_equipment_id1(user.getUser_equipment_id(), res.getUser_id()) != 1) {

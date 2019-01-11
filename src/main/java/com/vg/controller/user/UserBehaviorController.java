@@ -58,7 +58,7 @@ public class UserBehaviorController {
 
 	// 获取用户交易记录
 	@GetMapping({ "/getTradeLog/{user_id}/{kaishi}/{size}" })
-	@Authorization(authorization = "open")
+	@Authorization(authorization = "user")
 	public BackJSON getTradeLog(@PathVariable String user_id, @PathVariable int kaishi, @PathVariable int size) {
 		// user_id authorization_code
 
@@ -67,7 +67,7 @@ public class UserBehaviorController {
 
 	// 获取用户转入能量池记录
 	@GetMapping({ "/getPoolLog/{user_id}/{kaishi}/{size}" })
-	@Authorization(authorization = "open")
+	@Authorization(authorization = "user")
 	public BackJSON getPoolLog(@PathVariable String user_id, @PathVariable int kaishi, @PathVariable int size) {
 		// user_id authorization_code
 
