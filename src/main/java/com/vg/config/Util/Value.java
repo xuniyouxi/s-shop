@@ -9,6 +9,7 @@ public class Value {
 
 	//接口前缀（获取图片需要）
 	private static final String domain = "https://www.azstudio.top/vg/";
+	private static final Integer glanceGoodSize = 20;
 	
 	
 	
@@ -31,6 +32,10 @@ public class Value {
 
 	public static String getDomain() {
 		return domain;
+	}
+
+	public static Integer getGlancegoodsize() {
+		return glanceGoodSize;
 	}
 
 	

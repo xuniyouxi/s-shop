@@ -21,8 +21,8 @@ public class UserMapperProvider {
 		}.toString();
 	}
 	
-	public String getGlanceGoods(int r, int e) {
-		return new SQL() {
+	public String getGlanceGoods(int r, int e, int start, int size) {
+		String sql = new SQL() {
 			{
 				SELECT("goods_id, goods_name, goods_img, goods_rmb, goods_energyNum, goods_state");
 				FROM("t_goods");
@@ -37,10 +37,12 @@ public class UserMapperProvider {
 					ORDER_BY("goods_energyNum desc");
 			}
 		}.toString();
+		sql += " limit "+start+", "+size;
+		return sql;
 	}
 	
-	public String getExchangeRecord(String user_id, int r, int e, int t) {
-		return new SQL() {
+	public String getExchangeRecord(String user_id, int r, int e, int t, int start, int size) {
+		String sql = new SQL() {
 			{
 				SELECT("e.exchange_id, e.goods_energyNum, e.exchange_time, g.goods_name, g.goods_describe, g.goods_rmb");
 				FROM("t_goods g, t_exchange e");
@@ -59,6 +61,8 @@ public class UserMapperProvider {
 					ORDER_BY("e.exchange_time desc");
 			}
 		}.toString();
+		sql += " limit "+start+", "+size;
+		return sql;
 	}
 	
 	

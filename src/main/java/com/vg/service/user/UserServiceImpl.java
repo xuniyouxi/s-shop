@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 	public BackJSON getCenter(String user_id) {
 		BackJSON json = new BackJSON(200);
 		Map<String, String> tm = um.getCenter(user_id);
-		if(!tm.isEmpty()) {
+		if(!(tm==null)) {
 			String user_head_picture = tm.get("user_head_picture");
 			if(user_head_picture==null) {
 				user_head_picture = Value.getDomain()+"userImg/defaultImg/default.jpg";
@@ -90,6 +90,10 @@ public class UserServiceImpl implements UserService {
 			tm.replace("user_head_picture", user_head_picture);
 			json.setData(tm);
 //			json.setCode(200);
+		}else {
+			tm = new HashMap<String, String>();
+			tm.put("user_head_picture", Value.getDomain()+"userImg/defaultImg/default.jpg");
+			json.setData(tm);
 		}
 		return json;
 	}
@@ -145,7 +149,9 @@ public class UserServiceImpl implements UserService {
 		try {
 			new_password = MD5.md5(new_password);
 		} catch (Exception e) {
+			json.setData(rjson);
 			e.printStackTrace();
+			return json;
 		}
 		if(type==1) {
 			if(um.alterLoginpwd(user_id, new_password)==1) {
@@ -249,6 +255,24 @@ public class UserServiceImpl implements UserService {
 		}
 		map.put("piclist", pics);
 		json.setData(map);
+		return json;
+	}
+	@Override
+	public BackJSON resetStartPassword(String phone, String new_password) {
+		BackJSON json = new BackJSON(200);
+		JSONObject rjson = new JSONObject();
+		rjson.put("result", 0);
+		String password = null;
+		try {
+			password = MD5.md5(new_password);
+		} catch (Exception e) {
+			json.setData(rjson);
+			e.printStackTrace();
+			return json;
+		}
+		if(um.alterStartPwd(phone, password)==1)
+			rjson.replace("result", 1);
+		json.setData(rjson);
 		return json;
 	}
 

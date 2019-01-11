@@ -1,7 +1,6 @@
 package com.vg.service.user;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,31 +26,46 @@ public class ShoppingServiceImpl implements ShoppingService{
 	
 	@Override
 	@Transactional(readOnly=true)
-	public BackJSON glance(int type_r, int type_e) {
+	public BackJSON glance(int type_r, int type_e, int start) {
+		Integer size = Value.getGlancegoodsize();
 		BackJSON json = new BackJSON(200);
-		List<GlanceGoods> goods = sm.getGlanceGoods(type_r, type_e);
+		List<GlanceGoods> goods = sm.getGlanceGoods(type_r, type_e, (start-1)*size, size);
+		JSONObject data = new JSONObject();
+		data.put("pageNo", start);
+		Integer total_count = sm.getTotalGoods();
+		if(total_count==null)
+			total_count = 0;
+		data.put("totalCount", total_count);
+		data.put("totalPage", total_count/size+1);
 		if(goods.size()>0) {
 			//将商品地址配成完整url
 			String domain = Value.getDomain()+"storeImg/";
 			for(GlanceGoods good:goods) 
 				good.setGoods_img(domain+good.getGoods_img());
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("list", goods);
-			json.setData(map);
-//			json.setCode(200);
+			data.put("list", goods);
+		}else {
+			data.put("list", null);
 		}
+		json.setData(data);
 		return json;
 	}
 	@Override
-	public BackJSON exchangeRecord(String user_id, int type_r, int type_e, int type_t) {
+	public BackJSON exchangeRecord(String user_id, int type_r, int type_e, int type_t, int start) {
+		Integer size = Value.getGlancegoodsize();
 		BackJSON json = new BackJSON(200);
-		List<ExchangeRecord> records = sm.getExchangeRecord(user_id, type_r, type_e, type_t);
+		JSONObject data = new JSONObject();
+		data.put("pageNo", start);
+		List<ExchangeRecord> records = sm.getExchangeRecord(user_id, type_r, type_e, type_t, (start-1)*size, size);
+		Integer total_count = sm.getTotalRecord(user_id);
+		if(total_count==null)
+			total_count = 0;
+		data.put("totalCount", total_count);
+		data.put("totalPage", total_count/size+1);
 		if(records.size()>0) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("list", records);
-			json.setData(map);
-//			json.setCode(200);
-		}
+			data.put("list", records);
+		} else
+			data.put("list", null);
+		json.setData(data);
 		return json;
 	}
 	@Override

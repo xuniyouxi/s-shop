@@ -61,4 +61,7 @@ public interface UserMapper {
 	@Select("select bis_content from t_biscuits where bis_name='slidepic' and bis_state=1")
 	List<String> getSlidePicture();
 	
+	@Update("update t_user set user_password = #{param2} where user_phone=#{param1}")
+	int alterStartPwd(String phone, String new_password);
+	
 }

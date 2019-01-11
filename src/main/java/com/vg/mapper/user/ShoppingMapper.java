@@ -18,10 +18,10 @@ import com.vg.entity.EVO.GlanceGoods;
 public interface ShoppingMapper {
 
 	@SelectProvider(type = UserMapperProvider.class, method = "getGlanceGoods")
-	List<GlanceGoods> getGlanceGoods(int r, int e);
+	List<GlanceGoods> getGlanceGoods(int r, int e, int start, int size);
 	
 	@SelectProvider(type = UserMapperProvider.class, method = "getExchangeRecord")
-	List<ExchangeRecord> getExchangeRecord(String user_id, int r, int e, int t);
+	List<ExchangeRecord> getExchangeRecord(String user_id, int r, int e, int t, int start, int size);
 	
 	@Select("select user_address, user_balance from t_user_data where user_id = #{user_id}")
 	Map<String, Object> getAddressandBalance(String user_id);
@@ -36,5 +36,10 @@ public interface ShoppingMapper {
 			+ "where g.goods_id=#{goods_id} and ud.user_id=#{user_id}")
 	int updateGoodsSum(@Param("user_id")String user_id, @Param("goods_id")Integer goods_id);
 	
+	@Select("select count(1) from t_goods")
+	Integer getTotalGoods();
+	
+	@Select("select count(1) from t_exchange where user_id = #{user_id}")
+	Integer getTotalRecord(String user_id);
 	
 }

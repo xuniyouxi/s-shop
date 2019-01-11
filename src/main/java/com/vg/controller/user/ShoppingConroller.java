@@ -25,14 +25,15 @@ public class ShoppingConroller {
 	private ShoppingService ss;
 	
 	@Authorization(authorization="user")
-	@GetMapping("glance/{type_r}/{type_e}")
-	public BackJSON glance(@PathVariable("type_r")int type_r, @PathVariable("type_e")int type_e) {
-		return ss.glance(type_r, type_e);
+	@GetMapping("glance/{type_r}/{type_e}/{start_page}")
+	public BackJSON glance(@PathVariable("type_r")int type_r, @PathVariable("type_e")int type_e, @PathVariable("start_page")int start_page) {
+		return ss.glance(type_r, type_e, start_page);
 	}
 	@Authorization(authorization="user")
-	@GetMapping("recordExchange/{user_id}/{type_r}/{type_e}/{type_t}")
-	public BackJSON exchangeRecord(@PathVariable("user_id")String user_id, @PathVariable("type_r")int type_r, @PathVariable("type_e")int type_e, @PathVariable("type_t")int type_t) {
-		return ss.exchangeRecord(user_id, type_r, type_e, type_t);
+	@GetMapping("recordExchange/{user_id}/{type_r}/{type_e}/{type_t}/{start_page}")
+	public BackJSON exchangeRecord(@PathVariable("user_id")String user_id, @PathVariable("type_r")int type_r, 
+			@PathVariable("type_e")int type_e, @PathVariable("type_t")int type_t, @PathVariable("start_page")int start_page) {
+		return ss.exchangeRecord(user_id, type_r, type_e, type_t, start_page);
 	}
 	@Authorization(authorization="user")
 	@PostMapping("exchange/{user_id}")

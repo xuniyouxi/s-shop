@@ -18,5 +18,6 @@ public interface UserService {
 	public BackJSON newIdentifyCode(String phone);
 	public BackJSON checkIdentifyCode(String phone, int code);
 	public BackJSON getSlidePicture();
+	public BackJSON resetStartPassword(String phone, String new_password);
 	
 }

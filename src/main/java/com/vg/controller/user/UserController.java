@@ -110,6 +110,11 @@ public class UserController {
 	public BackJSON getSlidePicture() {
 		return us.getSlidePicture();
 	}
-	
+	//用户忘记密码重置密码，是公开接口
+	@Authorization(authorization="open")
+	@PostMapping("resetStartPassword")
+	public BackJSON resetStartPassword(@RequestBody Map<String, Object> map) {
+		return us.resetStartPassword((String)map.get("user_phone"), (String)map.get("new_password"));
+	}
 
 }
