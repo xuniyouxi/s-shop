@@ -60,4 +60,7 @@ public interface UserBehaviorservice {
 	
 	//获取用户转入能量池记录
 	BackJSON getuserPoolLog(String user_id,int kaishi,int size);
+	
+	//获取版本号
+	BackJSON getversion();
 }

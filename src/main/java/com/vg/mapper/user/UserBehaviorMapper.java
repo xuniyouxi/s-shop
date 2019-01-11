@@ -197,8 +197,11 @@ public interface UserBehaviorMapper {
 	@Select("select a.user_role,a.user_id,a.token_id,b.user_equipment_id1,b.user_equipment_id2 from t_user a JOIN t_user_data b ON a.user_id = b.user_id WHERE a.user_id=#{user_id}")
 	Map<String, Object> getuserInfoByid(String user_id);
 
-	// 判断用户是否在一个手机上登录设备
-	@Select("select COUNT(token_id) from t_user WHERE token_id=#{token_id} AND NOT user_id=#{user_id}")
-	int getPhoneTokenidSum(String token_id, String user_id);
+	// 一个账号只能在一台手机使用
+	@Select("select user_equipment_id1 from t_user_data WHERE NOT user_id = #{user_id}")
+	List<String> getAllIMEI1(String user_id);
+
+	@Select("select user_equipment_id2 from t_user_data WHERE NOT user_id = #{user_id}")
+	List<String> getAllIMEI2(String user_id);
 
 }

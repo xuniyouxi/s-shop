@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
+import org.aspectj.weaver.patterns.HasMemberTypePattern;
 import org.hibernate.id.enhanced.PooledLoOptimizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -54,6 +55,19 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	systemMapper systemMapper;
 	private String code;
 	private String data;
+
+	// 获取版本号
+	@Override
+	public BackJSON getversion() {
+		// TODO Auto-generated method stub
+		BackJSON backJSON = new BackJSON();
+		backJSON.setCode(200);
+		String res = systemMapper.getOperationContent1(8);
+		Map<String, String> content = new HashMap<>();
+		content.put("version_code", res);
+		backJSON.setData(content);
+		return backJSON;
+	}
 
 	// 首页查询
 	@Override
@@ -432,15 +446,39 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				TokenHeader.addTokenToResponseHeder(response, "token", "400");
 				return backJSON;
 			}
-			// 判断这台机器有几个人在线
-			int equUsedSum = userbehavhourmapper.getPhoneTokenidSum(user.getUser_equipment_id(), res.getUser_id());
-			System.out.println(equUsedSum + "======" + res.getUser_id() + "===" + user.getUser_equipment_id());
-			if (equUsedSum > 0) {
-				backJSON.setCode(200);
-				msg.put("result", 0);
-				msg.put("msg", "当前设备超过1个账户同时登陆");
-				backJSON.setData(msg);
-				return backJSON;
+//			// 判断这台机器有几个人在线
+//			int equUsedSum = userbehavhourmapper.getPhoneTokenidSum(user.getUser_equipment_id(), res.getUser_id());
+//			System.out.println(equUsedSum + "======" + res.getUser_id() + "===" + user.getUser_equipment_id());
+//			if (equUsedSum > 0) {
+//				backJSON.setCode(200);
+//				msg.put("result", 0);
+//				msg.put("msg", "当前设备超过1个账户同时登陆");
+//				backJSON.setData(msg);
+//				return backJSON;
+//			}
+			List<String> allIMEI1 = userbehavhourmapper.getAllIMEI1(res.getUser_id());
+			System.out.println("==========");
+			System.out.println(allIMEI1);
+			List<String> allIMEI2 = userbehavhourmapper.getAllIMEI2(res.getUser_id());
+			System.out.println("==========");
+			System.out.println(allIMEI2);
+			for (String string : allIMEI1) {
+				if (string.equals(user.getUser_equipment_id()) && !string.equals("NULL")) {
+					backJSON.setCode(200);
+					msg.put("result", 0);
+					msg.put("msg", "一台设备只能登陆一个号");
+					backJSON.setData(msg);
+					return backJSON;
+				}
+			}
+			for (String string : allIMEI2) {
+				if (string.equals(user.getUser_equipment_id()) && !string.equals("NULL")) {
+					backJSON.setCode(200);
+					msg.put("result", 0);
+					msg.put("msg", "一台设备只能登陆一个号");
+					backJSON.setData(msg);
+					return backJSON;
+				}
 			}
 			Map<String, Object> userdata = userbehavhourmapper.getUserData(res.getUser_id());
 

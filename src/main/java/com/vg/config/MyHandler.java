@@ -14,7 +14,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.MyAnn.Authorization;
 import com.vg.config.Util.PrintJSON;
-import com.vg.config.Util.TokenHeader;
 import com.vg.mapper.user.UserBehaviorMapper;
 import com.vg.service.user.UserBehaviorservice;
 
@@ -56,7 +55,7 @@ public class MyHandler implements HandlerInterceptor {
 					// user_id=649e8385f163472f9dec50520cc0de73, user_equipment_id2=NULL}+++++++
 					if (!user_token.get("IMEI").equals(userInfo.get("user_equipment_id1"))
 							&& !user_token.get("IMEI").equals(userInfo.get("user_equipment_id2"))) {
-						System.out.println("imei码对不上");
+						System.out.println("账号异常，重新登录");
 						String data = "{\"code\":250}";
 						PrintJSON.printJson(response, data);
 						return false;

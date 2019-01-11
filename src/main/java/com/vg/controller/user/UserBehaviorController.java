@@ -56,6 +56,13 @@ public class UserBehaviorController {
 		return userbehaviorservice.getallteam();
 	}
 
+	// 获取版本号  http://localhost:8080/vg/user/VersionCode
+	@GetMapping(value = "/VersionCode")
+	@Authorization(authorization = "open")
+	public BackJSON VersionCode() {
+		return userbehaviorservice.getversion();
+	}
+
 	// 获取用户交易记录
 	@GetMapping({ "/getTradeLog/{user_id}/{kaishi}/{size}" })
 	@Authorization(authorization = "user")
