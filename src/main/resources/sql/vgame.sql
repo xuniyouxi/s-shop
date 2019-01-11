@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2019-01-05 00:36:07
+Date: 2019-01-11 15:20:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -89,7 +89,7 @@ CREATE TABLE `t_biscuits` (
 -- Records of t_biscuits
 -- ----------------------------
 INSERT INTO `t_biscuits` VALUES ('1', '免责声明', '第一条 本网站所刊载的所有资料及图表仅供参考使用。刊载这些文档并不构成对任何股份的收购、购买、认购、抛售或持有的邀约或意图。参阅本网站上所刊的文档的人士，应被视为已确认得悉上述立场。投资者依据本网站提供的信息、资料及图表进行金融、证券等投资项目所造成的盈亏与本网站无关。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第二条 本网站的用户在参加网站举办的各种活动时，我们将在您的同意及确认下，通过注册表格等形式要求您提供一些个人资料，如：您的姓名、性别、年龄、出生日期、身份证号、家庭住址、教育程度、企业情况、所属行业等。请您绝对放心，我们在未经您同意的情况下，绝对不会将您的任何资料以任何方式泄露给任何第三方。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第三条 当政府司法机关依照法定程序要求本网站披露个人资料时，我们将根据执法单位之要求或为公共安全之目的提供个人资料。在此情况下之任何披露，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第四条 由于用户将个人密码告知他人或与他人共享注册账户，由此导致的任何个人资料泄露，本网站不负任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第五条 任何由于黑客攻击、计算机病毒侵人或发作、因政府管制而造成的暂时性关闭等影响网络正常经营的不可抗力而造成的个人资料泄露、丢失、被盗用或被窜改等，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第六条 由于与本网站链接的其他网站所造成之个人资料泄露及由此而导致的任何法律争议和后果，本网站均得免责。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第七条 本网站如因系统维护或升级而需暂停服务时，将事先公告。若因线路及非本企业控制范围外的硬件故障或其他不可抗力而导致暂停服务，于暂停服务期间造成的一切不便与损失，本网站不负任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第八条 本网站使用者因为违反本声明的规定而触犯中华人民共和国法律的，一切后果自己负责，本网站不承担任何责任。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第九条 凡以任何方式登录本网站或直接、间接使用本网站资料者，视为自愿接受本网站声明的约束。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第十条 本声明未涉及的问题参见国家有关法律法规，当本声明与国家法律法规冲突时，以国家法律法规为准。\\\\r\\\\n\\\\r\\\\n \\\\r\\\\n\\\\r\\\\n第十一条 本网站之声明以及其修改权、更新权及最终解释权均属东方财富网所有。', '1');
-INSERT INTO `t_biscuits` VALUES ('2', '个人邀请码', '4069', '1');
+INSERT INTO `t_biscuits` VALUES ('2', '个人邀请码', '4087', '1');
 INSERT INTO `t_biscuits` VALUES ('3', '联系电话', '15353101818', '1');
 INSERT INTO `t_biscuits` VALUES ('4', 'slidepic', '1.jpg', '1');
 INSERT INTO `t_biscuits` VALUES ('5', 'slidepic', '2.jpg', '1');
@@ -164,16 +164,42 @@ INSERT INTO `t_identify_code` VALUES ('18741069601', '85968', '1', '2', '2019-01
 -- ----------------------------
 DROP TABLE IF EXISTS `t_pool_operation`;
 CREATE TABLE `t_pool_operation` (
-  `operation_id` int(11) NOT NULL,
+  `operation_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) DEFAULT NULL,
-  `into_balance` int(11) DEFAULT NULL COMMENT '使用多少可用余额转入能量池',
+  `into_balance` int(20) DEFAULT NULL COMMENT '使用多少可用余额转入能量池',
   `operation_time` datetime DEFAULT NULL COMMENT '操作记录时间',
   PRIMARY KEY (`operation_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_pool_operation
 -- ----------------------------
+INSERT INTO `t_pool_operation` VALUES ('1', '1', '1', '2019-01-11 13:10:10');
+INSERT INTO `t_pool_operation` VALUES ('2', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('3', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('4', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('5', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('6', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('7', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('8', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('9', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('10', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('11', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('12', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('13', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('14', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('15', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('16', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('17', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('18', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('19', '1', '2', '2019-01-11 13:16:36');
+INSERT INTO `t_pool_operation` VALUES ('20', 'c3c1319afb5447aaba9f48d7b8634bc4', '100', '2019-01-11 13:32:58');
+INSERT INTO `t_pool_operation` VALUES ('21', 'c3c1319afb5447aaba9f48d7b8634bc4', '100', '2019-01-11 13:33:30');
+INSERT INTO `t_pool_operation` VALUES ('22', 'c3c1319afb5447aaba9f48d7b8634bc4', '100', '2019-01-11 13:34:06');
+INSERT INTO `t_pool_operation` VALUES ('23', 'c3c1319afb5447aaba9f48d7b8634bc4', '100', '2019-01-11 13:34:07');
+INSERT INTO `t_pool_operation` VALUES ('24', 'c3c1319afb5447aaba9f48d7b8634bc4', '100', '2019-01-11 13:34:08');
+INSERT INTO `t_pool_operation` VALUES ('25', 'c3c1319afb5447aaba9f48d7b8634bc4', '100', '2019-01-11 14:19:43');
+INSERT INTO `t_pool_operation` VALUES ('26', 'c3c1319afb5447aaba9f48d7b8634bc4', '100', '2019-01-11 14:19:49');
 
 -- ----------------------------
 -- Table structure for t_team
@@ -208,19 +234,39 @@ INSERT INTO `t_team` VALUES ('33', null, null);
 -- ----------------------------
 DROP TABLE IF EXISTS `t_trade_log`;
 CREATE TABLE `t_trade_log` (
-  `record_id` int(11) NOT NULL COMMENT '流水id',
+  `record_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水id',
   `user_id` varchar(255) DEFAULT NULL COMMENT '赠送能量人id',
   `team_id` int(11) NOT NULL COMMENT '用户的团队id 团队id为0代表没有团队',
-  `to_user_id` varchar(255) DEFAULT NULL COMMENT '被赠送能量人id',
-  `trade_number` double DEFAULT NULL COMMENT '赠送数量',
-  `service_charge` double(255,0) DEFAULT NULL,
+  `touser_phone` varchar(255) DEFAULT NULL COMMENT '被赠送能量人id',
+  `trade_number` double(15,4) DEFAULT NULL COMMENT '赠送数量',
+  `service_charge` double(15,4) DEFAULT NULL COMMENT '服务费',
   `trade_time` datetime DEFAULT NULL COMMENT '赠送时间',
   PRIMARY KEY (`record_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='交易表';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='交易表';
 
 -- ----------------------------
 -- Records of t_trade_log
 -- ----------------------------
+INSERT INTO `t_trade_log` VALUES ('1', '1', '1', '1', '1.0000', '1.0000', '2019-01-06 12:41:14');
+INSERT INTO `t_trade_log` VALUES ('2', '1', '1', '2', '22.0000', '2.0000', '2019-02-15 12:49:14');
+INSERT INTO `t_trade_log` VALUES ('3', '1', '2', '1', '222.0000', '1.0000', '2019-01-06 12:49:56');
+INSERT INTO `t_trade_log` VALUES ('4', '1', '1', '1', '1.0000', '1.0000', '2019-01-23 13:01:45');
+INSERT INTO `t_trade_log` VALUES ('5', '1', '1', '1', '1.0000', '1.0000', '2019-02-23 13:02:35');
+INSERT INTO `t_trade_log` VALUES ('6', '1', '1', '1', '1.0000', '1.0000', '2019-01-24 13:10:14');
+INSERT INTO `t_trade_log` VALUES ('7', '1', '1', '1', '1.0000', '1.0000', '2019-01-10 23:49:57');
+INSERT INTO `t_trade_log` VALUES ('8', '1', '1', '1', '1.0000', '1.0000', '2019-01-10 23:49:57');
+INSERT INTO `t_trade_log` VALUES ('9', '1', '1', '1', '1.0000', '1.0000', '2019-01-10 23:49:57');
+INSERT INTO `t_trade_log` VALUES ('10', '1', '1', '1', '1.0000', '1.0000', '2019-01-10 23:49:57');
+INSERT INTO `t_trade_log` VALUES ('11', '1', '1', '1', '1.0000', '1.0000', '2019-01-10 23:49:57');
+INSERT INTO `t_trade_log` VALUES ('12', '1', '1', '1', '1.0000', '1.0000', '2019-01-10 23:49:57');
+INSERT INTO `t_trade_log` VALUES ('13', '1', '1', '1', '1.0000', '1.0000', '2019-01-10 23:49:57');
+INSERT INTO `t_trade_log` VALUES ('14', '1', '1', '1', '1.0000', '1.0000', '2019-01-10 23:49:57');
+INSERT INTO `t_trade_log` VALUES ('15', '1', '1', '2', '2.0000', '2.0000', '2019-01-10 23:51:21');
+INSERT INTO `t_trade_log` VALUES ('16', '1', '1', '1', '1.0000', '1.0000', '2019-01-11 12:49:39');
+INSERT INTO `t_trade_log` VALUES ('17', 'c3c1319afb5447aaba9f48d7b8634bc4', '3', '2', '300.0000', '30.0000', '2019-01-11 13:03:42');
+INSERT INTO `t_trade_log` VALUES ('18', 'c3c1319afb5447aaba9f48d7b8634bc4', '3', '2', '300.0000', '30.0000', '2019-01-11 14:27:17');
+INSERT INTO `t_trade_log` VALUES ('19', 'c3c1319afb5447aaba9f48d7b8634bc4', '3', '2', '2000.0000', '200.0000', '2019-01-11 14:27:56');
+INSERT INTO `t_trade_log` VALUES ('20', 'c3c1319afb5447aaba9f48d7b8634bc4', '3', '2', '4399.0000', '440.0000', '2019-01-11 14:32:56');
 
 -- ----------------------------
 -- Table structure for t_user
@@ -231,6 +277,7 @@ CREATE TABLE `t_user` (
   `user_phone` varchar(255) DEFAULT NULL COMMENT '用户账号',
   `user_password` varchar(255) DEFAULT NULL COMMENT '用户密码',
   `user_role` int(255) DEFAULT NULL COMMENT '1普通用户 2管理员 999为失效用户',
+  `token_id` varchar(255) NOT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_phone` (`user_phone`)
@@ -239,21 +286,22 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('096914eeaa8d4b5bb4a94cfe0e00153a', '1315236', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-25 00:14:27');
-INSERT INTO `t_user` VALUES ('0ce0ef60bc304804ba6ac0ccc013c9da', '111111111', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-23 23:37:07');
-INSERT INTO `t_user` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '1111223322', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-24 00:49:47');
-INSERT INTO `t_user` VALUES ('3c789aa58d024907b1f40f50051982f8', '13152362488', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 15:33:24');
-INSERT INTO `t_user` VALUES ('44fa1d49b76843ec808be230c9b3d0d4', '15353969153', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 14:56:46');
-INSERT INTO `t_user` VALUES ('4d8848be5f3046e3b547bfd6fee49c59', '18742527429', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 14:35:29');
-INSERT INTO `t_user` VALUES ('649e8385f163472f9dec50520cc0de73', '2', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:39');
-INSERT INTO `t_user` VALUES ('72e326e07b7b43f0b91564318f941c52', '18742527413', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 13:48:26');
-INSERT INTO `t_user` VALUES ('7c783e21813f42e9be962efe94ce76be', '13892528159', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 14:31:02');
-INSERT INTO `t_user` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-10 18:41:19');
-INSERT INTO `t_user` VALUES ('c4d8813cfc844dd383dbb11a921d8acb', '13892528157', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-29 10:15:04');
-INSERT INTO `t_user` VALUES ('d972de471a394313910690e60919c350', '15524835299', '386f72fbd88bdd3047b862a26a981808', '999', '2019-01-04 19:25:28');
-INSERT INTO `t_user` VALUES ('e09f7b2b39254e6d85162c5cd7167c63', '13892533333', '386f72fbd88bdd3047b862a26a981808', '999', '2019-01-04 18:30:52');
-INSERT INTO `t_user` VALUES ('e0d84a1c3d3e41a68c8dba582cd30a15', '144806015151515', '386f72fbd88bdd3047b862a26a981808', '999', '2018-12-25 13:45:46');
-INSERT INTO `t_user` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', '3565028633', '386f72fbd88bdd3047b862a26a981808', '1', '2018-12-12 22:50:09');
+INSERT INTO `t_user` VALUES ('096914eeaa8d4b5bb4a94cfe0e00153a', '1315236', '386f72fbd88bdd3047b862a26a981808', '1', 'NULL', '2018-12-25 00:14:27');
+INSERT INTO `t_user` VALUES ('0ce0ef60bc304804ba6ac0ccc013c9da', '111111111', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-23 23:37:07');
+INSERT INTO `t_user` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '1111223322', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-24 00:49:47');
+INSERT INTO `t_user` VALUES ('3c789aa58d024907b1f40f50051982f8', '13152362488', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-25 15:33:24');
+INSERT INTO `t_user` VALUES ('44fa1d49b76843ec808be230c9b3d0d4', '15353969153', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-25 14:56:46');
+INSERT INTO `t_user` VALUES ('4d8848be5f3046e3b547bfd6fee49c59', '18742527429', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-25 14:35:29');
+INSERT INTO `t_user` VALUES ('649e8385f163472f9dec50520cc0de73', '2', '386f72fbd88bdd3047b862a26a981808', '1', 'NULL', '2018-12-10 18:41:39');
+INSERT INTO `t_user` VALUES ('727952922d6e406aa298c178c9bfbb35', '17628663291', '386f72fbd88bdd3047b862a26a981808', '1', '11', '2019-01-06 18:17:38');
+INSERT INTO `t_user` VALUES ('72e326e07b7b43f0b91564318f941c52', '18742527413', '386f72fbd88bdd3047b862a26a981808', '999', '11', '2018-12-25 13:48:26');
+INSERT INTO `t_user` VALUES ('7c783e21813f42e9be962efe94ce76be', '13892528159', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-25 14:31:02');
+INSERT INTO `t_user` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '386f72fbd88bdd3047b862a26a981808', '1', 'NULL', '2018-12-10 18:41:19');
+INSERT INTO `t_user` VALUES ('c4d8813cfc844dd383dbb11a921d8acb', '13892528157', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-29 10:15:04');
+INSERT INTO `t_user` VALUES ('d972de471a394313910690e60919c350', '15524835299', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2019-01-04 19:25:28');
+INSERT INTO `t_user` VALUES ('e09f7b2b39254e6d85162c5cd7167c63', '13892533333', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2019-01-04 18:30:52');
+INSERT INTO `t_user` VALUES ('e0d84a1c3d3e41a68c8dba582cd30a15', '144806015151515', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-25 13:45:46');
+INSERT INTO `t_user` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', '3565028633', '386f72fbd88bdd3047b862a26a981808', '999', 'NULL', '2018-12-12 22:50:09');
 
 -- ----------------------------
 -- Table structure for t_user_data
@@ -271,7 +319,7 @@ CREATE TABLE `t_user_data` (
   `invite_code` varchar(255) DEFAULT NULL COMMENT '用户自己的邀请码  //如果用户未激活，那么邀请码为父亲的id',
   `user_address` varchar(255) DEFAULT NULL COMMENT '用户的收货地址',
   `user_head_picture` varchar(255) DEFAULT NULL COMMENT '用户头像',
-  `user_balance` double(255,0) DEFAULT NULL COMMENT '用户的余额',
+  `user_balance` double(15,4) DEFAULT NULL COMMENT '用户的余额',
   `pool_usedCapacity` int(255) DEFAULT NULL COMMENT '能量池已经被使用的能量',
   `pool_rank` int(255) DEFAULT NULL COMMENT '能量池等级',
   `user_vip` int(255) DEFAULT NULL COMMENT '用户星级',
@@ -282,21 +330,22 @@ CREATE TABLE `t_user_data` (
 -- ----------------------------
 -- Records of t_user_data
 -- ----------------------------
-INSERT INTO `t_user_data` VALUES ('096914eeaa8d4b5bb4a94cfe0e00153a', 'IprAQCJL', null, null, null, '111', 'aaaaaaa1aaaaaaaaa', 'aaaaaa1a1aaaaaaaaa', '000000', '三里屯', null, '4399', '0', '1', '0');
-INSERT INTO `t_user_data` VALUES ('0ce0ef60bc304804ba6ac0ccc013c9da', 'kPU3rtAD', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '东软路', null, '4399', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '9ueqLwbG', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '北大街20号', null, '4399', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('3c789aa58d024907b1f40f50051982f8', 'Pw6eCXsr', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('44fa1d49b76843ec808be230c9b3d0d4', 'G2UWsECc', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('4d8848be5f3046e3b547bfd6fee49c59', 'FIzgJ4xs', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('649e8385f163472f9dec50520cc0de73', '毛泽东', '小毛子', '29959', '649e8385f163472f9dec50520cc0de73', '2515', 'NULL', 'NULL', '1515', '南京板鸭街', 'img/asd', '4399', '151', '1', '2');
-INSERT INTO `t_user_data` VALUES ('72e326e07b7b43f0b91564318f941c52', 'idy24Q8Y', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('7c783e21813f42e9be962efe94ce76be', 'IkacCqP1', null, null, null, null, 'aaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaa222', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '邓小平', '小邓子', '84848', '649e8385f163472f9dec50520cc0de73', '151', 'aaaaaaa1aaaaaaaaa', 'NULL', '5151', '苟佳巴村', 'img/asd/asd', '4399', '18', '2', '2');
-INSERT INTO `t_user_data` VALUES ('c4d8813cfc844dd383dbb11a921d8acb', 'M0T6c8FH', null, null, null, null, '879681888888', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('d972de471a394313910690e60919c350', 'vH4tPMDA', null, null, null, null, 'aaaaaaaaaaaaaaaa', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0', '1', '1', '0');
-INSERT INTO `t_user_data` VALUES ('e09f7b2b39254e6d85162c5cd7167c63', '3cI18gmR', null, null, null, null, 'BBBBBBBB', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('e0d84a1c3d3e41a68c8dba582cd30a15', 'QtWXUyF9', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399', '0', '0', '0');
-INSERT INTO `t_user_data` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', 'iZdbPf21', null, null, null, null, 'NULL', 'NULL', '4067', '垃圾村', null, '4399', '200', '1', '0');
+INSERT INTO `t_user_data` VALUES ('096914eeaa8d4b5bb4a94cfe0e00153a', 'IprAQCJL', null, null, null, '111', 'aaaaaaa1aaaaaaaaa', 'aaaaaa1a1aaaaaaaaa', '000000', '三里屯', null, '4399.0000', '0', '1', '0');
+INSERT INTO `t_user_data` VALUES ('0ce0ef60bc304804ba6ac0ccc013c9da', 'kPU3rtAD', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '东软路', null, '4399.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '9ueqLwbG', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '北大街20号', null, '4399.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('3c789aa58d024907b1f40f50051982f8', 'Pw6eCXsr', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('44fa1d49b76843ec808be230c9b3d0d4', 'G2UWsECc', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('4d8848be5f3046e3b547bfd6fee49c59', 'FIzgJ4xs', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('649e8385f163472f9dec50520cc0de73', '毛泽东', '小毛子', '29959', '386f72fbd88bdd3047b862a26a981808', '2515', 'aaaaaaaaaaaaaaaa', '111', 'c3c1319afb5447aaba9f48d7b8634bc4', '南京板鸭街', 'img/asd', '10951.6890', '151', '1', '2');
+INSERT INTO `t_user_data` VALUES ('727952922d6e406aa298c178c9bfbb35', '1111', null, null, null, null, 'aaaaaaaaaaaaaaaa', 'NULL', '4085', null, null, '4180.0000', '200', '1', null);
+INSERT INTO `t_user_data` VALUES ('72e326e07b7b43f0b91564318f941c52', 'idy24Q8Y', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '5000.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('7c783e21813f42e9be962efe94ce76be', 'IkacCqP1', null, null, null, null, 'aaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaa222', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '邓小平', '小邓子', '84848', '386f72fbd88bdd3047b862a26a981808', '151', 'aaaaaaa1aaaaaaaaa', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '苟佳巴村', 'img/asd/asd', '95161.1000', '0', '2', '2');
+INSERT INTO `t_user_data` VALUES ('c4d8813cfc844dd383dbb11a921d8acb', 'M0T6c8FH', null, null, null, null, '879681888888', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('d972de471a394313910690e60919c350', 'vH4tPMDA', null, null, null, null, 'aaaaaaaaaaaaaaaa', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0.0000', '1', '1', '0');
+INSERT INTO `t_user_data` VALUES ('e09f7b2b39254e6d85162c5cd7167c63', '3cI18gmR', null, null, null, null, 'BBBBBBBB', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '0.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('e0d84a1c3d3e41a68c8dba582cd30a15', 'QtWXUyF9', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', null, null, '4399.0000', '0', '0', '0');
+INSERT INTO `t_user_data` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', 'iZdbPf21', null, null, null, null, 'NULL', 'NULL', 'c3c1319afb5447aaba9f48d7b8634bc4', '垃圾村', null, '4399.0000', '200', '1', '0');
 
 -- ----------------------------
 -- Table structure for t_user_team
@@ -320,8 +369,7 @@ CREATE TABLE `t_user_team` (
 -- ----------------------------
 -- Records of t_user_team
 -- ----------------------------
-INSERT INTO `t_user_team` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '1', '1', '8', '1', '2', '1', '9');
-INSERT INTO `t_user_team` VALUES ('649e8385f163472f9dec50520cc0de73', '1', '3b9f8164d4dc4fddb2ec32eaa75b4a6a', '10', '2', '1', '1', '1');
-INSERT INTO `t_user_team` VALUES ('7c783e21813f42e9be962efe94ce76be', '3', '649e8385f163472f9dec50520cc0de73', '10', '1', '1', '1', '1');
-INSERT INTO `t_user_team` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '1', '7c783e21813f42e9be962efe94ce76be', '6', '11', '1', '1', '2');
-INSERT INTO `t_user_team` VALUES ('eaacd114a91543aea5a9b8cf238ed8b0', '1', 'c3c1319afb5447aaba9f48d7b8634bc4', '0', '0', '0', '0', '3');
+INSERT INTO `t_user_team` VALUES ('3b9f8164d4dc4fddb2ec32eaa75b4a6a', '1', '1', '13', '1', '2', '1', '9');
+INSERT INTO `t_user_team` VALUES ('649e8385f163472f9dec50520cc0de73', '1', '3b9f8164d4dc4fddb2ec32eaa75b4a6a', '15', '2', '1', '1', '1');
+INSERT INTO `t_user_team` VALUES ('727952922d6e406aa298c178c9bfbb35', '3', 'c3c1319afb5447aaba9f48d7b8634bc4', '0', '0', '0', '0', '2');
+INSERT INTO `t_user_team` VALUES ('c3c1319afb5447aaba9f48d7b8634bc4', '3', '7c783e21813f42e9be962efe94ce76be', '1', '7', '1', '1', '1');
