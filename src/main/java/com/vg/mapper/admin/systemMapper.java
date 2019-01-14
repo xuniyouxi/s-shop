@@ -1,7 +1,12 @@
 package com.vg.mapper.admin;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
+
+import com.vg.entity.EVO.getAllUserBalance;
 
 @Repository
 public interface systemMapper {
@@ -11,7 +16,10 @@ public interface systemMapper {
 	//获取能量池从0-6级的总容量
 	@Select({ "SELECT operation_content from sys_operation WHERE operation_name = #{rank}" })
 	String getPoolRankSum(String rank);
-	//每天24点更新数据库的能量池稀释
-	
-
+	//查询所有用户的user_data的可用余额和池子余额
+	@Select("select user_id,user_balance,pool_usedCapacity from t_user_data")
+	List<getAllUserBalance> getAllUserBalance();
+	//更新用户的可用余额和能量池
+	@Update("UPDATE `t_user_data` SET `user_balance`=#{user_balance}, `pool_usedCapacity`=#{pool_usedCapacity} WHERE (`user_id`=#{user_id})")
+	int UpdateUserBalance (getAllUserBalance getAllUserBalance);
 }

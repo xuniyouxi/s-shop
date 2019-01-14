@@ -45,42 +45,30 @@ public class MyHandler implements HandlerInterceptor {
 				try {
 					// 获取token内容
 					Map<String, Object> user_token = JWTUtil.parseJWT(token);
-					// {IMEI=aaaaaaaaaaaaaaaa, exp=1547117485,
-					// userId=649e8385f163472f9dec50520cc0de73, iat=1547113885,
-					// jti=eed3a4fb-14db-4a53-b5ad-9f91a982fcb2}
+
 					// 通过token的id查询部分用户信息
 					Map<String, Object> userInfo = userbehavhourmapper
 							.getuserInfoByid((String) user_token.get("userId"));
-					// {user_role=1, token_id=NULL, user_equipment_id1=aaaaaaaaaaaaaaaa,
-					// user_id=649e8385f163472f9dec50520cc0de73, user_equipment_id2=NULL}+++++++
-					if (!user_token.get("IMEI").equals(userInfo.get("user_equipment_id1"))
-							&& !user_token.get("IMEI").equals(userInfo.get("user_equipment_id2"))) {
-						System.out.println("账号异常，重新登录");
-						String data = "{\"code\":250}";
-						PrintJSON.printJson(response, data);
-						return false;
-					}
-					if (!user_token.get("IMEI").equals(userInfo.get("token_id"))) {
-						System.out.println("此账号已登录");
-						String data = "{\"code\":250}";
-						PrintJSON.printJson(response, data);
-						return false;
-					}
-
 					int user_role = (int) userInfo.get("user_role");
-					if (user_role == 0) {
-						// token不对,返回状态码
-						String data = "{\"code\":250}";
-						PrintJSON.printJson(response, data);
 
-						System.out.println("虚假token滚蛋");
-						return false;
-					} else if (user_role == 1
-							&& (useraut.authorization().equals("user") || useraut.authorization().equals("open"))) {
+					if (user_role == 1 && (useraut.authorization().equals("user"))) {
+
+						if (!user_token.get("IMEI").equals(userInfo.get("user_equipment_id1"))
+								&& !user_token.get("IMEI").equals(userInfo.get("user_equipment_id2"))) {
+							System.out.println("账号异常，重新登录");
+							String data = "{\"code\":250}";
+							PrintJSON.printJson(response, data);
+							return false;
+						}
+						if (!user_token.get("IMEI").equals(userInfo.get("token_id"))) {
+							System.out.println("此账号已登录");
+							String data = "{\"code\":250}";
+							PrintJSON.printJson(response, data);
+							return false;
+						}
 						System.out.println("访问了user接口，且权限对的上");
 						return true;
-					} else if (user_role == 2
-							&& (useraut.authorization().equals("user") || useraut.authorization().equals("open"))) {
+					} else if (useraut.authorization().equals("admin")) {
 						System.out.println("访问了admin接口，且权限对的上");
 						return true;
 					}

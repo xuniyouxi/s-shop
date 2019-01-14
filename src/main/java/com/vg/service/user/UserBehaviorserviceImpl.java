@@ -128,7 +128,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		int UserRes = userbehavhourmapper.updatauserData(userData);
 		int ToUserRes = userbehavhourmapper.updatauserData(ToUserData);
 
-		if (UserRes == 1 && ToUserRes == 1 && createServiceCharge(powers) && resLog == 1) {
+		if (UserRes == 1 && ToUserRes == 1 && createServiceCharge(powers,tradeLog.getUser_id()) && resLog == 1) {
 			msg.put("msg", "交易成功");
 			msg.put("result", 1);
 			backJSON.setData(msg);
@@ -663,7 +663,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 	 */
 
 	// 赠送能量的手续费逻辑,对应changepower(TradeLog tradeLog) service
-	private Boolean createServiceCharge(Double power) {
+	private Boolean createServiceCharge(Double power,String user_id) {
 		System.out.println("处理能量");
 		return true;
 	}
