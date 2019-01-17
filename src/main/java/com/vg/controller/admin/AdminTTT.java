@@ -118,7 +118,7 @@ public class AdminTTT {
 	//增加轮播图
 	@Authorization(authorization="open")
 	@PostMapping("{adminAccount}/addSlidePicture")
-	public BackJSON addSlidePicture(@PathVariable String adminAccount, @RequestParam("picture")MultipartFile file) {
+	public BackJSON addSlidePicture(@PathVariable String adminAccount, @RequestParam("file")MultipartFile file) {
 		return as.newSlidePic(adminAccount, file);
 	}
 	//轮播图排序
@@ -136,8 +136,8 @@ public class AdminTTT {
 	//修改法律声明
 	@Authorization(authorization="open")
 	@PostMapping("{adminAccount}/alterStatement/{type}")
-	public BackJSON updateStatement(@PathVariable String adminAccount, @PathVariable int type, @RequestParam("statement") String statement) {
-		return as.updateStatement(adminAccount, statement, type);
+	public BackJSON updateStatement(@PathVariable String adminAccount, @PathVariable int type, @RequestBody Map<String, String> map) {
+		return as.updateStatement(adminAccount, map.get("statement"), type);
 	}
 	//商品列表
 	@Authorization(authorization="open")
@@ -151,8 +151,8 @@ public class AdminTTT {
 	 */
 	@Authorization(authorization="open")
 	@PostMapping("{adminAccount}/alterGoodsInfo")
-	public BackJSON alterGoodsInfo(@PathVariable String adminAccount, Goods goods, MultipartFile goodsPicture) {
-		return as.updateGoodsInfo(adminAccount, goods, goodsPicture);
+	public BackJSON alterGoodsInfo(@PathVariable String adminAccount, Goods goods, MultipartFile file) {
+		return as.updateGoodsInfo(adminAccount, goods, file);
 	}
 	/*
 	 * 下架/上架/删除商品
@@ -176,8 +176,8 @@ public class AdminTTT {
 	//添加商品
 	@Authorization(authorization="open")
 	@PostMapping("{adminAccount}/newGood")
-	public BackJSON newGoods(@PathVariable String adminAccount, Goods goods, MultipartFile goodsPicture) {
-		return as.newGoods(adminAccount, goods, goodsPicture);
+	public BackJSON newGoods(@PathVariable String adminAccount, Goods goods, MultipartFile file) {
+		return as.newGoods(adminAccount, goods, file);
 	}
 	//订单列表
 	@Authorization(authorization="open")
