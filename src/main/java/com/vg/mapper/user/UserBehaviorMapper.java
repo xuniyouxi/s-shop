@@ -204,4 +204,14 @@ public interface UserBehaviorMapper {
 	@Select("select user_equipment_id2 from t_user_data WHERE NOT user_id = #{user_id}")
 	List<String> getAllIMEI2(String user_id);
 
+	/**
+	 * 用户交易时手续费发放部分
+	 */
+	// 查询用户的爹的余额
+	@Select("select user_id,user_vip,user_balance from t_user_data WHERE user_id= (select invited_father from t_user_team where user_id=#{user_id})")
+	UserData getUserBalance(String user_id);
+	
+	//查询自己多少代
+	@Select ("select member_layer from t_user_team WHERE user_id=#{user_id}")
+	int getMemberLayer(String user_id);
 }

@@ -54,13 +54,13 @@ public interface UserBehaviorservice {
 
 	// 查询首页详情
 	BackJSON getfastPage(String user_id);
-	
-	//获取用户交易记录
-	BackJSON getusertradeLog(String User_id,int kaishi,int size);
-	
-	//获取用户转入能量池记录
-	BackJSON getuserPoolLog(String user_id,int kaishi,int size);
-	
-	//获取版本号
+
+	// 获取用户交易记录
+	BackJSON getusertradeLog(String User_id, int kaishi, int size);
+
+	// 获取用户转入能量池记录
+	BackJSON getuserPoolLog(String user_id, int kaishi, int size);
+
+	// 获取版本号
 	BackJSON getversion();
 }

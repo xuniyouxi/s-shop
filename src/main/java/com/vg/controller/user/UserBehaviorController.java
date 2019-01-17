@@ -1,6 +1,5 @@
 package com.vg.controller.user;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +54,7 @@ public class UserBehaviorController {
 		return userbehaviorservice.getallteam();
 	}
 
-	// 获取版本号  http://localhost:8080/vg/user/VersionCode
+	// 获取版本号 http://localhost:8080/vg/user/VersionCode
 	@GetMapping(value = "/VersionCode")
 	@Authorization(authorization = "open")
 	public BackJSON VersionCode() {

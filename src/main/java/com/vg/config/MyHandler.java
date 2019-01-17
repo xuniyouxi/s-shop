@@ -50,7 +50,10 @@ public class MyHandler implements HandlerInterceptor {
 					Map<String, Object> userInfo = userbehavhourmapper
 							.getuserInfoByid((String) user_token.get("userId"));
 					int user_role = (int) userInfo.get("user_role");
-
+					if (useraut.authorization().equals("open")) {
+						System.out.println("请求了公开接口");
+						return true;
+					}
 					if (user_role == 1 && (useraut.authorization().equals("user"))) {
 
 						if (!user_token.get("IMEI").equals(userInfo.get("user_equipment_id1"))

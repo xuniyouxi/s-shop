@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.aspectj.weaver.patterns.HasMemberTypePattern;
 import org.hibernate.id.enhanced.PooledLoOptimizer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ErrorProperties.Whitelabel;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.vg.InitDataListener;
 import com.vg.config.Encrypt.JWTUtil;
 import com.vg.config.Encrypt.MD5;
 import com.vg.config.Encrypt.UUID8;
@@ -38,6 +40,7 @@ import com.vg.entity.UserData;
 import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
 import com.vg.entity.EVO.UserRegister;
+import com.vg.entity.EVO.getAllUserBalance;
 import com.vg.mapper.admin.systemMapper;
 import com.vg.mapper.user.UserBehaviorMapper;
 import com.vg.mapper.user.UserMapper;
@@ -128,7 +131,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		int UserRes = userbehavhourmapper.updatauserData(userData);
 		int ToUserRes = userbehavhourmapper.updatauserData(ToUserData);
 
-		if (UserRes == 1 && ToUserRes == 1 && createServiceCharge(powers,tradeLog.getUser_id()) && resLog == 1) {
+		if (UserRes == 1 && ToUserRes == 1 && createServiceCharge(powers, tradeLog.getUser_id()) && resLog == 1) {
 			msg.put("msg", "交易成功");
 			msg.put("result", 1);
 			backJSON.setData(msg);
@@ -140,6 +143,55 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		msg.put("result", 0);
 		backJSON.setData(msg);
 		return backJSON;
+
+	}
+
+	// 赠送能量的手续费逻辑,对应changepower(TradeLog tradeLog) service
+	private Boolean createServiceCharge(Double power, String user_id) {
+		try {
+			System.out.println(power);
+			int vip = 0;
+			// 父亲会获得自己手续费的十分之2
+			// 开始递归查询自己所有祖宗，
+			// 一星到5星各拿10分支1
+			// 1第一步，先递归查询自己的所有爹和祖宗，获取<=5个人信息，！先查自己爹是不是会员如果爹是会员，那么，直接给爹20%，如果爹不是会员,查爹的爹和祖宗，查第一个星级会员给他10%，查到的星级n+1，再给10%，直到n=5结束
+			UserData father = userbehavhourmapper.getUserBalance(user_id);
+			System.out.println(father);
+			int MemberLayer = userbehavhourmapper.getMemberLayer(user_id);
+			int flag = 1;
+			if (father.getUser_vip() > 0) {
+				System.out.println("原" + father.getUser_balance());
+				father.setUser_balance(father.getUser_balance() + power * 20 / 100);
+				vip = father.getUser_vip();
+				System.out.println(vip + "====" + father.getUser_balance());
+				System.out.println("baba" + vip);
+				userbehavhourmapper.updatauserData(father);
+			}
+			while (vip <= 5 && vip != 5 && flag < MemberLayer * 2) {
+				flag++;
+				father = userbehavhourmapper.getUserBalance(father.getUser_id());
+				if (father == null)
+					break;
+				if (father.getUser_vip() > vip) {
+					vip = father.getUser_vip();
+					System.out.println("原" + father.getUser_balance());
+					father.setUser_balance(father.getUser_balance() + power * 10 / 100);
+					System.out.println(vip + "====" + father.getUser_balance());
+					userbehavhourmapper.updatauserData(father);
+					if (vip == 5)
+						break;
+					System.out.println("我是falg" + flag);
+					if (flag > 5)
+						break;
+				} else
+					continue;
+			}
+
+			System.out.println("处理能量");
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 
 	}
 
@@ -656,16 +708,6 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		backJSON.setCode(200);
 		backJSON.setData(msg);
 		return backJSON;
-	}
-
-	/**
-	 * 某个业务的具体了细节逻辑
-	 */
-
-	// 赠送能量的手续费逻辑,对应changepower(TradeLog tradeLog) service
-	private Boolean createServiceCharge(Double power,String user_id) {
-		System.out.println("处理能量");
-		return true;
 	}
 
 }

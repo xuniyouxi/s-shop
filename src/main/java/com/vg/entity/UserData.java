@@ -167,4 +167,14 @@ public class UserData implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public String toString() {
+		return "UserData [user_id=" + user_id + ", user_realname=" + user_realname + ", user_name=" + user_name
+				+ ", user_wxcode=" + user_wxcode + ", user_pay_password=" + user_pay_password + ", authorization_code="
+				+ authorization_code + ", user_equipment_id1=" + user_equipment_id1 + ", user_equipment_id2="
+				+ user_equipment_id2 + ", invite_code=" + invite_code + ", user_address=" + user_address
+				+ ", user_head_picture=" + user_head_picture + ", user_balance=" + user_balance + ", pool_usedCapacity="
+				+ pool_usedCapacity + ", pool_rank=" + pool_rank + ", user_vip=" + user_vip + "]";
+	}
+
 }
