@@ -98,8 +98,8 @@ public class UserServiceImpl implements UserService {
 		return json;
 	}
 	@Override
-	@Cacheable(value = "contactPhone")
-	public BackJSON contactUS() {
+	@Cacheable(value="statementValue", key="#type+'statement'")
+	public BackJSON contactUS(int type) {
 		BackJSON json = new BackJSON(200);
 		String phone = um.contactUS();
 		if(phone!=null) {

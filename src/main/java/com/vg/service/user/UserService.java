@@ -10,7 +10,7 @@ public interface UserService {
 	public BackJSON getInfo(String user_id);
 	public BackJSON alterInfo(UserInfo user);
 	public BackJSON getCenter(String user_id);
-	public BackJSON contactUS();
+	public BackJSON contactUS(int type);
 	public BackJSON getTeamNum(String user_id);
 	public BackJSON truePhone(String user_id, String user_phone);
 	public BackJSON resetPassword(String user_id, String new_password, int type);

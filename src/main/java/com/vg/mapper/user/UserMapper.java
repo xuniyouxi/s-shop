@@ -58,7 +58,7 @@ public interface UserMapper {
 			+ "used_static=0 and used_method=2 and user_phone=#{user_phone} and identify_code=#{identify_code} and used_time>=#{used_time}")
 	int ifIdentifyCodeTrue(IdentifyCode identifyCode);
 	
-	@Select("select bis_content from t_biscuits where bis_name='slidepic' and bis_state=1")
+	@Select("select bis_content from t_biscuits where bis_name='slidepic' and bis_state>0 order by bis_state asc")
 	List<String> getSlidePicture();
 	
 	@Update("update t_user set user_password = #{param2} where user_phone=#{param1}")
