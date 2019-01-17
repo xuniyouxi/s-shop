@@ -9,8 +9,12 @@ public class Value {
 
 	//接口前缀（获取图片需要）
 	private static final String domain = "https://www.azstudio.top/vg/";
+	//返回商品列表每页大小
 	private static final Integer glanceGoodSize = 20;
-	
+	//管理员查看信息每页大小
+	private static final Integer ASeeSize = 10;
+	//允许每个管理员可以拥有的激活码数
+	private static final Integer allowActivationCodeSize = 10;
 	
 	
 	//图片地址
@@ -29,6 +33,16 @@ public class Value {
 		}
 		return path;
 	}
+	
+	//轮播图片地址
+	public static String getSlidePicPath() {
+		return "vgameResource"+File.separator+"user"+File.separator+"slidePicture";
+	}
+	
+	//轮播图片地址
+	public static String getStoreImgPath() {
+		return "vgameResource"+File.separator+"admin"+File.separator+"storeImg";
+	}
 
 	public static String getDomain() {
 		return domain;
@@ -38,6 +52,27 @@ public class Value {
 		return glanceGoodSize;
 	}
 
+	public static Integer getAseesize() {
+		return ASeeSize;
+	}
+
+	public static Integer getAllowactivationcodesize() {
+		return allowActivationCodeSize;
+	}
+
+	
+	//随机字符串
+	public static String randStrNum(int length, int numLen) {
+		int size;
+		String str = "";
+		for(int i=0; i<length; i++) {
+			size = ((int)(Math.random()*2))==0 ? 65 : 97;
+			str += (char)((int)(Math.random()*26) + size);
+		}
+		int number = (int)(Math.random()*Math.pow(10, numLen));
+		str += number;
+		return str;
+	}
 	
 	
 }

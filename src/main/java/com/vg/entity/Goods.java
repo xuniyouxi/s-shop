@@ -2,6 +2,8 @@ package com.vg.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Goods {
 	private Integer goods_id;
 
@@ -17,6 +19,7 @@ public class Goods {
 
 	private Integer goods_sum;
 
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
 	private Date goods_ShelfTime;
 
 	private Integer goods_state;

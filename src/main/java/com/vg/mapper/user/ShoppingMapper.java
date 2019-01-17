@@ -1,6 +1,5 @@
 package com.vg.mapper.user;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +25,11 @@ public interface ShoppingMapper {
 	@Select("select user_address, user_balance from t_user_data where user_id = #{user_id}")
 	Map<String, Object> getAddressandBalance(String user_id);
 	
-	@Insert("insert into t_exchange(user_id, goods_id, goods_energyNum, exchange_time) "
-			+ "values(#{user_id, jdbcType=VARCHAR}, #{goods_id, jdbcType=INTEGER}, "
-			+ "(select goods_energyNum from t_goods where goods_id=#{goods_id}), "
-			+ "#{exchange_time, jdbcType=TIMESTAMP})")
-	int confirmExchange(@Param("user_id")String user_id, @Param("goods_id")Integer goods_id, @Param("exchange_time")Timestamp exchange_time);
+	@Insert("insert into t_exchange(exchange_id, user_id, goods_id, goods_energyNum, exchange_status, exchange_time, order_address) "
+			+ "values(#{exchange_id, jdbcType=VARCHAR}, #{user_id, jdbcType=VARCHAR}, #{goods_id, jdbcType=INTEGER}, "
+			+ "(select goods_energyNum from t_goods where goods_id=#{goods_id}), 0, (select now()), "
+			+ "(select user_address from t_user_data where user_id=#{user_id}))")
+	int confirmExchange(Map<String, Object> map);
 	
 	@Update("update t_goods g, t_user_data ud set g.goods_sum = g.goods_sum-1, ud.user_balance = ud.user_balance-g.goods_energyNum "
 			+ "where g.goods_id=#{goods_id} and ud.user_id=#{user_id}")

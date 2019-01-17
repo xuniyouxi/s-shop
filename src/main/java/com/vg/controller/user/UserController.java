@@ -3,6 +3,7 @@ package com.vg.controller.user;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import com.vg.service.user.UserService;
 
 @RestController
 @RequestMapping("/userInfo/")
+@CrossOrigin
 public class UserController {
 	
 	@Autowired
@@ -63,7 +65,7 @@ public class UserController {
 	@Authorization(authorization="open")
 	@GetMapping("contactUS")
 	public BackJSON contactUS() {
-		return us.contactUS();
+		return us.contactUS(1);
 	}
 	//我的团队
 	@Authorization(authorization="user")

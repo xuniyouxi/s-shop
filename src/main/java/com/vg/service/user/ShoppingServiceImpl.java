@@ -1,6 +1,6 @@
 package com.vg.service.user;
 
-import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.vg.config.Util.BackJSON;
+import com.vg.config.Util.Base64Utils;
 import com.vg.config.Util.Value;
 import com.vg.entity.EVO.ExchangeRecord;
 import com.vg.entity.EVO.GlanceGoods;
@@ -90,7 +91,12 @@ public class ShoppingServiceImpl implements ShoppingService{
 		BackJSON json = new BackJSON(200);
 		JSONObject rjson = new JSONObject();
 		rjson.put("result", 0);
-		if(sm.confirmExchange(user_id, goods_id, new Timestamp(System.currentTimeMillis()))==1) {
+		Map<String, Object> map = new HashMap<>();
+		//订单号，随机字符串-当前毫秒数
+		map.put("exchange_id", Base64Utils.randString(2)+"-"+System.currentTimeMillis());
+		map.put("user_id", user_id);
+		map.put("goods_id", goods_id);
+		if(sm.confirmExchange(map)==1) {
 //			json.setCode(200);
 			if(sm.updateGoodsSum(user_id, goods_id)>0)
 				rjson.replace("result", 1);
