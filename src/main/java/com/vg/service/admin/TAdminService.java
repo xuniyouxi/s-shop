@@ -43,5 +43,8 @@ public interface TAdminService {
 	public BackJSON getMyAdminInfo(String adminAccount);
 	public BackJSON alterAdminPassword(String adminAccount, String oldPassword, String newPassword);
 	public BackJSON login(String account, String password);
+	public BackJSON getMySearch(String admin_account, String pageIndex, int type, String keyword);
+	public BackJSON getAlterUserInfo(String user_id);
+	public BackJSON getAlterGoodsInfo(int goods_id);
 	
 }

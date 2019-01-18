@@ -118,5 +118,11 @@ public class UserController {
 	public BackJSON resetStartPassword(@RequestBody Map<String, Object> map) {
 		return us.resetStartPassword((String)map.get("user_phone"), (String)map.get("new_password"));
 	}
+	//欢迎页图片
+	@Authorization(authorization="open")
+	@GetMapping("welcomePicture")
+	public BackJSON WelcomePicture() {
+		return us.getWelcomePicture();
+	}
 
 }

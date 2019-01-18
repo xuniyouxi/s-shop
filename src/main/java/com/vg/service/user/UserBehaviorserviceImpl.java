@@ -494,6 +494,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				backJSON.setCode(200);
 				msg.put("result", 0);
 				msg.put("msg", "未激活");
+				msg.put("user_role", 999);
 				backJSON.setData(msg);
 				TokenHeader.addTokenToResponseHeder(response, "token", "400");
 				return backJSON;

@@ -151,7 +151,7 @@ public class AdminTTT {
 	 */
 	@Authorization(authorization="open")
 	@PostMapping("{adminAccount}/alterGoodsInfo")
-	public BackJSON alterGoodsInfo(@PathVariable String adminAccount, Goods goods, MultipartFile file) {
+	public BackJSON alterGoodsInfo(@PathVariable String adminAccount, Goods goods, @RequestParam("file") MultipartFile file) {
 		return as.updateGoodsInfo(adminAccount, goods, file);
 	}
 	/*
@@ -176,7 +176,7 @@ public class AdminTTT {
 	//添加商品
 	@Authorization(authorization="open")
 	@PostMapping("{adminAccount}/newGood")
-	public BackJSON newGoods(@PathVariable String adminAccount, Goods goods, MultipartFile file) {
+	public BackJSON newGoods(@PathVariable String adminAccount, Goods goods, @RequestParam("file") MultipartFile file) {
 		return as.newGoods(adminAccount, goods, file);
 	}
 	//订单列表
@@ -240,6 +240,28 @@ public class AdminTTT {
 	@PostMapping("login/{account}/{password}")
 	public BackJSON login(@PathVariable String account, @PathVariable String password) {
 		return as.login(account, password);
+	}
+	//搜索集合
+	@Authorization(authorization="open")
+	@GetMapping("{adminAccount}/mySearch")
+	public BackJSON getMySearch(
+			@PathVariable String adminAccount, 
+			@RequestParam(value="pageIndex", required=true) String pageIndex, 
+			@RequestParam(value="type", required=false, defaultValue="0") int type, 
+			@RequestParam(value="keyword", required=true) String keyword) {
+		return as.getMySearch(adminAccount, pageIndex, type, keyword);
+	}
+	//获取要修改的用户的信息
+	@Authorization(authorization="open")
+	@GetMapping("{adminAccount}/seeAlterUserInfo/{user_id}")
+	public BackJSON seeAlterUserInfo(@PathVariable String user_id) {
+		return as.getAlterUserInfo(user_id);
+	}
+	//获取要修改的商品的信息
+	@Authorization(authorization="open")
+	@GetMapping("{adminAccount}/seeAlterGoodsInfo/{goods_id}")
+	public BackJSON seeAlterGoodsInfo(@PathVariable int goods_id) {
+		return as.getAlterGoodsInfo(goods_id);
 	}
 	
 	
