@@ -11,17 +11,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ExchangeRecord {
 
-	private Integer exchange_id;
+	private String exchange_id;
 	private double goods_energyNum;	
 	@JsonFormat(pattern="yyyy/MM/dd", timezone="GMT+8")
 	private Date exchange_time;	
 	private String goods_name;
 	private double goods_rmb;
 	private String goods_describe;
-	public Integer getExchange_id() {
+	public String getExchange_id() {
 		return exchange_id;
 	}
-	public void setExchange_id(Integer exchange_id) {
+	public void setExchange_id(String exchange_id) {
 		this.exchange_id = exchange_id;
 	}
 	public double getGoods_energyNum() {

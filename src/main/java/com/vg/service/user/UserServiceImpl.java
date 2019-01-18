@@ -276,7 +276,7 @@ public class UserServiceImpl implements UserService {
 		return json;
 	}
 	@Override
-	@Cacheable(value="welcomePic")
+	@Cacheable(value="welcomePic", key="'picture'")
 	public BackJSON getWelcomePicture() {
 		BackJSON json = new BackJSON(200);
 		String data = "{\"picture\":null}";

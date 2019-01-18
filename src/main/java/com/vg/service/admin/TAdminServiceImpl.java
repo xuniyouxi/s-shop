@@ -364,7 +364,7 @@ public class TAdminServiceImpl implements TAdminService {
 			String path = Value.getStoreImgPath();
 			File file = new File(path+File.separator+am.getGoodsPicImg(goods_id));
 			if(!file.delete())
-				System.out.println("delete file wrong\npath:"+path+am.getGoodsPicImg(goods_id));
+				System.out.println("delete file wrong\npath:"+path+File.separator+am.getGoodsPicImg(goods_id));
 			String goods_img = Base64Utils.randString(5)+goodsPicture.getOriginalFilename();
 			//绝对路径
 			file = new File(new File(path).getAbsolutePath()+File.separator+goods_img);
@@ -718,6 +718,53 @@ public class TAdminServiceImpl implements TAdminService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("info", am.getAlterGoodsInfo(Value.getDomain()+"storeImg/", goods_id));
 		json.setData(map);
+		return json;
+	}
+
+	@Transactional
+	@CacheEvict(value="welcomePic", key="'picture'")
+	@Override
+	public BackJSON updateWelcomePicture(String admin_account, MultipartFile picture) {
+		BackJSON json = new BackJSON(200);
+		String data = "{\"result\":0}";
+		String path = "vgameResource"+File.separator+"user"+File.separator+"welcomePicture";
+		File file = new File(path);
+		if(!file.exists())
+			file.mkdirs();
+		String[] piclist = file.list();
+		if(piclist.length>0) {
+			//删除文件夹下所有欢迎图片
+			File file1 = null;
+			for(String picname : piclist) {
+				file1 = new File(path, picname);
+				if(!file1.delete())
+					System.out.println("wrong!!!  fail to delete welcome picture "+picname);
+			}
+		}
+		try {
+			String pictureName = picture.getOriginalFilename();
+			picture.transferTo(new File(file.getAbsolutePath()+File.separator+pictureName));
+			if(am.updateWelcomePicture(pictureName)==1&&am.recordDeal(new AdminDealRecord(admin_account, pictureName, "new welcome picture", new Timestamp(System.currentTimeMillis())))==1)
+				data = "{\"result\":1}";
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+			json.setData(JSON.parse(data));
+			return json;
+		}
+		
+		json.setData(JSON.parse(data));
+		return json;
+	}
+	
+	@Override
+	@Cacheable(value="welcomePic", key="'picture'")
+	public BackJSON getWelcomePicture() {
+		BackJSON json = new BackJSON(200);
+		String data = "{\"picture\":null}";
+		String pic = am.getWeclomePicture();
+		if(pic!=null)
+			data = "{\"picture\":\""+Value.getDomain()+"welcomePicture/"+pic+"\"}";
+		json.setData(JSONObject.parse(data));
 		return json;
 	}
 	

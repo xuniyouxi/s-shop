@@ -313,9 +313,14 @@ public interface TAdminMapper {
 			+ "where u.user_id=#{user_id}")
 	AAUserInfo getAlterUserInfo(String user_id);
 	
-	@Select("select goods_id, goods_name, concat(#{prefix}, goods_img) as goods_img, goods_describe, goods_rmb, goods_energyNum from t_goods where goods_id=#{goods_id}")
+	@Select("select goods_id, goods_name, concat(#{prefix}, goods_img) as goods_img, goods_describe, goods_rmb, goods_energyNum, goods_sum from t_goods where goods_id=#{goods_id}")
 	Goods getAlterGoodsInfo(String prefix, int goods_id);
 	
+	@Update("update t_biscuits set bis_content=#{picname} where bis_id=4")
+	int updateWelcomePicture(String picname);
+	
+	@Select("select bis_content from t_biscuits where bis_id=4 and bis_state=1")
+	String getWeclomePicture();
 	
 	
 }

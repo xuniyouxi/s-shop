@@ -151,7 +151,7 @@ public class AdminTTT {
 	 */
 	@Authorization(authorization="open")
 	@PostMapping("{adminAccount}/alterGoodsInfo")
-	public BackJSON alterGoodsInfo(@PathVariable String adminAccount, Goods goods, @RequestParam("file") MultipartFile file) {
+	public BackJSON alterGoodsInfo(@PathVariable String adminAccount, Goods goods, @RequestParam(value="file", required=false) MultipartFile file) {
 		return as.updateGoodsInfo(adminAccount, goods, file);
 	}
 	/*
@@ -262,6 +262,18 @@ public class AdminTTT {
 	@GetMapping("{adminAccount}/seeAlterGoodsInfo/{goods_id}")
 	public BackJSON seeAlterGoodsInfo(@PathVariable int goods_id) {
 		return as.getAlterGoodsInfo(goods_id);
+	}
+	//修改欢迎页图片
+	@Authorization(authorization="open")
+	@PostMapping("{adminAccount}/alterWelcomePicture")
+	public BackJSON alterWelcomePicture(@PathVariable String adminAccount, MultipartFile file) {
+		return as.updateWelcomePicture(adminAccount, file);
+	}
+	//获取欢迎页图片
+	@Authorization(authorization="open")
+	@GetMapping("{adminAccount}/getWelcomePicture")
+	public BackJSON getWelcomePicture() {
+		return as.getWelcomePicture();
 	}
 	
 	
