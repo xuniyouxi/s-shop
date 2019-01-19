@@ -310,6 +310,11 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		userbehavhourmapper.updataauthorcode(code_id);
 		return backJSON;
 	}
+	//激活时，更新用户vip级别
+	private Boolean updataRank() {
+		System.out.println("进入更新用户级别");
+		return true;
+	}
 
 	// 注册发送验证码后,查看验证码是否有效
 	@Override
