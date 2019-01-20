@@ -677,7 +677,9 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					return backJSON;
 
 				} else {
+
 					// TokenHeader.addTokenToResponseHeder(response, "token", "400");
+
 					backJSON.setCode(250);
 					msg.put("result", 0);
 					msg.put("msg", "不是指定设备");
@@ -687,6 +689,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 			}
 		} else {
 			// TokenHeader.addTokenToResponseHeder(response, "token", "400");
+
 			backJSON.setCode(200);
 			msg.put("msg", "账号或密码错误");
 			msg.put("result", 0);

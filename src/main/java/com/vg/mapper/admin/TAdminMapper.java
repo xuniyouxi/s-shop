@@ -22,6 +22,9 @@ import com.vg.entity.EVO.AAUserInfo;
 import com.vg.entity.EVO.AAdmin;
 import com.vg.entity.EVO.AAuthorizationCode;
 import com.vg.entity.EVO.AExchange;
+import com.vg.entity.EVO.AHomePage;
+import com.vg.entity.EVO.AHomeUser;
+import com.vg.entity.EVO.AHomeVRB;
 import com.vg.entity.EVO.AUserInfo;
 import com.vg.entity.EVO.SlidePicture;
 
@@ -172,10 +175,11 @@ public interface TAdminMapper {
 	@Options(useGeneratedKeys=true, keyProperty="goods_id")
 	int newGoods(Goods goods);
 	
-	@Select("select e.exchange_id, e.goods_energyNum, e.order_address as user_address, e.exchange_time, e.exchange_status, g.goods_name, ud.user_realname, ud.user_name "
+	@Select("select e.exchange_id, e.goods_energyNum, e.order_address as user_address, e.exchange_time, e.exchange_status, g.goods_name, ud.user_realname, ud.user_name, u.user_phone "
 			+ "from t_exchange e "
 			+ "left join t_goods g on g.goods_id=e.goods_id "
 			+ "left join t_user_data ud on ud.user_id=e.user_id "
+			+ "left join t_user u on u.user_id=e.user_id "
 			+ "limit ${param1}, ${param2}")
 	List<AExchange> getOrderList(int start, int size);
 	
@@ -321,6 +325,30 @@ public interface TAdminMapper {
 	
 	@Select("select bis_content from t_biscuits where bis_id=4 and bis_state=1")
 	String getWeclomePicture();
+	
+	@Select("select SUM(user_balance) as balanceVRB, SUM(pool_usedCapacity) as poolVRB, "
+			+ "(select count(1) from t_user) as totalLogin, "
+			+ "(select count(1) from t_user where user_role=1) as totalMember, "
+			+ "(select count(1) from t_exchange where exchange_status=0) as orderConfirmNum "
+			+ "from t_user_data")
+	//不让这样做
+	/*@Results({
+		@Result(property="dealVRB", javaType=List.class, many=@Many(select="getDealVRB", fetchType=FetchType.EAGER)),
+		@Result(property="intoPool", javaType=List.class, many=@Many(select="getIntoPool", fetchType=FetchType.EAGER)),
+		@Result(property="userLogin", javaType=List.class, many=@Many(select="getUserLogin", fetchType=FetchType.EAGER)),
+		@Result(property="userActivate", javaType=List.class, many=@Many(select="getUserActivate", fetchType=FetchType.EAGER)),
+	})*/
+	AHomePage getHomePageInfo();
+	@Select("select SUM(trade_number) as VRBNum, trade_time as date from t_trade_log where DATEDIFF(CURDATE(), DATE_FORMAT(trade_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	List<AHomeVRB> getDealVRB();
+	@Select("select SUM(into_balance) as VRBNum, operation_time as date from t_pool_operation where DATEDIFF(CURDATE(), DATE_FORMAT(operation_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	List<AHomeVRB> getIntoPool();
+//	@Select("select (SUM(user_role=1)+SUM(user_role=999)) as userNum, create_time as date from t_user where DATEDIFF(CURDATE(), DATE_FORMAT(create_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	@Select("select count(1) as userNum, create_time as date from t_user where DATEDIFF(CURDATE(), DATE_FORMAT(create_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	List<AHomeUser> getUserLogin();
+	@Select("select count(1) as userNum, create_time as date from t_user where user_role = 1 and DATEDIFF(CURDATE(), DATE_FORMAT(create_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	List<AHomeUser> getUserActivate();
+	
 	
 	
 }

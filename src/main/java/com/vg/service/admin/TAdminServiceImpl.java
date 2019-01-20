@@ -28,6 +28,7 @@ import com.vg.entity.Goods;
 import com.vg.entity.EVO.AAdmin;
 import com.vg.entity.EVO.AAuthorizationCode;
 import com.vg.entity.EVO.AExchange;
+import com.vg.entity.EVO.AHomePage;
 import com.vg.entity.EVO.AUserInfo;
 import com.vg.entity.EVO.SlidePicture;
 import com.vg.mapper.admin.TAdminMapper;
@@ -78,7 +79,7 @@ public class TAdminServiceImpl implements TAdminService {
 	public BackJSON freezeUser(String adminAccount, String user_id) {
 		BackJSON json = new BackJSON(200);
 		String data = "{\"result\":0}";
-		if(am.freezeUser(user_id, 999)==1&&am.recordDeal(new AdminDealRecord(adminAccount, user_id, "freeze user", new Timestamp(System.currentTimeMillis())))==1)
+		if(am.freezeUser(user_id, 777)==1&&am.recordDeal(new AdminDealRecord(adminAccount, user_id, "freeze user", new Timestamp(System.currentTimeMillis())))==1)
 			data = "{\"result\":1}";
 		json.setData(JSONObject.parse(data));
 		return json;
@@ -92,10 +93,10 @@ public class TAdminServiceImpl implements TAdminService {
 		int size = Value.getAseesize();
 		map.put("pageSize", size);
 		map.put("pageNum", startPage);
-		Integer totalNum = am.getUserNum(999); 
+		Integer totalNum = am.getUserNum(777); 
 		map.put("totalNum", totalNum);
 		map.put("pageTotal", totalNum/size+1);
-		List<AUserInfo> ui = am.getAllUser((startPage-1)*size, size, 999);
+		List<AUserInfo> ui = am.getAllUser((startPage-1)*size, size, 777);
 		if(ui.size()>0)
 			map.put("list", ui);
 		else
@@ -635,19 +636,27 @@ public class TAdminServiceImpl implements TAdminService {
 		JSONObject data = new JSONObject();
 		data.put("result", 0);
 		AAdmin aa = am.login(account);
-		try {
-			if(aa.getAdmin_password().equalsIgnoreCase(MD5.md5(password))) {
-				//登录成功
-				data.replace("result", 1);
-				am.updateLoginTime(account);
-				aa.setAdmin_password("");
-				data.put("admin", aa);
-			}else
-				data.replace("result", 2);
-		} catch (Exception e) {
-			e.printStackTrace();
-			json.setData(data);
-			return json;
+		if(aa!=null) {
+			try {
+				if(aa.getAdmin_password().equalsIgnoreCase(MD5.md5(password))) {
+					//登录成功
+					data.replace("result", 1);
+					am.updateLoginTime(account);
+					aa.setAdmin_password("");
+					data.put("admin", aa);
+				}else {
+					data.replace("result", 2);
+					data.put("msg", "密码不正确");
+				}
+			} catch (Exception e) {
+				data.put("msg", "服务器错误");
+				e.printStackTrace();
+				json.setData(data);
+				return json;
+			}
+		}else {
+			data.replace("result", 2);
+			data.put("msg", "账户不存在");
 		}
 		json.setData(data);
 		return json;
@@ -666,7 +675,7 @@ public class TAdminServiceImpl implements TAdminService {
 			break;
 		case "B":
 			//冻结用户列表
-			data.replace("result", am.searchAllUser(999, type, keyword));
+			data.replace("result", am.searchAllUser(777, type, keyword));
 			break;
 		case "C":
 			//团队列表
@@ -765,6 +774,22 @@ public class TAdminServiceImpl implements TAdminService {
 		if(pic!=null)
 			data = "{\"picture\":\""+Value.getDomain()+"welcomePicture/"+pic+"\"}";
 		json.setData(JSONObject.parse(data));
+		return json;
+	}
+
+	@Override
+	public BackJSON getHomePageInfo() {
+		BackJSON json = new BackJSON(200);
+		JSONObject data = new JSONObject();
+		AHomePage info = am.getHomePageInfo();
+		//计算VRB总数
+		info.setTotalVRB(info.getBalanceVRB()+info.getPoolVRB());
+		info.setDealVRB(am.getDealVRB());
+		info.setIntoPool(am.getIntoPool());
+		info.setUserLogin(am.getUserLogin());
+		info.setUserActivate(am.getUserActivate());
+		data.put("info", info);
+		json.setData(data);
 		return json;
 	}
 	

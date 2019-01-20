@@ -13,6 +13,7 @@ public class ExchangeRecord {
 
 	private String exchange_id;
 	private double goods_energyNum;	
+	private Integer exchange_status;
 	@JsonFormat(pattern="yyyy/MM/dd", timezone="GMT+8")
 	private Date exchange_time;	
 	private String goods_name;
@@ -53,6 +54,12 @@ public class ExchangeRecord {
 	}
 	public void setGoods_describe(String goods_describe) {
 		this.goods_describe = goods_describe;
+	}
+	public Integer getExchange_status() {
+		return exchange_status;
+	}
+	public void setExchange_status(Integer exchange_status) {
+		this.exchange_status = exchange_status;
 	}
 	
 }

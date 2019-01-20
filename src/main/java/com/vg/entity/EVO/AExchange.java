@@ -15,7 +15,22 @@ public class AExchange {
 	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
 	private Timestamp exchange_time;
 	private String exchange_status;
+	private String user_phone;
 	public AExchange() {}
+	public AExchange(String exchange_id, String goods_name, String user_realname, String user_name,
+			String goods_energyNum, String user_address, Timestamp exchange_time, String exchange_status,
+			String user_phone) {
+		super();
+		this.exchange_id = exchange_id;
+		this.goods_name = goods_name;
+		this.user_realname = user_realname;
+		this.user_name = user_name;
+		this.goods_energyNum = goods_energyNum;
+		this.user_address = user_address;
+		this.exchange_time = exchange_time;
+		this.exchange_status = exchange_status;
+		this.user_phone = user_phone;
+	}
 	public AExchange(String exchange_id, String goods_name, String user_realname, String user_name,
 			String goods_energyNum, String user_address, Timestamp exchange_time, String exchange_status) {
 		super();
@@ -27,6 +42,12 @@ public class AExchange {
 		this.user_address = user_address;
 		this.exchange_time = exchange_time;
 		this.exchange_status = exchange_status;
+	}
+	public String getUser_phone() {
+		return user_phone;
+	}
+	public void setUser_phone(String user_phone) {
+		this.user_phone = user_phone;
 	}
 	public String getExchange_id() {
 		return exchange_id;

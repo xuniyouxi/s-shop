@@ -44,7 +44,7 @@ public class UserMapperProvider {
 	public String getExchangeRecord(String user_id, int r, int e, int t, int start, int size) {
 		String sql = new SQL() {
 			{
-				SELECT("e.exchange_id, e.goods_energyNum, e.exchange_time, g.goods_name, g.goods_describe, g.goods_rmb");
+				SELECT("e.exchange_id, e.goods_energyNum, e.exchange_status, e.exchange_time, g.goods_name, g.goods_describe, g.goods_rmb");
 				FROM("t_goods g, t_exchange e");
 				WHERE("e.user_id = #{user_id} and g.goods_id = e.goods_id");
 				if(r==1) 
