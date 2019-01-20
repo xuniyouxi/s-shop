@@ -275,7 +275,12 @@ public class AdminTTT {
 	public BackJSON getWelcomePicture() {
 		return as.getWelcomePicture();
 	}
-	
+	//首页
+	@Authorization(authorization="open")
+	@GetMapping("{adminAccount}/homePage")
+	public BackJSON homePage() {
+		return as.getHomePageInfo();
+	}
 	
 	
 }

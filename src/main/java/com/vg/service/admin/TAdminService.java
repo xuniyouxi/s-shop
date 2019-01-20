@@ -48,5 +48,6 @@ public interface TAdminService {
 	public BackJSON getAlterGoodsInfo(int goods_id);
 	public BackJSON updateWelcomePicture(String admin_account, MultipartFile file);
 	public BackJSON getWelcomePicture();
+	public BackJSON getHomePageInfo();
 	
 }

@@ -496,7 +496,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				msg.put("msg", "未激活");
 				msg.put("user_role", 999);
 				backJSON.setData(msg);
-				TokenHeader.addTokenToResponseHeder(response, "token", "400");
+//				TokenHeader.addTokenToResponseHeder(response, "token", "400");
 				return backJSON;
 			}
 //			// 判断这台机器有几个人在线
@@ -637,8 +637,8 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					return backJSON;
 
 				} else {
-					TokenHeader.addTokenToResponseHeder(response, "token", "400");
-					backJSON.setCode(200);
+//					TokenHeader.addTokenToResponseHeder(response, "token", "400");
+					backJSON.setCode(250);
 					msg.put("result", 0);
 					msg.put("msg", "不是指定设备");
 					backJSON.setData(msg);
@@ -646,7 +646,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				}
 			}
 		} else {
-			TokenHeader.addTokenToResponseHeder(response, "token", "400");
+//			TokenHeader.addTokenToResponseHeder(response, "token", "400");
 			backJSON.setCode(200);
 			msg.put("msg", "账号或密码错误");
 			msg.put("result", 0);
