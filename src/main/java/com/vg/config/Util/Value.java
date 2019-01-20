@@ -34,15 +34,17 @@ public class Value {
 		return path;
 	}
 	
-	//轮播图片地址
+	//轮播图片地址前缀
 	public static String getSlidePicPath() {
 		return "vgameResource"+File.separator+"user"+File.separator+"slidePicture";
 	}
 	
-	//轮播图片地址
+	//轮播图片地址前缀
 	public static String getStoreImgPath() {
 		return "vgameResource"+File.separator+"admin"+File.separator+"storeImg";
 	}
+	
+	
 
 	public static String getDomain() {
 		return domain;

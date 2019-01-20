@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import com.vg.entity.AdminDealRecord;
 import com.vg.entity.Goods;
+import com.vg.entity.EVO.AAUserInfo;
 import com.vg.entity.EVO.AAdmin;
 import com.vg.entity.EVO.AAuthorizationCode;
 import com.vg.entity.EVO.AExchange;
@@ -127,8 +128,9 @@ public interface TAdminMapper {
 	@Update("update t_biscuits set bis_content=#{statement} where bis_id=3 and bis_state=1")
 	int updateContactPhone(String statement);
 	
-	@Select("select goods_id, goods_name, concat(#{prefix}, goods_img) as goods_img, goods_describe, goods_rmb, goods_energyNum, goods_sum, goods_ShelfTime from t_goods "
-			+ "where goods_state=1 limit #{start}, #{size}")
+	@Select("select g.goods_id, g.goods_name, concat(#{prefix}, g.goods_img) as goods_img, g.goods_describe, g.goods_rmb, g.goods_energyNum, g.goods_sum, g.goods_ShelfTime, "
+			+ "(select count(1) from t_exchange e where e.goods_id=g.goods_id and e.exchange_status<>3) as sold_out_num from t_goods g "
+			+ "where g.goods_state=1 limit #{start}, #{size}")
 	List<Goods> getAllGoods(String prefix, int start, int size);
 	
 	@Select("select count(1) from t_goods where goods_state=${_parameter}")
@@ -183,6 +185,11 @@ public interface TAdminMapper {
 	@Update("update t_exchange set exchange_status=#{exchange_status} where exchange_id=#{exchange_id}")
 	int confirmOrder(@Param("exchange_id")String exchange_id, @Param("exchange_status")int type);
 	
+	@Update("update t_exchange e, t_goods g, t_user_data ud "
+			+ "set e.exchange_status=3, g.goods_sum=g.goods_sum+1, ud.user_balance=ud.user_balance+e.goods_energyNum "
+			+ "where e.exchange_id=#{exchange_id} and g.goods_id=e.goods_id and ud.user_id=e.user_id")
+	int confirmOrderCancel(String exchange_id);
+	
 	@Select("select admin_account, admin_name, admin_rank, admin_status, last_login_time from t_admin limit ${param1}, ${param2}")
 	List<AAdmin> getAdminList(int start, int size);
 	
@@ -212,6 +219,108 @@ public interface TAdminMapper {
 	
 	@Update("update t_admin set last_login_time=(select now()) where admin_account=#{admin_account}")
 	void updateLoginTime(String admin_account);
+	
+	/*
+	 * type 决定搜索的类型
+	 * 1-用户名
+	 * 2-手机号
+	 * 3-昵称
+	 * 4-微信号
+	 */
+	@Select("select u.user_id, u.user_phone, ud.user_realname, ud.user_name, ud.user_wxcode, ud.user_vip, ud.pool_rank, ud.pool_usedCapacity, ud.user_balance "
+			+ "from t_user u "
+			+ "inner join t_user_data ud on u.user_id=ud.user_id "
+			+ "where u.user_role=#{param1} and case #{param2} "
+			+ "when 1 then ud.user_realname "
+			+ "when 2 then u.user_phone "
+			+ "when 3 then ud.user_name "
+			+ "when 4 then ud.user_wxcode "
+			+ "end like concat('%', #{param3}, '%')")
+	@Results({
+		@Result(id=true, property="user_id", column="user_id"),
+		@Result(property="team_user_name", column="user_id", javaType=String.class, 
+				one=@One(select="getUserTeamName", fetchType=FetchType.EAGER))
+	})
+	List<AUserInfo> searchAllUser(int user_role, int type, String keyword);
+	
+	/*
+	 * type-搜索类型
+	 * 1-	队长
+	 * 2-	手机号
+	 * 3-	昵称
+	 * 4-	微信号
+	 */
+	@Select("select t.team_id, u.user_phone, ud.user_realname, ud.user_name, ud.user_wxcode, ud.user_vip, ud.pool_rank, ud.pool_usedCapacity, ud.user_balance "
+			+ "from t_team t, t_user_team ut, t_user u, t_user_data ud "
+			+ "where (ut.team_id=t.team_id) and (ut.member_layer=1 and u.user_id=ut.user_id and ud.user_id=ut.user_id) and case #{param1} "
+			+ "when 1 then ud.user_realname "
+			+ "when 2 then u.user_phone "
+			+ "when 3 then ud.user_name "
+			+ "when 4 then ud.user_wxcode "
+			+ "end like concat('%', #{param2}, '%')")
+	List<AUserInfo> searchAllTeams(int type, String keyword);
+	
+	@Select("select code_id, code_content, apply_time from authorization_code "
+			+ "where apply_admin=(select admin_name from t_admin where admin_account=#{param1}) and code_content like concat('%', #{param2}, '%')")
+	List<AAuthorizationCode> searchMyInviteId(String admin_account, String keyword);
+	
+	/*
+	 * type-搜索类型
+	 * 1-	激活码
+	 * 2-	申请者
+	 */
+	@Select("select * from authorization_code where case #{param1} "
+			+ "when 1 then code_content "
+			+ "when 2 then apply_admin "
+			+ "end like concat('%', #{param2}, '%')")
+	List<AAuthorizationCode> searchAllInviteId(int type, String keyword);
+	
+	@Select("select g.goods_id, g.goods_name, concat(#{prefix}, g.goods_img) as goods_img, g.goods_describe, g.goods_rmb, g.goods_energyNum, g.goods_sum, g.goods_ShelfTime, "
+			+ "(select count(1) from t_exchange e where e.goods_id=g.goods_id and e.exchange_status<>3) as sold_out_num from t_goods g "
+			+ "where g.goods_state=1 and g.goods_name like concat('%', #{keyword}, '%')")
+	List<Goods> searchAllGoods(String prefix, String keyword);
+	
+	@Select("select goods_id, goods_name, concat(#{param1}, goods_img) as goods_img, goods_rmb, goods_energyNum, goods_sum, goods_ShelfTime from t_goods "
+			+ "where goods_state=0 and goods_name like concat('%', #{param2}, '%')")
+	List<Goods> searchSoldoutGoods(String prefix, String keyword);
+	
+	/*
+	 * 1-	用户名
+	 * 2-	手机号
+	 * 3-	昵称
+	 * 4-	微信号
+	 */
+	@Select("select e.exchange_id, e.goods_energyNum, e.order_address as user_address, e.exchange_time, e.exchange_status, g.goods_name, ud.user_realname, ud.user_name "
+			+ "from t_exchange e "
+			+ "inner join t_goods g on g.goods_id=e.goods_id "
+			+ "inner join t_user_data ud on ud.user_id=e.user_id "
+			+ "inner join t_user u on u.user_id=e.user_id "
+			+ "where case #{type} "
+			+ "when 1 then ud.user_realname "
+			+ "when 2 then u.user_phone "
+			+ "when 3 then ud.user_name "
+			+ "when 4 then ud.user_wxcode "
+			+ "end like concat('%', #{keyword}, '%')")
+	List<AExchange> searchOrderList(int type, String keyword);
+	
+	@Select("select admin_account, admin_name, admin_rank, admin_status, last_login_time from t_admin where admin_name like concat('%', #{keyword}, '%')")
+	List<AAdmin> searchAdminList(String keyword);
+	
+	@Select("select u.user_id, u.user_phone, ud.user_realname, ud.user_name, ud.user_wxcode, ut.team_id "
+			+ "from t_user u "
+			+ "left join t_user_data ud on u.user_id=ud.user_id "
+			+ "left join t_user_team ut on ut.user_id=u.user_id "
+			+ "where u.user_id=#{user_id}")
+	AAUserInfo getAlterUserInfo(String user_id);
+	
+	@Select("select goods_id, goods_name, concat(#{prefix}, goods_img) as goods_img, goods_describe, goods_rmb, goods_energyNum, goods_sum from t_goods where goods_id=#{goods_id}")
+	Goods getAlterGoodsInfo(String prefix, int goods_id);
+	
+	@Update("update t_biscuits set bis_content=#{picname} where bis_id=4")
+	int updateWelcomePicture(String picname);
+	
+	@Select("select bis_content from t_biscuits where bis_id=4 and bis_state=1")
+	String getWeclomePicture();
 	
 	
 }

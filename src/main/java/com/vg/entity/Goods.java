@@ -18,11 +18,38 @@ public class Goods {
 	private Double goods_energyNum;
 
 	private Integer goods_sum;
+	
+	private Integer sold_out_num;
 
 	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
 	private Date goods_ShelfTime;
 
 	private Integer goods_state;
+
+
+	public Goods(Integer goods_id, String goods_name, String goods_img, String goods_describe, Double goods_rmb,
+			Double goods_energyNum, Integer goods_sum, Integer sold_out_num, Date goods_ShelfTime,
+			Integer goods_state) {
+		super();
+		this.goods_id = goods_id;
+		this.goods_name = goods_name;
+		this.goods_img = goods_img;
+		this.goods_describe = goods_describe;
+		this.goods_rmb = goods_rmb;
+		this.goods_energyNum = goods_energyNum;
+		this.goods_sum = goods_sum;
+		this.sold_out_num = sold_out_num;
+		this.goods_ShelfTime = goods_ShelfTime;
+		this.goods_state = goods_state;
+	}
+
+	public Integer getSold_out_num() {
+		return sold_out_num;
+	}
+
+	public void setSold_out_num(Integer sold_out_num) {
+		this.sold_out_num = sold_out_num;
+	}
 
 	public Integer getGoods_id() {
 		return goods_id;

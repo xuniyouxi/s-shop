@@ -2,6 +2,8 @@ package com.vg.entity.EVO;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class AExchange {
 
 	private String exchange_id;
@@ -10,6 +12,7 @@ public class AExchange {
 	private String user_name;
 	private String goods_energyNum;
 	private String user_address;
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
 	private Timestamp exchange_time;
 	private String exchange_status;
 	public AExchange() {}

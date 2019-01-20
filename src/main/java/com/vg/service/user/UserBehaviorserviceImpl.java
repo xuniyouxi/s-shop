@@ -39,6 +39,7 @@ import com.vg.entity.User;
 import com.vg.entity.UserData;
 import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
+import com.vg.entity.EVO.UserRecommendInfo;
 import com.vg.entity.EVO.UserRegister;
 import com.vg.entity.EVO.getAllUserBalance;
 import com.vg.mapper.admin.systemMapper;
@@ -294,6 +295,13 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					ut.setInvited_sum(user_father.getInvited_sum() + 1);
 					ut.setInvited_father(user_father.getInvited_father());
 				}
+				// 通过队伍id，开始更新用户，自定向下
+				// 通过id获取用户的team信息，挨个遍历，从祖宗开始，获取祖宗id 祖宗直推人数，祖宗间接推荐人数，获取用户vip等级
+				List<UserRecommendInfo> userRecommendInfo = userbehavhourmapper
+						.getUserRecommendInfo(userTeam.getTeam_id());
+				for (UserRecommendInfo record : userRecommendInfo) {
+					System.out.println(updataRank(record));
+				}
 			} catch (Exception e) {
 				// 递归结束，全员加一
 			}
@@ -310,10 +318,37 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 		userbehavhourmapper.updataauthorcode(code_id);
 		return backJSON;
 	}
-	//激活时，更新用户vip级别
-	private Boolean updataRank() {
+
+	// 激活时，更新用户vip级别
+	private Boolean updataRank(UserRecommendInfo u) {
+		int flag = 0;
 		System.out.println("进入更新用户级别");
-		return true;
+		System.out.println("上面是soncount");
+		if (u.getUser_vip() == 0 && u.getInvited_son() >= 50) { // 如果是0级，那么，判断是否直推超过50，如果50更新等级为1级，用户升1级
+			flag = userbehavhourmapper.UpdateUserVip(u.getUser_id(), 1);
+			System.out.println("我是0级，满足1级");
+		} else if (u.getUser_vip() == 1 && userbehavhourmapper.getSonCount(u.getUser_id(), 1) >= 2
+				&& u.getInvited_sum() >= 300) { // 如果是1级，那么，判断是否直推50，并且间接300，并且儿子里有vip=1，升2级
+			flag = userbehavhourmapper.UpdateUserVip(u.getUser_id(), 2);
+			System.out.println("我是1级，满足2级");
+		} else if (u.getUser_vip() == 2 && userbehavhourmapper.getSonCount(u.getUser_id(), 2) >= 2
+				&& u.getInvited_sum() >= 1000) {// 如果用户是2级，判断是否直推50，并且间接1000,，儿子里有2个以上vip=2，升3级
+			flag = userbehavhourmapper.UpdateUserVip(u.getUser_id(), 3);
+			System.out.println("我是2级，满足3级");
+		} else if (u.getUser_vip() == 3 && userbehavhourmapper.getSonCount(u.getUser_id(), 3) >= 2
+				&& u.getInvited_sum() >= 3000) {// 如果用户是2级，判断是否直推50，并且间接3000,，儿子里有2个以上vip=3，升4级
+			flag = userbehavhourmapper.UpdateUserVip(u.getUser_id(), 4);
+			System.out.println("我是3级，满足4级");
+		} else if (u.getUser_vip() == 1 && userbehavhourmapper.getSonCount(u.getUser_id(), 14) >= 2
+				&& u.getInvited_sum() >= 10000) {// 如果用户是2级，判断是否直推50，并且间接10000,，儿子里有2个以上vip=4，升5级
+			flag = userbehavhourmapper.UpdateUserVip(u.getUser_id(), 5);
+			System.out.println("我是4级，满足5级");
+		}
+
+		if (flag == 1)
+			return true;
+		else
+			return false;
 	}
 
 	// 注册发送验证码后,查看验证码是否有效
@@ -499,8 +534,9 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				backJSON.setCode(200);
 				msg.put("result", 0);
 				msg.put("msg", "未激活");
+				msg.put("user_role", 999);
 				backJSON.setData(msg);
-				TokenHeader.addTokenToResponseHeder(response, "token", "400");
+//				TokenHeader.addTokenToResponseHeder(response, "token", "400");
 				return backJSON;
 			}
 //			// 判断这台机器有几个人在线
@@ -641,8 +677,8 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 					return backJSON;
 
 				} else {
-					TokenHeader.addTokenToResponseHeder(response, "token", "400");
-					backJSON.setCode(200);
+					// TokenHeader.addTokenToResponseHeder(response, "token", "400");
+					backJSON.setCode(250);
 					msg.put("result", 0);
 					msg.put("msg", "不是指定设备");
 					backJSON.setData(msg);
@@ -650,7 +686,7 @@ public class UserBehaviorserviceImpl implements UserBehaviorservice {
 				}
 			}
 		} else {
-			TokenHeader.addTokenToResponseHeder(response, "token", "400");
+			// TokenHeader.addTokenToResponseHeder(response, "token", "400");
 			backJSON.setCode(200);
 			msg.put("msg", "账号或密码错误");
 			msg.put("result", 0);

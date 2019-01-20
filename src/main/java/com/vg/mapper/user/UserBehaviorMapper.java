@@ -19,6 +19,7 @@ import com.vg.entity.User;
 import com.vg.entity.UserData;
 import com.vg.entity.UserTeam;
 import com.vg.entity.EVO.UserLogin;
+import com.vg.entity.EVO.UserRecommendInfo;
 import com.vg.entity.EVO.UserRegister;
 
 @Repository
@@ -210,8 +211,24 @@ public interface UserBehaviorMapper {
 	// 查询用户的爹的余额
 	@Select("select user_id,user_vip,user_balance from t_user_data WHERE user_id= (select invited_father from t_user_team where user_id=#{user_id})")
 	UserData getUserBalance(String user_id);
-	
-	//查询自己多少代
-	@Select ("select member_layer from t_user_team WHERE user_id=#{user_id}")
+
+	// 查询自己多少代
+	@Select("select member_layer from t_user_team WHERE user_id=#{user_id}")
 	int getMemberLayer(String user_id);
+
+	/**
+	 * 更新用户星级团队
+	 */
+	// 查询用户直接推荐、间接推荐、以及用户等级
+	@Select("select a.user_id,a.invited_sum,a.invited_son,b.user_vip from t_user_team a LEFT JOIN t_user_data b ON a.user_id=b.user_id WHERE a.team_id=#{team_id}")
+	List<UserRecommendInfo> getUserRecommendInfo(int team_id);
+
+	// 更新用户的等级vip，通过id
+	@Update("UPDATE `t_user_data` SET `user_vip`=#{user_vip} WHERE (`user_id`=#{user_id})")
+	int UpdateUserVip(String user_id, int user_vip);
+
+	// 获取用户满足vip条件的儿子数量
+	@Select("select COUNT(b.user_id) from t_user_team a LEFT JOIN t_user_data b ON a.user_id=b.user_id WHERE a.invited_father=#{invited_father} AND b.user_vip=#{user_vip}")
+	int getSonCount(String invited_father, int user_vip);
+
 }

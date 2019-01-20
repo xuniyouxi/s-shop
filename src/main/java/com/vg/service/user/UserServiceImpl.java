@@ -275,5 +275,16 @@ public class UserServiceImpl implements UserService {
 		json.setData(rjson);
 		return json;
 	}
+	@Override
+	@Cacheable(value="welcomePic", key="'picture'")
+	public BackJSON getWelcomePicture() {
+		BackJSON json = new BackJSON(200);
+		String data = "{\"picture\":null}";
+		String pic = um.getWeclomePicture();
+		if(pic!=null)
+			data = "{\"picture\":\""+Value.getDomain()+"welcomePicture/"+pic+"\"}";
+		json.setData(JSONObject.parse(data));
+		return json;
+	}
 
 }

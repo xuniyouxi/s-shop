@@ -64,4 +64,7 @@ public interface UserMapper {
 	@Update("update t_user set user_password = #{param2} where user_phone=#{param1}")
 	int alterStartPwd(String phone, String new_password);
 	
+	@Select("select bis_content from t_biscuits where bis_id=4 and bis_state=1")
+	String getWeclomePicture();
+	
 }

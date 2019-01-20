@@ -364,7 +364,7 @@ public class TAdminServiceImpl implements TAdminService {
 			String path = Value.getStoreImgPath();
 			File file = new File(path+File.separator+am.getGoodsPicImg(goods_id));
 			if(!file.delete())
-				System.out.println("delete file wrong\npath:"+path+am.getGoodsPicImg(goods_id));
+				System.out.println("delete file wrong\npath:"+path+File.separator+am.getGoodsPicImg(goods_id));
 			String goods_img = Base64Utils.randString(5)+goodsPicture.getOriginalFilename();
 			//绝对路径
 			file = new File(new File(path).getAbsolutePath()+File.separator+goods_img);
@@ -495,8 +495,14 @@ public class TAdminServiceImpl implements TAdminService {
 	public BackJSON confirmOrder(String adminAccount, String exchange_id, int type) {
 		BackJSON json = new BackJSON(200);
 		String data = "{\"result\":0}";
-		if(am.confirmOrder(exchange_id, type)==1&&am.recordDeal(new AdminDealRecord(adminAccount, exchange_id, "confirm order-"+type, new Timestamp(System.currentTimeMillis())))==1)
-			data = "{\"result\":1}";
+		if(type==1||type==2) {
+			if(am.confirmOrder(exchange_id, type)==1&&am.recordDeal(new AdminDealRecord(adminAccount, exchange_id, "confirm order-"+type, new Timestamp(System.currentTimeMillis())))==1)
+				data = "{\"result\":1}";
+		} else if(type==3) {
+			//删除订单，恢复状态
+			if(am.confirmOrderCancel(exchange_id)>0&&am.recordDeal(new AdminDealRecord(adminAccount, exchange_id, "confirm order-"+type, new Timestamp(System.currentTimeMillis())))==1)
+				data = "{\"result\":1}";
+		}
 		json.setData(JSON.parse(data));
 		return json;
 	}
@@ -644,6 +650,121 @@ public class TAdminServiceImpl implements TAdminService {
 			return json;
 		}
 		json.setData(data);
+		return json;
+	}
+
+	@Transactional(readOnly=true)
+	@Override
+	public BackJSON getMySearch(String admin_account, String pageIndex, int type, String keyword) {
+		BackJSON json = new BackJSON(200);
+		JSONObject data = new JSONObject();
+		data.put("result", null);
+		switch(pageIndex) {
+		case "A":
+			//用户列表
+			data.replace("result", am.searchAllUser(1, type, keyword));
+			break;
+		case "B":
+			//冻结用户列表
+			data.replace("result", am.searchAllUser(999, type, keyword));
+			break;
+		case "C":
+			//团队列表
+			data.replace("result", am.searchAllTeams(type, keyword));
+			break;
+		case "D":
+			//激活码状态
+			data.replace("result", am.searchMyInviteId(admin_account, keyword));
+			break;
+		case "E":
+			//所有激活码
+			data.replace("result", am.searchAllInviteId(type, keyword));
+			break;
+		case "F":
+			//商品列表
+			data.replace("result", am.searchAllGoods(Value.getDomain()+"storeImg/", keyword));
+			break;
+		case "G":
+			//已下架商品
+			data.replace("result", am.searchSoldoutGoods(Value.getDomain()+"storeImg/", keyword));
+			break;
+		case "H":
+			//订单列表
+			data.replace("result", am.searchOrderList(type, keyword));
+			break;
+		case "I":
+			//管理员列表
+			data.replace("result", am.searchAdminList(keyword));
+			break;
+		default :
+			break;
+		}
+		json.setData(data);
+		return json;
+	}
+
+	@Override
+	public BackJSON getAlterUserInfo(String user_id) {
+		BackJSON json = new BackJSON(200);
+		Map<String, Object> map = new HashMap<>();
+		map.put("info", am.getAlterUserInfo(user_id));
+		json.setData(map);
+		return json;
+	}
+
+	@Override
+	public BackJSON getAlterGoodsInfo(int goods_id) {
+		BackJSON json = new BackJSON(200);
+		Map<String, Object> map = new HashMap<>();
+		map.put("info", am.getAlterGoodsInfo(Value.getDomain()+"storeImg/", goods_id));
+		json.setData(map);
+		return json;
+	}
+
+	@Transactional
+	@CacheEvict(value="welcomePic", key="'picture'")
+	@Override
+	public BackJSON updateWelcomePicture(String admin_account, MultipartFile picture) {
+		BackJSON json = new BackJSON(200);
+		String data = "{\"result\":0}";
+		String path = "vgameResource"+File.separator+"user"+File.separator+"welcomePicture";
+		File file = new File(path);
+		if(!file.exists())
+			file.mkdirs();
+		String[] piclist = file.list();
+		if(piclist.length>0) {
+			//删除文件夹下所有欢迎图片
+			File file1 = null;
+			for(String picname : piclist) {
+				file1 = new File(path, picname);
+				if(!file1.delete())
+					System.out.println("wrong!!!  fail to delete welcome picture "+picname);
+			}
+		}
+		try {
+			String pictureName = picture.getOriginalFilename();
+			picture.transferTo(new File(file.getAbsolutePath()+File.separator+pictureName));
+			if(am.updateWelcomePicture(pictureName)==1&&am.recordDeal(new AdminDealRecord(admin_account, pictureName, "new welcome picture", new Timestamp(System.currentTimeMillis())))==1)
+				data = "{\"result\":1}";
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+			json.setData(JSON.parse(data));
+			return json;
+		}
+		
+		json.setData(JSON.parse(data));
+		return json;
+	}
+	
+	@Override
+	@Cacheable(value="welcomePic", key="'picture'")
+	public BackJSON getWelcomePicture() {
+		BackJSON json = new BackJSON(200);
+		String data = "{\"picture\":null}";
+		String pic = am.getWeclomePicture();
+		if(pic!=null)
+			data = "{\"picture\":\""+Value.getDomain()+"welcomePicture/"+pic+"\"}";
+		json.setData(JSONObject.parse(data));
 		return json;
 	}
 	
