@@ -11,8 +11,27 @@ public class AAuthorizationCode {
 	private String apply_admin;
 	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
 	private Timestamp apply_time;
+	private Integer used_state;
 	public AAuthorizationCode() {}
 	
+	public AAuthorizationCode(String code_content, String apply_admin, Timestamp apply_time, Integer used_state) {
+		super();
+		this.code_content = code_content;
+		this.apply_admin = apply_admin;
+		this.apply_time = apply_time;
+		this.used_state = used_state;
+	}
+
+	public AAuthorizationCode(Integer code_id, String code_content, String apply_admin, Timestamp apply_time,
+			Integer used_state) {
+		super();
+		this.code_id = code_id;
+		this.code_content = code_content;
+		this.apply_admin = apply_admin;
+		this.apply_time = apply_time;
+		this.used_state = used_state;
+	}
+
 	public AAuthorizationCode(String code_content, String apply_admin, Timestamp apply_time) {
 		super();
 		this.code_content = code_content;
@@ -27,6 +46,14 @@ public class AAuthorizationCode {
 		this.apply_admin = apply_admin;
 		this.apply_time = apply_time;
 	}
+	public Integer getUsed_state() {
+		return used_state;
+	}
+
+	public void setUsed_state(Integer used_state) {
+		this.used_state = used_state;
+	}
+
 	public Integer getCode_id() {
 		return code_id;
 	}

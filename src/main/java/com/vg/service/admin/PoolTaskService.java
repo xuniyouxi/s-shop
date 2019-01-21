@@ -25,7 +25,8 @@ public class PoolTaskService {
 	UserBehaviorMapper userbehavhourmapper;
 
 	//每天晚上更新用户能量池的能量
-	@Scheduled(cron = "0 22 0 * * ?")
+//	@Scheduled(cron = "0 22 0 * * ?")
+	@Scheduled(cron = "0 10 1 * * ?")
 	//@Scheduled(cron = "0 13 1 * * ?")
 	public void getCurrentDate() {
 		double PoolMultiple = InitDataListener.PoolMultiple;

@@ -75,15 +75,15 @@ public interface TAdminMapper {
 			+ "order by member_layer asc")
 	List<AUserInfo> getTeamMember(int team_id);
 	
-	@Select("select count(1) from authorization_code where apply_admin=(select admin_name from t_admin where admin_account=#{admin_account})")
+	@Select("select count(1) from authorization_code where apply_admin=(select admin_name from t_admin where admin_account=#{admin_account}) and used_state=0")
 	Integer adminCodeCount(String admin_account);
 	
-	@Insert("insert into authorization_code(code_content, apply_admin, apply_time) values"
-			+ "(#{code_content}, (select admin_name from t_admin where admin_account=#{apply_admin}), #{apply_time, jdbcType=TIMESTAMP})")
+	@Insert("insert into authorization_code(code_content, apply_admin, apply_time, used_state) values"
+			+ "(#{code_content}, (select admin_name from t_admin where admin_account=#{apply_admin}), #{apply_time, jdbcType=TIMESTAMP}, 0)")
 	@Options(useGeneratedKeys=true, keyProperty="code_id")
 	int newActivationCode(AAuthorizationCode ac);
 	
-	@Select("select code_id, code_content, apply_time from authorization_code where apply_admin=(select admin_name from t_admin where admin_account=#{param3}) "
+	@Select("select code_id, code_content, apply_time, used_state from authorization_code where apply_admin=(select admin_name from t_admin where admin_account=#{param3}) "
 			+ "limit #{param1}, #{param2}")
 	List<AAuthorizationCode> getMyInviteId(int start, int size, String admin_account);
 	
