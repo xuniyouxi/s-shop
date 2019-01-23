@@ -206,7 +206,7 @@ public interface TAdminMapper {
 	@Delete("delete from t_admin where admin_account=#{admin_account}")
 	int deleteAdmin(String admin_account);
 	
-	@Insert("insert into t_admin values(#{admin_account}, #{admin_name}, #{admin_rank}, #{admin_password}, 0, (select now()), '1970-01-01 08:00:00')")
+	@Insert("insert into t_admin values(#{admin_account}, #{admin_name}, #{admin_rank}, #{admin_password}, 0, (select now()), '1970-01-01 08:00:00', 'NULL')")
 	int newAdmin(AAdmin a);
 	
 	@Select("select admin_name, admin_rank from t_admin where admin_account=#{admin_account}")
@@ -339,14 +339,14 @@ public interface TAdminMapper {
 		@Result(property="userActivate", javaType=List.class, many=@Many(select="getUserActivate", fetchType=FetchType.EAGER)),
 	})*/
 	AHomePage getHomePageInfo();
-	@Select("select SUM(trade_number) as VRBNum, trade_time as date from t_trade_log where DATEDIFF(CURDATE(), DATE_FORMAT(trade_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	@Select("select SUM(trade_number) as VRBNum, UNIX_TIMESTAMP(trade_time) as date from t_trade_log where DATEDIFF(CURDATE(), DATE_FORMAT(trade_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(trade_time, '%Y-%m-%d')")
 	List<AHomeVRB> getDealVRB();
-	@Select("select SUM(into_balance) as VRBNum, operation_time as date from t_pool_operation where DATEDIFF(CURDATE(), DATE_FORMAT(operation_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	@Select("select SUM(into_balance) as VRBNum, UNIX_TIMESTAMP(operation_time) as date from t_pool_operation where DATEDIFF(CURDATE(), DATE_FORMAT(operation_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(operation_time, '%Y-%m-%d')")
 	List<AHomeVRB> getIntoPool();
 //	@Select("select (SUM(user_role=1)+SUM(user_role=999)) as userNum, create_time as date from t_user where DATEDIFF(CURDATE(), DATE_FORMAT(create_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
-	@Select("select count(1) as userNum, create_time as date from t_user where DATEDIFF(CURDATE(), DATE_FORMAT(create_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	@Select("select count(1) as userNum, UNIX_TIMESTAMP(create_time) as date from t_user where DATEDIFF(CURDATE(), DATE_FORMAT(create_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(create_time, '%Y-%m-%d')")
 	List<AHomeUser> getUserLogin();
-	@Select("select count(1) as userNum, create_time as date from t_user where user_role = 1 and DATEDIFF(CURDATE(), DATE_FORMAT(create_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(date, '%m/%d')")
+	@Select("select count(1) as userNum, UNIX_TIMESTAMP(create_time) as date from t_user where user_role = 1 and DATEDIFF(CURDATE(), DATE_FORMAT(create_time, '%Y-%m-%d')) < 30 group by DATE_FORMAT(create_time, '%Y-%m-%d')")
 	List<AHomeUser> getUserActivate();
 	
 	

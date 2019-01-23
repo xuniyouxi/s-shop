@@ -1,9 +1,5 @@
 package com.vg.entity.EVO;
 
-import java.sql.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -12,13 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AHomeVRB {
 
-	@JsonFormat(pattern="MM/dd", timezone="GMT+8")
-	private Date date;
+//	@JsonFormat(pattern="MM/dd", timezone="GMT+8")
+	private long date;
 	private Double VRBNum;
-	public Date getDate() {
+	
+	public long getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
 	public Double getVRBNum() {
